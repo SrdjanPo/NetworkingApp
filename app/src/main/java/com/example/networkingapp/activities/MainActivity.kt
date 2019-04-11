@@ -1,10 +1,11 @@
-package com.example.networkingapp
+package com.example.networkingapp.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.example.networkingapp.R
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -26,7 +27,9 @@ class MainActivity : AppCompatActivity() {
 
 
         //choose your favorite adapter
-        arrayAdapter = ArrayAdapter(this, R.layout.item, R.id.helloText, al);
+        arrayAdapter = ArrayAdapter(this,
+            R.layout.item,
+            R.id.helloText, al);
 
         //set the listener and the adapter
         frame.adapter = arrayAdapter;
