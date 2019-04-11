@@ -9,9 +9,9 @@
         android:orientation="vertical">
 
     <ImageView
-            android:layout_width="@dimen/startup_logo_width"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/startup_logo_height"
-            app:srcCompat="@drawable/nordvisualLogo"
+            app:srcCompat="@drawable/nord"
             android:id="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +23,13 @@
             android:layout_width="@dimen/standard_width"
             android:layout_height="@dimen/standard_height"
             android:text="@string/startup_button_login"
+            style="@style/StandardButton"
             android:onClick="onLogin"/>
 
     <Button
             android:layout_width="@dimen/standard_width"
             android:layout_height="@dimen/standard_height"
             android:text="@string/startup_button_signup"
+            style="@style/StandardButton"
             android:onClick="onSignup"/>
 </LinearLayout>
