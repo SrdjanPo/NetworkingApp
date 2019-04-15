@@ -1,5 +1,7 @@
 package com.example.networkingapp.activities
 
+import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -27,9 +29,11 @@ class MainActivity : AppCompatActivity() {
 
 
         //choose your favorite adapter
-        arrayAdapter = ArrayAdapter(this,
+        arrayAdapter = ArrayAdapter(
+            this,
             R.layout.item,
-            R.id.helloText, al);
+            R.id.helloText, al
+        );
 
         //set the listener and the adapter
         frame.adapter = arrayAdapter;
@@ -59,5 +63,9 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    companion object {
+        fun newIntent(context: Context?) = Intent(context, LoginActivity::class.java)
     }
 }
