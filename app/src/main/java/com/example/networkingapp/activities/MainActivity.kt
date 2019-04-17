@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    //Diolor/Swipecards library implementation
+
     private var al = ArrayList<String>()
     private var arrayAdapter: ArrayAdapter<String>? = null
     private var i = 0
@@ -66,6 +68,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun newIntent(context: Context?) = Intent(context, LoginActivity::class.java)
+        fun newIntent(context: Context?) = Intent(context, MainActivity::class.java)
     }
 }

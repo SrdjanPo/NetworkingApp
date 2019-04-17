@@ -12,13 +12,11 @@ class StartupActivity : AppCompatActivity() {
         setContentView(R.layout.activity_startup)
     }
 
-    fun onLogin(v: View) {
+    fun onLoginStart(v: View) {
         startActivity(LoginActivity.newIntent(this))
-
     }
 
-    fun onSignup(v: View){
+    fun onSignupStart(v: View) {
         startActivity(SignupActivity.newIntent(this))
-
     }
 }

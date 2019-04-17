@@ -20,6 +20,6 @@ class SignupActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun newIntent(context: Context?) = Intent(context, LoginActivity::class.java)
+        fun newIntent(context: Context?) = Intent(context, SignupActivity::class.java)
     }
 }
