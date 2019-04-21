@@ -7,11 +7,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.example.networkingapp.R
+import com.example.networkingapp.User
+import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_signup.*
 
 class SignupActivity : AppCompatActivity() {
 
+    private val firebaseDatabase = FirebaseDatabase.getInstance().reference
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
         val user = firebaseAuth.currentUser
@@ -42,6 +46,11 @@ class SignupActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     if(!task.isSuccessful) {
                         Toast.makeText(this, "Signup error ${task.exception?.localizedMessage}", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val email = emailET.text.toString()
+                        val userId = firebaseAuth.currentUser?.uid ?: ""
+                        val user = User(userId, "","", email, "","","")
+                        firebaseDatabase.child(DATA_USERS).child(userId).setValue(user)
                     }
                 }
         }
