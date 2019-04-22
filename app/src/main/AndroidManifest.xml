@@ -7,7 +7,7 @@
             android:icon="@drawable/nord"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activities.SignupActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="adjustResize">
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.MainActivity"
+        <activity android:name=".activities.TinderActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="adjustResize"/>
     </application>
