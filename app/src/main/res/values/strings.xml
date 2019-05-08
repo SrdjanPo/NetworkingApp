@@ -15,4 +15,6 @@
     <string name="button_sign_out">Sign out</string>
     <string name="button_apply">Apply</string>
     <string name="hint_location">Location</string>
+    <string name="goals_text">Goals</string>
+    <string name="interested_in_text">Interested in</string>
 </resources>
