@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "17886831998",
+    "firebase_url": "https://networkingapp-fe75a.firebaseio.com",
+    "project_id": "networkingapp-fe75a",
+    "storage_bucket": "networkingapp-fe75a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17886831998:android:945b603ccd55289d",
+        "android_client_info": {
+          "package_name": "com.example.networkingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17886831998-jeos8g64f6sa438dp395vmrdu26hde0c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.networkingapp",
+            "certificate_hash": "78ff47267dab5de39db515eee5400c109016abb6"
+          }
+        },
+        {
+          "client_id": "17886831998-r4ib1jakj1kdngort7paipv76f52malv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOEJZFnMOyvcyayd69_bj1AOuUUCDR1Rk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17886831998-r4ib1jakj1kdngort7paipv76f52malv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
