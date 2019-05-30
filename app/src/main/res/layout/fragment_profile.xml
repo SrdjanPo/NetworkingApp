@@ -70,13 +70,11 @@
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/penresized4"
                                     android:layout_gravity="top|right"
-
                             />
 
                             <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
-
 
 
                                 <TextView
@@ -139,6 +137,7 @@
                                         android:layout_below="@id/profileLocation"/>
 
                                 <RelativeLayout
+                                        android:id="@+id/interestsContainer"
                                         android:layout_width="match_parent"
                                         android:layout_height="150dp"
                                         android:layout_below="@+id/horizontalLineInfo">
@@ -288,7 +287,7 @@
             </RelativeLayout>
 
             <LinearLayout
-                    android:id="@+id/relativesocial"
+                    android:id="@+id/linearsocial"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -305,6 +304,34 @@
                         card_view:cardBackgroundColor="#fff"
                         card_view:cardElevation="6dp">
 
+                    <LinearLayout
+                            android:layout_width="250dp"
+                            android:layout_height="match_parent"
+                            android:weightSum="3"
+                    android:layout_gravity="center_horizontal">
+
+                        <ImageView
+                                android:id="@+id/instagramicon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/instacircle"
+                                android:layout_weight="1"/>
+                        <ImageView
+                                android:id="@+id/linkedinicon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/linkedincircle"
+                                android:layout_weight="1"/>
+                        <ImageView
+                                android:id="@+id/wwwicon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/wwwcircle"
+                                android:layout_weight="1"/>
+
+
+                    </LinearLayout>
+
                 </android.support.v7.widget.CardView>
 
 
@@ -313,7 +340,7 @@
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/relativesocial"
+                    android:layout_below="@id/linearsocial"
                     android:orientation="vertical">
 
                 <Button

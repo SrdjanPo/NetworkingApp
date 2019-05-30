@@ -8,6 +8,14 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".profile.WebActivity">
+        </activity>
+        <activity android:name=".profile.LinkedinActivity">
+        </activity>
+        <activity android:name=".profile.InstagramActivity">
+        </activity>
+        <activity android:name=".profile.InterestsActivity">
+        </activity>
         <activity android:name=".profile.BasicInfoActivity">
         </activity>
         <activity
