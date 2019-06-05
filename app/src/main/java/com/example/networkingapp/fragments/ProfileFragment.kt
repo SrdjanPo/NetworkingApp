@@ -78,6 +78,24 @@ class ProfileFragment : Fragment() {
             startActivity(intentWeb)
         }
 
+        // Open AboutActivity on click
+        relativeabout.setOnClickListener {
+            val intentAbout = Intent(getActivity(), AboutActivity::class.java)
+            startActivity(intentAbout)
+        }
+
+        // Open GoalsActivity on click
+        relativegoals.setOnClickListener {
+            val intentGoals = Intent(getActivity(), GoalsActivity::class.java)
+            startActivity(intentGoals)
+        }
+
+        // Open ExperienceActivity on click
+        relativeexp.setOnClickListener {
+            val intentExperience = Intent(getActivity(), ExperienceActivity::class.java)
+            startActivity(intentExperience)
+        }
+
 
     }
 

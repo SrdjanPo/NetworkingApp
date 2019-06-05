@@ -112,6 +112,7 @@ class TinderActivity : AppCompatActivity(), TinderCallback {
         finish()
     }
 
+
     override fun onGetUserId(): String = userId!!
 
     override fun getUserDatabase(): DatabaseReference = userDatabase
