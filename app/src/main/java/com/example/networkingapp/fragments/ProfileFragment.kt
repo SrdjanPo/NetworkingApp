@@ -1,6 +1,6 @@
 package com.example.networkingapp.fragments
 
-
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -15,16 +15,18 @@ import com.google.firebase.database.DatabaseReference
 import kotlinx.android.synthetic.main.activity_basic_info.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
+
+
 class ProfileFragment : Fragment() {
 
     private lateinit var userId: String
     private lateinit var userDatabase: DatabaseReference
     private var callback: TinderCallback? = null
 
+    val REQUEST_CODE = 11
+    val RESULT_CODE = 12
+    val EXTRA_KEY_TEST = "testKey"
 
-    //fun setCallback(callback: TinderCallback) {
-      //  this.callback = callback
-    //}
 
     fun setCallback(callback: TinderCallback) {
         this.callback = callback
@@ -43,13 +45,13 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         // Signout button
         signoutButton.setOnClickListener { callback?.onSignout() }
 
-        // Open BasicInfoActivity on click
+        // Open BasicInfoActivity
         basicInfoEdit.setOnClickListener {
-            val intentBasicInfo = Intent (getActivity(), BasicInfoActivity::class.java)
-            startActivity(intentBasicInfo)
+            startBasicInfoActivity()
         }
 
         // Open InterestsActivity on click
@@ -97,6 +99,20 @@ class ProfileFragment : Fragment() {
         }
 
 
+    }
+
+    fun startBasicInfoActivity() {
+        val intent = Intent(getActivity(), BasicInfoActivity::class.java)
+        startActivityForResult(intent,REQUEST_CODE)
+    }
+
+    @Suppress("RedundantOverride")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            val name = data?.getStringExtra(BasicInfoActivity.INPUT_NAME)
+            profileName.text = name
+        }
     }
 
 

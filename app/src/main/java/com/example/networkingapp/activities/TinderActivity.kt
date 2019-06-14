@@ -99,6 +99,11 @@ class TinderActivity : AppCompatActivity(), TinderCallback {
         profileTab?.select()
     }
 
+    @Suppress("RedundantOverride")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
     fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
