@@ -114,9 +114,9 @@
                                         android:paddingBottom="5dp"
                                         android:textStyle="normal"
                                         android:layout_below="@id/profileProfession"
-                                        android:layout_centerHorizontal="true"
+                                        android:layout_centerHorizontal="true">
 
-                                />
+                                </TextView>
 
                                 <ImageView
                                         android:layout_width="wrap_content"
@@ -126,6 +126,7 @@
                                         android:layout_below="@id/profileProfession"
                                         android:layout_marginHorizontal="5dp"
                                 />
+
 
                                 <View
                                         android:id="@+id/horizontalLineInfo"

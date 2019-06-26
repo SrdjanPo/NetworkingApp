@@ -23,9 +23,8 @@ class ProfileFragment : Fragment() {
     private lateinit var userDatabase: DatabaseReference
     private var callback: TinderCallback? = null
 
-    val REQUEST_CODE = 11
-    val RESULT_CODE = 12
-    val EXTRA_KEY_TEST = "testKey"
+    val REQUEST_CODE_BASICINFO = 11
+    val REQUEST_CODE_INSTAGRAM = 12
 
 
     fun setCallback(callback: TinderCallback) {
@@ -103,17 +102,20 @@ class ProfileFragment : Fragment() {
 
     fun startBasicInfoActivity() {
         val intent = Intent(getActivity(), BasicInfoActivity::class.java)
-        startActivityForResult(intent,REQUEST_CODE)
+        startActivityForResult(intent,REQUEST_CODE_BASICINFO)
     }
+
 
     @Suppress("RedundantOverride")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_CODE_BASICINFO && resultCode == RESULT_OK) {
             val name = data?.getStringExtra(BasicInfoActivity.INPUT_NAME)
+            val profession = data?.getStringExtra(BasicInfoActivity.INPUT_PROFESSION)
+            val location = data?.getStringExtra(BasicInfoActivity.INPUT_LOCATION)
             profileName.text = name
+            profileProfession.text = profession
+            profileLocation.text = location
         }
     }
-
-
 }
