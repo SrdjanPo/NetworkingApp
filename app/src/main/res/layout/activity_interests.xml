@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            android:elevation="4dp">
+
+        <!--
+
+        <Button
+                android:id="@+id/profileChanges"
+                android:layout_width="70sp"
+                android:layout_height="50sp"
+                android:text="save"
+                style="@style/SaveButtonTransparent"/>
+
+                -->
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+            android:id="@+id/experienceRelative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:focusableInTouchMode="true">
+
+        <android.support.design.widget.TextInputLayout
+                android:id="@+id/interestsTIL"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:layout_gravity="start"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp">
+
+            <android.support.design.widget.TextInputEditText
+                    android:id="@+id/interestsET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter an interest"
+                    android:inputType="textCapWords"
+                    android:gravity="start"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+                android:id="@+id/addExperience"
+                android:layout_width="70sp"
+                android:layout_height="50sp"
+                android:text="Add"
+                style="@style/AddExperienceButton"
+                android:layout_alignBottom="@id/interestsTIL"
+                android:layout_toEndOf="@id/interestsTIL"
+                android:layout_marginTop="20dp"/>
+
+
+    </RelativeLayout>
+
+    <View
+            android:id="@+id/horizontalLineInterests"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="#c0c0c0"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/experienceRelative"/>
+
+    <LinearLayout
+            android:id="@+id/interestsContainerLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/horizontalLineInterests"
+            android:orientation="vertical">
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
