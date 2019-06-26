@@ -1,5 +1,6 @@
 package com.example.networkingapp.profile
 
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
@@ -39,7 +40,7 @@ class InterestsActivity : AppCompatActivity() {
     fun addInterest() {
 
 
-        if( viewCounter >=10){
+        if( viewCounter == 10){
 
             Toast.makeText(this, "You've reached maximum number of interests", Toast.LENGTH_SHORT).show()
             return
@@ -48,8 +49,6 @@ class InterestsActivity : AppCompatActivity() {
         else {
 
             var interestStr = interestsET.text.toString().plus("  X")
-            //tempContainer.setText(interestStr)
-
             val textView = TextView(this, null, 0, R.style.Interest)
 
             textView.layoutParams =
@@ -60,11 +59,27 @@ class InterestsActivity : AppCompatActivity() {
             textView.layoutParams = param
             textView.setText(interestStr)
             interestsContainerLinear.addView(textView)
-            viewCounter++
+            ++viewCounter
+
+            if(viewCounter == 10)
+            {
+                numberOfIntTextView.setTextColor(Color.parseColor("#f47742"))
+            }
+
+            var interestCounter = viewCounter.toString().plus("/10")
+
+            numberOfIntTextView.setText(interestCounter)
+
             interestsET.getText()?.clear()
             textView.setOnClickListener {
                 interestsContainerLinear.removeView(textView)
-                viewCounter--
+                --viewCounter
+                if(viewCounter != 10)
+                {
+                    numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
+                }
+                var interestCounter = viewCounter.toString().plus("/10")
+                numberOfIntTextView.setText(interestCounter)
             }
         }
     }
