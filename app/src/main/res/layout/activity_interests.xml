@@ -22,25 +22,22 @@
             android:layout_below="@+id/toolbar"
             android:focusableInTouchMode="true">
 
-        <android.support.design.widget.TextInputLayout
-                android:id="@+id/interestsTIL"
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:layout_gravity="start"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp">
 
-            <android.support.design.widget.TextInputEditText
+
+            <com.example.networkingapp.profile.CustomAutoCompleteTextView
                     android:id="@+id/interestsET"
-                    android:layout_width="match_parent"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
+                    android:completionThreshold="1"
+                    android:dropDownAnchor="@id/horizontalLineInterests"
                     android:hint="Enter an interest"
-                    android:inputType="textCapWords"
-                    android:gravity="start"/>
+                    android:layout_gravity="start"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:popupElevation="0dp"
+                    android:inputType="textCapWords"/>
 
-        </android.support.design.widget.TextInputLayout>
 
         <Button
                 android:id="@+id/addExperience"
@@ -48,9 +45,10 @@
                 android:layout_height="50sp"
                 android:text="Add"
                 style="@style/AddExperienceButton"
-                android:layout_alignBottom="@id/interestsTIL"
-                android:layout_toEndOf="@id/interestsTIL"
-                android:layout_marginTop="20dp"/>
+                android:layout_alignBottom="@id/interestsET"
+                android:layout_toEndOf="@id/interestsET"
+                android:layout_marginTop="20dp"
+        android:gravity="bottom"/>
 
 
     </RelativeLayout>

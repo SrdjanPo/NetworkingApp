@@ -9,5 +9,6 @@
     <color name="blue">#a8acff</color>
     <color name="green">#6bffa1</color>
     <color name="shadow">#cadddddd</color>
+    <color name="transparent">#00000000</color>
 
 </resources>
