@@ -79,11 +79,13 @@ class InterestsActivity : AppCompatActivity() {
             if (stringInput.isBlank())
             {
                 viewVisible(interestsContainerLinear)
+                NumberViewVisible(numberOfIntTextView)
             }
 
             else
             {
                 viewInvisible(interestsContainerLinear)
+                NumberViewInvisible(numberOfIntTextView)
             }
         }
 
@@ -102,6 +104,14 @@ class InterestsActivity : AppCompatActivity() {
         interestsContainerLinear.visibility = View.VISIBLE
     }
 
+    fun NumberViewInvisible(v: View) {
+        numberOfIntTextView.visibility = View.INVISIBLE
+    }
+
+    fun NumberViewVisible(v: View) {
+        numberOfIntTextView.visibility = View.VISIBLE
+    }
+
 
     fun addInterest() {
 
@@ -109,8 +119,9 @@ class InterestsActivity : AppCompatActivity() {
         if( viewCounter == 10){
 
             viewVisible(interestsContainerLinear)
+            NumberViewVisible(numberOfIntTextView)
 
-            Toast.makeText(this, "You've reached maximum number of interests", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "You've reached maximum number of interests", Toast.LENGTH_LONG).show()
             return
         }
 
@@ -118,6 +129,18 @@ class InterestsActivity : AppCompatActivity() {
 
             var interestStr = interestsET.text.toString().plus("  X")
             val textView = TextView(this, null, 0, R.style.Interest)
+
+            if(interestStr.length >= 33){
+
+                Toast.makeText(this, "Interest you've entered is too long", Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            if(interestStr.length < 5){
+
+                Toast.makeText(this, "Interest you've entered is too short", Toast.LENGTH_SHORT).show()
+                return
+            }
 
             textView.layoutParams =
                 LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -154,7 +177,17 @@ class InterestsActivity : AppCompatActivity() {
 
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+
+        if (viewCounter >= 3) {
+            onBackPressed()
+            return true
+        }
+        else
+        {
+            Toast.makeText(this, "Please enter at least 3 interests", Toast.LENGTH_LONG).show()
+            return false
+        }
+
         return true
     }
 }
