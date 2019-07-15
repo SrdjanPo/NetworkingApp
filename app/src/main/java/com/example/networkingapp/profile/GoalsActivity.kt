@@ -1,8 +1,11 @@
 package com.example.networkingapp.profile
 
+import android.app.Activity
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.networkingapp.R
+import kotlinx.android.synthetic.main.activity_about.*
 
 class GoalsActivity : AppCompatActivity() {
 
@@ -15,6 +18,8 @@ class GoalsActivity : AppCompatActivity() {
         //home navigation
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Goals"
+
+
     }
 
     override fun onSupportNavigateUp(): Boolean {

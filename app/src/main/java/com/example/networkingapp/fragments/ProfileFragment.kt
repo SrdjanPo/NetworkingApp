@@ -12,6 +12,7 @@ import com.example.networkingapp.R
 import com.example.networkingapp.activities.TinderCallback
 import com.example.networkingapp.profile.*
 import com.google.firebase.database.DatabaseReference
+import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.activity_basic_info.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
@@ -24,7 +25,9 @@ class ProfileFragment : Fragment() {
     private var callback: TinderCallback? = null
 
     val REQUEST_CODE_BASICINFO = 11
-    val REQUEST_CODE_INSTAGRAM = 12
+    val REQUEST_CODE_INTERESTS = 12
+    val REQUEST_CODE_ABOUT = 13
+
 
 
     fun setCallback(callback: TinderCallback) {
@@ -55,8 +58,7 @@ class ProfileFragment : Fragment() {
 
         // Open InterestsActivity on click
         interestsContainer.setOnClickListener {
-            val intentInterests = Intent(getActivity(), InterestsActivity::class.java)
-            startActivity(intentInterests)
+            startInterestsActivity()
         }
 
 
@@ -81,8 +83,7 @@ class ProfileFragment : Fragment() {
 
         // Open AboutActivity on click
         relativeabout.setOnClickListener {
-            val intentAbout = Intent(getActivity(), AboutActivity::class.java)
-            startActivity(intentAbout)
+            startAboutActivity()
         }
 
         // Open GoalsActivity on click
@@ -105,6 +106,16 @@ class ProfileFragment : Fragment() {
         startActivityForResult(intent,REQUEST_CODE_BASICINFO)
     }
 
+    fun startInterestsActivity() {
+        val intent = Intent(getActivity(), InterestsActivity::class.java)
+        startActivityForResult(intent,REQUEST_CODE_INTERESTS)
+    }
+
+    fun startAboutActivity() {
+        val intent = Intent(getActivity(), AboutActivity::class.java)
+        startActivityForResult(intent,REQUEST_CODE_ABOUT)
+    }
+
 
     @Suppress("RedundantOverride")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -116,6 +127,20 @@ class ProfileFragment : Fragment() {
             profileName.text = name
             profileProfession.text = profession
             profileLocation.text = location
+        }
+        if (requestCode == REQUEST_CODE_INTERESTS && resultCode == RESULT_OK) {
+
+            val interest = data?.getStringExtra(InterestsActivity.INPUT_INTEREST)
+            test.text = interest
+
+        }
+        if (requestCode == REQUEST_CODE_ABOUT && resultCode == RESULT_OK) {
+
+            val about = data?.getStringExtra(AboutActivity.INPUT_ABOUT)
+            //val aboutQuoted = "''".plus(about).plus("''")
+            //aboutProfile.setText(aboutQuoted)
+            aboutProfile.setText(about)
+
         }
     }
 }

@@ -18,6 +18,7 @@ import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.Intent
 import android.view.View
 import android.support.v4.content.ContextCompat.getSystemService
 import android.view.KeyEvent.KEYCODE_BACK
@@ -115,9 +116,10 @@ class InterestsActivity : AppCompatActivity() {
 
     fun addInterest() {
 
-
+        // checking the number of added interests
         if( viewCounter == 10){
 
+            // set views to visible when there are 10 interests
             viewVisible(interestsContainerLinear)
             NumberViewVisible(numberOfIntTextView)
 
@@ -127,9 +129,11 @@ class InterestsActivity : AppCompatActivity() {
 
         else {
 
+            // adding X to the string
             var interestStr = interestsET.text.toString().plus("  X")
             val textView = TextView(this, null, 0, R.style.Interest)
 
+            // checking the length of the string
             if(interestStr.length >= 33){
 
                 Toast.makeText(this, "Interest you've entered is too long", Toast.LENGTH_SHORT).show()
@@ -142,6 +146,7 @@ class InterestsActivity : AppCompatActivity() {
                 return
             }
 
+            // parameters for TextView
             textView.layoutParams =
                 LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val param = textView.layoutParams as LinearLayout.LayoutParams
@@ -150,8 +155,11 @@ class InterestsActivity : AppCompatActivity() {
             textView.layoutParams = param
             textView.setText(interestStr)
             interestsContainerLinear.addView(textView)
+            // send string to ProfileFragment
+            closeActivity(interestsET.text.toString())
             ++viewCounter
 
+            // changing the color of the number of views (from black to orange) when there are 10/10 views
             if(viewCounter == 10)
             {
                 numberOfIntTextView.setTextColor(Color.parseColor("#f47742"))
@@ -162,6 +170,8 @@ class InterestsActivity : AppCompatActivity() {
             numberOfIntTextView.setText(interestCounter)
 
             interestsET.getText()?.clear()
+
+            // delete interest on touch
             textView.setOnClickListener {
                 interestsContainerLinear.removeView(textView)
                 --viewCounter
@@ -175,9 +185,24 @@ class InterestsActivity : AppCompatActivity() {
         }
     }
 
+    private fun closeActivity(interest: String) {
+
+        val resultIntent = Intent()
+        resultIntent.putExtra(INPUT_INTEREST, interest)
+
+        setResult(Activity.RESULT_OK, resultIntent)
+        //finish()
+    }
+
+
+    companion object {
+        @JvmField
+        val INPUT_INTEREST = "TESTINTEREST"
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
-
+        /*
         if (viewCounter >= 3) {
             onBackPressed()
             return true
@@ -187,7 +212,10 @@ class InterestsActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter at least 3 interests", Toast.LENGTH_LONG).show()
             return false
         }
+        */
 
+
+        onBackPressed()
         return true
     }
 }
