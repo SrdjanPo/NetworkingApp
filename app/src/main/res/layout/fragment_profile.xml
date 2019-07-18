@@ -68,8 +68,12 @@
                                     android:id="@+id/basicInfoEdit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/penresized4"
-                                    android:layout_gravity="top|right"
+                                    android:src="@drawable/penresized1"
+                                    android:layout_gravity="top|end"
+                                    android:scaleType="fitCenter"
+                                    android:adjustViewBounds="true"
+                                    android:maxWidth="22dp"
+                                    android:maxHeight="22dp"
                             />
 
                             <RelativeLayout
@@ -121,10 +125,14 @@
                                 <ImageView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:src="@drawable/location3"
-                                        android:layout_toLeftOf="@id/profileLocation"
+                                        android:src="@drawable/locationmarker"
+                                        android:layout_toStartOf="@id/profileLocation"
                                         android:layout_below="@id/profileProfession"
-                                        android:layout_marginHorizontal="5dp"
+                                        android:layout_alignTop="@id/profileLocation"
+                                        android:scaleType="fitCenter"
+                                        android:adjustViewBounds="true"
+                                        android:maxWidth="20dp"
+                                        android:maxHeight="20dp"
                                 />
 
 
@@ -146,9 +154,13 @@
                                     <ImageView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:src="@drawable/penresized4"
+                                            android:src="@drawable/penresized1"
                                             android:layout_alignParentRight="true"
                                             android:layout_alignParentTop="true"
+                                            android:scaleType="fitCenter"
+                                            android:adjustViewBounds="true"
+                                            android:maxWidth="22dp"
+                                            android:maxHeight="22dp"
                                     />
 
                                     <TextView
@@ -191,9 +203,13 @@
                     <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/penresized4"
-                            android:layout_gravity="top|right"
+                            android:src="@drawable/penresized1"
+                            android:layout_gravity="top|end"
                             android:layout_margin="10dp"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
+                            android:maxWidth="22dp"
+                            android:maxHeight="22dp"
 
                     />
 
@@ -232,9 +248,13 @@
                     <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/penresized4"
-                            android:layout_gravity="top|right"
+                            android:src="@drawable/penresized1"
+                            android:layout_gravity="top|end"
                             android:layout_margin="10dp"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
+                            android:maxWidth="22dp"
+                            android:maxHeight="22dp"
 
                     />
 
@@ -272,9 +292,13 @@
                     <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/penresized4"
-                            android:layout_gravity="top|right"
+                            android:src="@drawable/penresized1"
+                            android:layout_gravity="top|end"
                             android:layout_margin="10dp"
+                            android:scaleType="fitCenter"
+                            android:adjustViewBounds="true"
+                            android:maxWidth="22dp"
+                            android:maxHeight="22dp"
 
                     />
 

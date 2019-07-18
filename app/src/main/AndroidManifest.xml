@@ -8,6 +8,10 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".profile.PreviousOrganizationActivity">
+        </activity>
+        <activity android:name=".profile.CurrentOrganizationActivity">
+        </activity>
         <activity android:name=".profile.ExperienceActivity">
         </activity>
         <activity android:name=".profile.GoalsActivity">
