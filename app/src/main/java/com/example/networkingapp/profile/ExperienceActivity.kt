@@ -23,9 +23,15 @@ class ExperienceActivity : AppCompatActivity() {
         val company = arrayListOf<String?>()
         val companyTitle = arrayListOf<String?>()
         val date = arrayListOf<String?>()
+        val prevCompany = arrayListOf<String?>()
+        val prevTitle = arrayListOf<String?>()
+        val prevStartDate = arrayListOf<String?>()
+        val prevEndDate = arrayListOf<String?>()
+
     }
 
     val REQUEST_CODE_CURRENTORG = 21
+    val REQUEST_CODE_PREVIOUSORG = 22
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +44,13 @@ class ExperienceActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Experience"
 
+
+
         currentOrgListView.adapter = MyCustomAdapter(this)
+
+        previousOrgListView.adapter = MyCustomAdapterPrevious(this)
+
+
 
         addCurrentOrg.setOnClickListener {
 
@@ -47,15 +59,9 @@ class ExperienceActivity : AppCompatActivity() {
 
         addPreviousOrg.setOnClickListener {
 
-            val intentPreviousOrg = Intent(this, PreviousOrganizationActivity::class.java)
-            startActivity(intentPreviousOrg)
+            startPreviousOrganizationActivity()
         }
 
-    }
-
-    fun startCurrentOrganizationActivity() {
-        val intent = Intent(this, CurrentOrganizationActivity::class.java)
-        startActivityForResult(intent, REQUEST_CODE_CURRENTORG)
     }
 
     private class MyCustomAdapter(context: Context) : BaseAdapter() {
@@ -100,6 +106,50 @@ class ExperienceActivity : AppCompatActivity() {
 
     }
 
+    private class MyCustomAdapterPrevious(context: Context) : BaseAdapter() {
+
+        private val mContext: Context
+
+        init {
+            mContext = context
+        }
+
+        override fun getCount(): Int {
+            return prevCompany.size
+        }
+
+        override fun getItemId(position: Int): Long {
+
+            return position.toLong()
+        }
+
+        override fun getItem(position: Int): Any {
+
+            return "GET STRING"
+        }
+
+        // responsible for rendering out each row
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+
+            val layoutInflater = LayoutInflater.from(mContext)
+            val rowListView = layoutInflater.inflate(R.layout.prevrow_listview, parent, false)
+
+            val prevCompanyTextView = rowListView.rowCompany
+            val prevTitleTextView = rowListView.rowTitle
+            val prevStartDateTextView = rowListView.rowStartingDate
+            val prevEndDateTextView = rowListView.rowEndingDate
+
+            prevCompanyTextView.text = prevCompany.get(position)
+            prevTitleTextView.text = prevTitle.get(position)
+            prevStartDateTextView.text = prevStartDate.get(position)
+            prevEndDateTextView.text = prevEndDate.get(position)
+
+            return rowListView
+
+        }
+
+    }
+
     @Suppress("RedundantOverride")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -111,8 +161,31 @@ class ExperienceActivity : AppCompatActivity() {
             companyTitle.add(currentTitle)
             date.add(currentStartDate)
 
+
         }
 
+        if (requestCode == REQUEST_CODE_PREVIOUSORG && resultCode == RESULT_OK) {
+            val previousCompany = data?.getStringExtra(PreviousOrganizationActivity.INPUT_PREVCOMPANY)
+            val previousTitle = data?.getStringExtra(PreviousOrganizationActivity.INPUT_PREVTITLE)
+            val previousStartDate = data?.getStringExtra(PreviousOrganizationActivity.INPUT_PREVSTARTDATE)
+            val previousEndDate = data?.getStringExtra(PreviousOrganizationActivity.INPUT_PREVENDDATE)
+            prevCompany.add(previousCompany)
+            prevTitle.add(previousTitle)
+            prevStartDate.add(previousStartDate)
+            prevEndDate.add(previousEndDate)
+
+        }
+
+    }
+
+    fun startCurrentOrganizationActivity() {
+        val intent = Intent(this, CurrentOrganizationActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_CURRENTORG)
+    }
+
+    fun startPreviousOrganizationActivity() {
+        val intent = Intent(this, PreviousOrganizationActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_PREVIOUSORG)
     }
 
 

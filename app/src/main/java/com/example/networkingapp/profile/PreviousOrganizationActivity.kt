@@ -1,7 +1,9 @@
 package com.example.networkingapp.profile
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -38,6 +40,34 @@ class PreviousOrganizationActivity : AppCompatActivity() {
 
         previousEndDateET.setOnClickListener {
             showCalendarEnd()
+        }
+
+        profileChangess.setOnClickListener {
+
+            val string1 = prevCompanyET.text.toString()
+            val string2 = prevTitleET.text.toString()
+            val string3 = previousStartDateET.text.toString()
+            val string4 = previousEndDateET.text.toString()
+
+            if (string1.length == 0) {
+
+                companyET.error = "Please enter company name"
+
+            } else if (string2.length == 0) {
+
+                titleET.error = "Please enter your job title"
+
+            } else if (string3.length == 0) {
+                currentStartDateET.error = "Please enter starting date"
+
+            } else if (string4.length == 0) {
+                currentStartDateET.error = "Please enter ending date"
+            }
+
+            else
+            {
+                closeActivity(string1,string2,string3,string4)
+            }
         }
 
 
@@ -97,6 +127,26 @@ class PreviousOrganizationActivity : AppCompatActivity() {
 
         dpd.datePicker.maxDate = Calendar.getInstance().timeInMillis
         dpd.show()
+    }
+
+    private fun closeActivity(company: String, title: String, startdate: String, enddate: String) {
+
+        val resultIntent = Intent()
+        resultIntent.putExtra(INPUT_PREVCOMPANY, company)
+        resultIntent.putExtra(INPUT_PREVTITLE, title)
+        resultIntent.putExtra(INPUT_PREVSTARTDATE, startdate)
+        resultIntent.putExtra(INPUT_PREVENDDATE, enddate)
+
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
+    }
+
+    companion object {
+        @JvmField
+        val INPUT_PREVCOMPANY = "TESTCOMPANY"
+        val INPUT_PREVTITLE = "TESTTITLE"
+        val INPUT_PREVSTARTDATE = "TESTSTARTDATE"
+        val INPUT_PREVENDDATE = "TESTPREVDATE"
     }
 
     override fun onSupportNavigateUp(): Boolean {

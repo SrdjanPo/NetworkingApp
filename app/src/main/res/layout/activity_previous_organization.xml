@@ -14,7 +14,7 @@
             android:elevation="4dp">
 
         <Button
-                android:id="@+id/profileChanges"
+                android:id="@+id/profileChangess"
                 android:layout_width="70sp"
                 android:layout_height="50sp"
                 android:text="save"
@@ -32,7 +32,7 @@
 
 
         <android.support.design.widget.TextInputLayout
-                android:id="@+id/nameTIL"
+                android:id="@+id/prevCompanyTIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -42,7 +42,7 @@
                 android:layout_gravity="center_horizontal">
 
             <android.support.design.widget.TextInputEditText
-                    android:id="@+id/nameET"
+                    android:id="@+id/prevCompanyET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Company"
@@ -52,7 +52,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-                android:id="@+id/professionTIL"
+                android:id="@+id/prevTitleTIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
@@ -61,7 +61,7 @@
                 android:layout_marginStart="20dp">
 
             <android.support.design.widget.TextInputEditText
-                    android:id="@+id/professionET"
+                    android:id="@+id/prevTitleET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Title"
@@ -71,7 +71,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-                android:id="@+id/locationTIL"
+                android:id="@+id/prevLocationTIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
@@ -81,7 +81,7 @@
                 android:layout_marginStart="20dp">
 
             <android.support.design.widget.TextInputEditText
-                    android:id="@+id/locationET"
+                    android:id="@+id/prevLocationET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_location"
