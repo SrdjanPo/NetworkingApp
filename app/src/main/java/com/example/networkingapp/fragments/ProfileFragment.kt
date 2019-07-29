@@ -2,8 +2,12 @@ package com.example.networkingapp.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +21,6 @@ import kotlinx.android.synthetic.main.activity_basic_info.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 
-
 class ProfileFragment : Fragment() {
 
     private lateinit var userId: String
@@ -27,7 +30,6 @@ class ProfileFragment : Fragment() {
     val REQUEST_CODE_BASICINFO = 11
     val REQUEST_CODE_INTERESTS = 12
     val REQUEST_CODE_ABOUT = 13
-
 
 
     fun setCallback(callback: TinderCallback) {
@@ -46,6 +48,21 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /*
+        val example = "jedan dva tri cetri pet"
+
+        val ssb = SpannableStringBuilder(example)
+
+        val bcsYellow = BackgroundColorSpan(Color.YELLOW)
+
+        ssb.setSpan(bcsYellow, 1, example.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        test.setText(ssb)
+        */
+
+        // NAPRAVITI LISTU NA ITEMIMA IMPLEMENTIRATI DRAWABLE PA APPENDOVATI U TEXTVIEW
+
 
 
         // Signout button
@@ -103,17 +120,17 @@ class ProfileFragment : Fragment() {
 
     fun startBasicInfoActivity() {
         val intent = Intent(getActivity(), BasicInfoActivity::class.java)
-        startActivityForResult(intent,REQUEST_CODE_BASICINFO)
+        startActivityForResult(intent, REQUEST_CODE_BASICINFO)
     }
 
     fun startInterestsActivity() {
         val intent = Intent(getActivity(), InterestsActivity::class.java)
-        startActivityForResult(intent,REQUEST_CODE_INTERESTS)
+        startActivityForResult(intent, REQUEST_CODE_INTERESTS)
     }
 
     fun startAboutActivity() {
         val intent = Intent(getActivity(), AboutActivity::class.java)
-        startActivityForResult(intent,REQUEST_CODE_ABOUT)
+        startActivityForResult(intent, REQUEST_CODE_ABOUT)
     }
 
 

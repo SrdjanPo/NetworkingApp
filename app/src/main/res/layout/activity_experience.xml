@@ -4,85 +4,91 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
-
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            android:elevation="4dp">
 
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+            android:id="@+id/relativeCurrentOrg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp">
+
+
+        <TextView
+                android:id="@+id/currentOrg"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                android:elevation="4dp">
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Current Organization"/>
 
-        </android.support.v7.widget.Toolbar>
-
-        <RelativeLayout
-                android:id="@+id/relativeCurrentOrg"
-                android:layout_width="match_parent"
+        <ImageView
+                android:id="@+id/addCurrentOrg"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/toolbar"
-                android:padding="20dp">
+                android:src="@drawable/plusicon"
+                android:layout_alignParentEnd="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:maxHeight="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="2dp"/>
 
+    </RelativeLayout>
 
-            <TextView
-                    android:id="@+id/currentOrg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:textSize="18sp"
-                    android:text="Current Organization"/>
+    <ListView
+            android:id="@+id/currentOrgListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/relativeCurrentOrg"
+            android:layout_marginBottom="10dp"
+            android:divider="@null">
 
-            <ImageView
-                    android:id="@+id/addCurrentOrg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/plusicon"
-                    android:layout_alignParentEnd="true"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:maxWidth="20dp"
-                    android:maxHeight="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginTop="2dp"/>
+    </ListView>
 
-        </RelativeLayout>
+    <RelativeLayout
+            android:id="@+id/relativePreviousOrg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/currentOrgListView"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="20dp">
 
-        <RelativeLayout
-                android:id="@+id/relativePreviousOrg"
-                android:layout_width="match_parent"
+        <TextView
+                android:id="@+id/previousOrg"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/relativeCurrentOrg"
-                android:padding="20dp">
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:text="Previous Organization"/>
 
+        <ImageView
+                android:id="@+id/addPreviousOrg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/plusicon"
+                android:layout_alignParentEnd="true"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:maxWidth="20dp"
+                android:maxHeight="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="2dp"/>
 
-            <TextView
-                    android:id="@+id/previousOrg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:textSize="18sp"
-                    android:text="Previous Organization"/>
-
-            <ImageView
-                    android:id="@+id/addPreviousOrg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/plusicon"
-                    android:layout_alignParentEnd="true"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:maxWidth="20dp"
-                    android:maxHeight="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginTop="2dp"/>
-
-        </RelativeLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+    </RelativeLayout>
 
 
 </RelativeLayout>
