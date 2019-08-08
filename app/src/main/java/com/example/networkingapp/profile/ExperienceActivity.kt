@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +33,8 @@ class ExperienceActivity : AppCompatActivity() {
     val REQUEST_CODE_CURRENTORG = 21
     val REQUEST_CODE_PREVIOUSORG = 22
 
+    private val currentAdapter = MyCustomAdapter(this)
+    private val previousAdapter = MyCustomAdapterPrevious(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,9 +48,15 @@ class ExperienceActivity : AppCompatActivity() {
 
 
 
-        currentOrgListView.adapter = MyCustomAdapter(this)
+        currentOrgListView.adapter = currentAdapter
 
-        previousOrgListView.adapter = MyCustomAdapterPrevious(this)
+
+        //currentOrgListView.adapter = MyCustomAdapter(this)
+
+
+        //previousOrgListView.adapter = MyCustomAdapterPrevious(this)
+
+        previousOrgListView.adapter = previousAdapter
 
 
 
@@ -161,7 +169,7 @@ class ExperienceActivity : AppCompatActivity() {
             companyTitle.add(currentTitle)
             date.add(currentStartDate)
 
-
+            currentAdapter.notifyDataSetChanged()
         }
 
         if (requestCode == REQUEST_CODE_PREVIOUSORG && resultCode == RESULT_OK) {
@@ -173,6 +181,8 @@ class ExperienceActivity : AppCompatActivity() {
             prevTitle.add(previousTitle)
             prevStartDate.add(previousStartDate)
             prevEndDate.add(previousEndDate)
+
+            previousAdapter.notifyDataSetChanged()
 
         }
 

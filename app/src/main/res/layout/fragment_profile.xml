@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent" android:layout_height="match_parent"
         tools:context=".fragments.ProfileFragment">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
 
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -53,7 +53,7 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                        <android.support.v7.widget.CardView
+                        <androidx.cardview.widget.CardView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="85dp"
@@ -173,7 +173,7 @@
 
                             </RelativeLayout>
 
-                        </android.support.v7.widget.CardView>
+                        </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
 
@@ -191,7 +191,7 @@
                     android:layout_below="@+id/lineartop">
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="115dp"
@@ -222,7 +222,7 @@
                             android:layout_gravity="center_horizontal"/>
 
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
             </RelativeLayout>
@@ -236,7 +236,7 @@
                     android:layout_below="@+id/relativegoals">
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
@@ -267,7 +267,7 @@
                             android:layout_gravity="center_horizontal"/>
 
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
             </RelativeLayout>
@@ -280,7 +280,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_below="@+id/relativeexp">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -335,7 +335,7 @@
                     </RelativeLayout>
 
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
             </RelativeLayout>
@@ -349,7 +349,7 @@
                     android:layout_marginTop="2dp"
                     android:layout_below="@+id/relativeabout">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
@@ -386,7 +386,7 @@
 
                     </LinearLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
             </LinearLayout>
@@ -413,7 +413,7 @@
 
         </RelativeLayout>
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
             android:id="@+id/progressLayout"
@@ -430,4 +430,4 @@
 
     </LinearLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

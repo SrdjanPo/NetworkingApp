@@ -1,7 +1,7 @@
 package com.example.networkingapp.profile
 
 import android.graphics.Color
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
@@ -20,7 +20,7 @@ import android.view.inputmethod.InputMethodManager
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.view.View
-import android.support.v4.content.ContextCompat.getSystemService
+import androidx.core.content.ContextCompat.getSystemService
 import android.view.KeyEvent.KEYCODE_BACK
 import java.util.*
 import kotlin.collections.ArrayList

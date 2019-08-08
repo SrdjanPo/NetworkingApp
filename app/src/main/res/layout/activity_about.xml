@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
                 android:text="save"
                 style="@style/SaveButtonTransparent"/>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
 
     <LinearLayout
@@ -31,7 +31,7 @@
             android:layout_below="@+id/toolbar">
 
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/aboutTIL"
                 android:layout_width="@dimen/standard_width"
                 android:layout_height="wrap_content"
@@ -39,14 +39,14 @@
                 android:paddingBottom="5dp"
                 android:layout_gravity="center_horizontal">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/aboutET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Short Biography"
                     android:gravity="center_horizontal"/>
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
 
     </LinearLayout>

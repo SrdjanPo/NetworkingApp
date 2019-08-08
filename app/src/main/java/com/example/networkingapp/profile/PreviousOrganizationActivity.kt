@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.networkingapp.R
@@ -87,7 +87,7 @@ class PreviousOrganizationActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
 
                 // Display Selected date in textbox
-                val date = "" + MONTHS[monthOfYear] + " - " + year
+                val date = "" + MONTHS[monthOfYear] + " " + year
                 previousStartDateET.setText(date)
             },
             year,
@@ -115,7 +115,7 @@ class PreviousOrganizationActivity : AppCompatActivity() {
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
 
                 // Display Selected date in textbox
-                val date = "" + MONTHS[monthOfYear] + " - " + year
+                val date = "" + MONTHS[monthOfYear] + " " + year
                 previousEndDateET.setText(date)
             },
             year,
