@@ -72,8 +72,8 @@
                                     android:layout_gravity="top|end"
                                     android:scaleType="fitCenter"
                                     android:adjustViewBounds="true"
-                                    android:maxWidth="22dp"
-                                    android:maxHeight="22dp"
+                                    android:maxWidth="20dp"
+                                    android:maxHeight="20dp"
                             />
 
                             <RelativeLayout
@@ -148,10 +148,10 @@
                                 <RelativeLayout
                                         android:id="@+id/interestsContainer"
                                         android:layout_width="match_parent"
-                                        android:layout_height="150dp"
+                                        android:layout_height="wrap_content"
                                         android:layout_below="@+id/horizontalLineInfo">
 
-                                    <ImageView
+                                    <!--<ImageView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:src="@drawable/penresized1"
@@ -161,13 +161,89 @@
                                             android:adjustViewBounds="true"
                                             android:maxWidth="22dp"
                                             android:maxHeight="22dp"
-                                    />
+                                    />-->
 
-                                    <TextView
-                                            android:id="@+id/test"
-                                            android:layout_width="wrap_content"
+                                    <org.apmem.tools.layouts.FlowLayout
+                                            android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                    />
+                                            android:layout_marginTop="0dp"
+                                            app:layout_constraintTop_toBottomOf="@+id/cardView"
+                                            android:gravity="center_horizontal">
+
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Marketing"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="5dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Social Media"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="5dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Networking"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="7dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Business"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="7dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Startups"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="7dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Enterprenuership"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="7dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Health"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="7dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Reading"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="7dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                        <TextView android:layout_width="wrap_content"
+                                                  android:layout_height="wrap_content"
+                                                  android:text="Communication"
+                                                  style="@style/interestsProfile"
+                                                  android:gravity="center_horizontal"
+                                                  android:layout_marginTop="7dp"
+                                                  android:layout_marginRight="5dp"/>
+
+                                    </org.apmem.tools.layouts.FlowLayout>
 
                                 </RelativeLayout>
 
@@ -194,32 +270,81 @@
                 <androidx.cardview.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
-                        android:layout_height="115dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
                         card_view:cardBackgroundColor="#fff"
                         card_view:cardElevation="6dp">
 
                     <ImageView
+                            android:id="@+id/editGoals"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/penresized1"
                             android:layout_gravity="top|end"
-                            android:layout_margin="10dp"
                             android:scaleType="fitCenter"
                             android:adjustViewBounds="true"
-                            android:maxWidth="22dp"
-                            android:maxHeight="22dp"
-
+                            android:maxWidth="20dp"
+                            android:maxHeight="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
                     />
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/goals_text"
-                            android:textSize="20dp"
-                            android:textColor="#c1c0bf"
-                            android:layout_gravity="center_horizontal"/>
+                    <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        <TextView
+                                android:id="@+id/textAbout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Goals"
+                                android:textSize="20dp"
+                                android:textColor="#c1c0bf"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="5dp"/>
+
+
+                        <org.apmem.tools.layouts.FlowLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="0dp"
+                                app:layout_constraintTop_toBottomOf="@+id/cardView"
+                                android:gravity="center_horizontal"
+                                android:layout_below="@id/textAbout"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="20dp"
+                                android:paddingHorizontal="20dp">
+
+
+                            <TextView android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
+                                      android:text="Find investors"
+                                      style="@style/goalsProfile"
+                                      android:gravity="center_horizontal"
+                                      android:layout_marginTop="5dp"
+                                      android:layout_marginRight="5dp"/>
+
+                            <TextView android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
+                                      android:text="Find mentors"
+                                      style="@style/goalsProfile"
+                                      android:gravity="center_horizontal"
+                                      android:layout_marginTop="5dp"
+                                      android:layout_marginRight="5dp"/>
+
+                            <TextView android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
+                                      android:text="Grow my business"
+                                      style="@style/goalsProfile"
+                                      android:gravity="center_horizontal"
+                                      android:layout_marginTop="7dp"
+                                      android:layout_marginRight="5dp"/>
+
+                        </org.apmem.tools.layouts.FlowLayout>
+
+                    </RelativeLayout>
 
 
                 </androidx.cardview.widget.CardView>
@@ -250,11 +375,12 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/penresized1"
                             android:layout_gravity="top|end"
-                            android:layout_margin="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
                             android:scaleType="fitCenter"
                             android:adjustViewBounds="true"
-                            android:maxWidth="22dp"
-                            android:maxHeight="22dp"
+                            android:maxWidth="20dp"
+                            android:maxHeight="20dp"
 
                     />
 
@@ -264,7 +390,8 @@
                             android:text="Experience"
                             android:textSize="20dp"
                             android:textColor="#c1c0bf"
-                            android:layout_gravity="center_horizontal"/>
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"/>
 
 
                 </androidx.cardview.widget.CardView>
@@ -294,11 +421,12 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/penresized1"
                             android:layout_gravity="top|end"
-                            android:layout_margin="10dp"
                             android:scaleType="fitCenter"
                             android:adjustViewBounds="true"
-                            android:maxWidth="22dp"
-                            android:maxHeight="22dp"
+                            android:maxWidth="20dp"
+                            android:maxHeight="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
 
                     />
 
@@ -315,7 +443,8 @@
                                 android:textSize="20dp"
                                 android:textColor="#c1c0bf"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_centerHorizontal="true"/>
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="5dp"/>
 
 
                         <TextView

@@ -148,7 +148,10 @@ class ProfileFragment : Fragment() {
         if (requestCode == REQUEST_CODE_INTERESTS && resultCode == RESULT_OK) {
 
             val interest = data?.getStringExtra(InterestsActivity.INPUT_INTEREST)
-            test.text = interest
+
+            // OVDE SETOVATI PRIMLJENE PODATKE
+
+            //test.text = interest
 
         }
         if (requestCode == REQUEST_CODE_ABOUT && resultCode == RESULT_OK) {
