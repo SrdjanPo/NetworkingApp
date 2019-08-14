@@ -35,98 +35,58 @@
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="20dp">
+                android:paddingBottom="10dp">
 
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" app:srcCompat="@drawable/briefcase"
-                    android:id="@+id/briefcase"
-                    android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:maxWidth="30dp"
-                    android:maxHeight="30dp"
-                    android:layout_gravity="center_horizontal"
-                    app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"/>
-            <Button
-                    android:text="Looking for a job"
-                    style="@style/goals"
-                    android:layout_width="wrap_content"
+            <LinearLayout
+                    android:id="@+id/briefcaseContainer"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/button"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toBottomOf="@+id/briefcase"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:textAllCaps="false" android:fontFamily="sans-serif"
-                    android:layout_marginStart="20dp" app:layout_constraintStart_toStartOf="parent"/>
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+                    android:background="#e3e3e3"
+                    android:gravity="center_horizontal">
 
-            <Button
-                    android:text="Hire employees"
-                    style="@style/goals"
-                    android:layout_width="wrap_content"
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/briefcase"
+                        android:id="@+id/briefcase"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:maxWidth="30dp"
+                        android:maxHeight="30dp"
+                />
+
+            </LinearLayout>
+
+
+            <org.apmem.tools.layouts.FlowLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/button2"
                     android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toBottomOf="@+id/briefcase"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:textAllCaps="false" android:fontFamily="sans-serif" android:layout_marginEnd="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintTop_toBottomOf="@+id/briefcaseContainer"
+                    android:gravity="center_horizontal"
+                    android:padding="10dp">
+
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Hire employees"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginRight="50dp"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Looking for a job"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"/>
+
+            </org.apmem.tools.layouts.FlowLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.cardview.widget.CardView>
-
-    <org.apmem.tools.layouts.FlowLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/cardView"
-            android:gravity="center_horizontal"
-            android:padding="10dp">
-
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Ttttttt"
-                  style="@style/goals"
-                  android:gravity="center_horizontal"
-        android:layout_margin="5dp"/>
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Testtttttttttttt"
-                  style="@style/goals"
-                  android:gravity="center_horizontal"
-                  android:layout_margin="5dp"/>
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Testttttttttttt"
-                  style="@style/goals"
-                  android:gravity="center_horizontal"
-                  android:layout_margin="5dp"/>
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Testttttttttttttt"
-                  style="@style/goals"
-                  android:gravity="center_horizontal"
-                  android:layout_margin="5dp"/>
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="Testtttttt"
-                  style="@style/goals"
-                  android:gravity="center_horizontal"
-                  android:layout_margin="5dp"/>
-
-
-    </org.apmem.tools.layouts.FlowLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
