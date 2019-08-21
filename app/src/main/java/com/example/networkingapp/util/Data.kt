@@ -9,5 +9,8 @@ data class User(
     val email: String? = "",
     val interestedIn: String? = "",
     val goals: String? = "",
+    val instagram: String? = "",
+    val linkedin: String? = "",
+    val web: String? = "",
     val imageUrl: String? = ""
 )

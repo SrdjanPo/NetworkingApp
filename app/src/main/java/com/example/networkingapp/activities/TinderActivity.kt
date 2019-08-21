@@ -14,6 +14,7 @@ import com.example.networkingapp.R
 import com.example.networkingapp.fragments.MatchesFragment
 import com.example.networkingapp.fragments.ProfileFragment
 import com.example.networkingapp.fragments.SwipeFragment
+import com.example.networkingapp.profile.BasicInfoActivity
 import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference

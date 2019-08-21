@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:layout_editor_absoluteX="0dp"
-            app:cardUseCompatPadding="true" android:id="@+id/cardView"
+            app:cardUseCompatPadding="true" android:id="@+id/cardViewBriefcase"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             android:layout_marginTop="20dp">
 
@@ -37,48 +37,265 @@
                 android:layout_height="match_parent"
                 android:paddingBottom="10dp">
 
-            <LinearLayout
-                    android:id="@+id/briefcaseContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-                    android:background="#e3e3e3"
-                    android:gravity="center_horizontal">
 
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" app:srcCompat="@drawable/briefcase"
-                        android:id="@+id/briefcase"
-                        android:scaleType="fitCenter"
-                        android:adjustViewBounds="true"
-                        android:maxWidth="30dp"
-                        android:maxHeight="30dp"
-                />
-
-            </LinearLayout>
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/briefcase"
+                    android:id="@+id/briefcase"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="30dp"
+                    android:maxHeight="30dp"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
 
 
             <org.apmem.tools.layouts.FlowLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toBottomOf="@+id/briefcaseContainer"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/briefcase"
                     android:gravity="center_horizontal"
-                    android:padding="10dp">
+                    android:padding="5dp">
 
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="Hire employees"
                           style="@style/goals"
+                          android:background="@drawable/goals_test"
                           android:gravity="center_horizontal"
-                          android:layout_marginRight="50dp"/>
+                          android:layout_marginRight="30dp"
+                          android:clickable="true"
+                          android:onClick="changeStyle"
+                />
+
+                <!--<Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hire employees"
+                        style="@style/goalsButtons"
+                        android:background="@drawable/goals_test"
+                        android:gravity="center_horizontal"
+                        android:layout_marginRight="30dp"
+                        android:focusable="true"
+                        />-->
 
                 <TextView android:layout_width="wrap_content"
                           android:layout_height="wrap_content"
                           android:text="Looking for a job"
                           style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:clickable="true"
+                />
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Find Co-Founders"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginTop="10dp"
+                          android:clickable="true"
+                />
+
+            </org.apmem.tools.layouts.FlowLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="0dp"
+            app:cardUseCompatPadding="true" android:id="@+id/cardViewPlant"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewBriefcase"
+            android:layout_marginTop="10dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp">
+
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/plant"
+                    android:id="@+id/plant"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="30dp"
+                    android:maxHeight="30dp"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <org.apmem.tools.layouts.FlowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/plant"
+                    android:gravity="center_horizontal"
+                    android:padding="5dp">
+
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Invest in projects"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginRight="30dp"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Find investors"
+                          style="@style/goals"
                           android:gravity="center_horizontal"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Grow my business"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginTop="10dp"/>
+
+            </org.apmem.tools.layouts.FlowLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="0dp"
+            app:cardUseCompatPadding="true" android:id="@+id/cardViewLaptop"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewPlant"
+            android:layout_marginTop="10dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp">
+
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/laptop"
+                    android:id="@+id/laptop"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="30dp"
+                    android:maxHeight="30dp"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <org.apmem.tools.layouts.FlowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/laptop"
+                    android:gravity="center_horizontal"
+                    android:padding="5dp">
+
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Hire freelancers"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginRight="30dp"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Find freelance jobs"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"/>
+
+
+            </org.apmem.tools.layouts.FlowLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteX="0dp"
+            app:cardUseCompatPadding="true" android:id="@+id/cardViewTeam"
+            app:layout_constraintTop_toBottomOf="@+id/cardViewLaptop"
+            android:layout_marginTop="10dp">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp">
+
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/team"
+                    android:id="@+id/team"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:maxWidth="30dp"
+                    android:maxHeight="30dp"
+                    android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"/>
+
+
+            <org.apmem.tools.layouts.FlowLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/team"
+                    android:gravity="center_horizontal"
+                    android:padding="5dp">
+
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Find mentors"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginRight="30dp"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Mentor others"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Make new friends"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginRight="30dp"
+                          android:layout_marginTop="10dp"/>
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Explore ideas"
+                          style="@style/goals"
+                          android:gravity="center_horizontal"
+                          android:layout_marginTop="10dp"/>
+
 
             </org.apmem.tools.layouts.FlowLayout>
 

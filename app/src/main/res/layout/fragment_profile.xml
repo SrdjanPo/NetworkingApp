@@ -167,7 +167,6 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="0dp"
-                                            app:layout_constraintTop_toBottomOf="@+id/cardView"
                                             android:gravity="center_horizontal">
 
 
@@ -310,7 +309,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                app:layout_constraintTop_toBottomOf="@+id/cardView"
                                 android:gravity="center_horizontal"
                                 android:layout_below="@id/textAbout"
                                 android:paddingTop="10dp"
@@ -325,6 +323,8 @@
                                       android:gravity="center_horizontal"
                                       android:layout_marginTop="5dp"
                                       android:layout_marginRight="5dp"
+                                      android:drawableStart="@drawable/ic_suit1"
+                                      android:drawablePadding="3dp"
                             />
 
                             <TextView android:layout_width="wrap_content"
@@ -333,7 +333,9 @@
                                       style="@style/goalsProfile"
                                       android:gravity="center_horizontal"
                                       android:layout_marginTop="5dp"
-                                      android:layout_marginRight="5dp"/>
+                                      android:layout_marginRight="5dp"
+                                      android:drawableStart="@drawable/ic_owl2"
+                                      android:drawablePadding="3dp"/>
 
                             <TextView android:layout_width="wrap_content"
                                       android:layout_height="wrap_content"
@@ -341,7 +343,9 @@
                                       style="@style/goalsProfile"
                                       android:gravity="center_horizontal"
                                       android:layout_marginTop="7dp"
-                                      android:layout_marginRight="5dp"/>
+                                      android:layout_marginRight="5dp"
+                                      android:drawableStart="@drawable/ic_plant1"
+                                      android:drawablePadding="3dp"/>
 
                         </org.apmem.tools.layouts.FlowLayout>
 
@@ -551,7 +555,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone"
+
             android:background="#aaaaaaaa">
 
         <ProgressBar

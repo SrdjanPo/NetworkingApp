@@ -2,20 +2,20 @@ package com.example.networkingapp.fragments
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import android.widget.TextView
 import com.example.networkingapp.R
+import com.example.networkingapp.User
 import com.example.networkingapp.activities.TinderCallback
 import com.example.networkingapp.profile.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.activity_about.*
 import kotlinx.android.synthetic.main.activity_basic_info.*
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -49,21 +49,9 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*
-        val example = "jedan dva tri cetri pet"
+        progressLayout.setOnTouchListener { view, event -> true }
 
-        val ssb = SpannableStringBuilder(example)
-
-        val bcsYellow = BackgroundColorSpan(Color.YELLOW)
-
-        ssb.setSpan(bcsYellow, 1, example.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        test.setText(ssb)
-        */
-
-        // NAPRAVITI LISTU NA ITEMIMA IMPLEMENTIRATI DRAWABLE PA APPENDOVATI U TEXTVIEW
-
-
+        populateInfo()
 
         // Signout button
         signoutButton.setOnClickListener { callback?.onSignout() }
@@ -115,6 +103,37 @@ class ProfileFragment : Fragment() {
             startActivity(intentExperience)
         }
 
+
+    }
+
+    fun populateInfo() {
+
+        progressLayout.visibility = View.VISIBLE
+
+        userDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+                progressLayout.visibility = View.GONE
+
+
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+                if (isAdded) {
+
+                    val user = p0.getValue(User::class.java)
+                    profileName.setText(user?.name, TextView.BufferType.NORMAL)
+                    profileProfession.setText(user?.profession, TextView.BufferType.NORMAL)
+                    profileLocation.setText(user?.location, TextView.BufferType.NORMAL)
+
+                    aboutProfile.setText(user?.about, TextView.BufferType.NORMAL)
+
+                    progressLayout.visibility = View.GONE
+                }
+            }
+
+        })
 
     }
 
