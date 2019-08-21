@@ -1,5 +1,6 @@
 package com.example.networkingapp
 
+
 data class User(
     val uid: String? = "",
     val name: String? = "",
@@ -7,10 +8,12 @@ data class User(
     val location: String? = "",
     val about: String? = "",
     val email: String? = "",
-    val interestedIn: String? = "",
     val goals: String? = "",
     val instagram: String? = "",
     val linkedin: String? = "",
     val web: String? = "",
     val imageUrl: String? = ""
 )
+
+
+

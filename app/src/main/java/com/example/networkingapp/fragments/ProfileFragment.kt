@@ -3,6 +3,7 @@ package com.example.networkingapp.fragments
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +17,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.activity_about.*
-import kotlinx.android.synthetic.main.activity_basic_info.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import org.apmem.tools.layouts.FlowLayout
+import android.util.Log
+
+
 
 
 class ProfileFragment : Fragment() {
@@ -37,6 +40,7 @@ class ProfileFragment : Fragment() {
         userId = callback.onGetUserId()
         userDatabase = callback.getUserDatabase().child(userId)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +68,9 @@ class ProfileFragment : Fragment() {
         // Open InterestsActivity on click
         interestsContainer.setOnClickListener {
             startInterestsActivity()
+
+            /*val intentInterest = Intent(getActivity(), InterestsActivity::class.java)
+            startActivity(intentInterest)*/
         }
 
 
@@ -115,7 +122,6 @@ class ProfileFragment : Fragment() {
 
                 progressLayout.visibility = View.GONE
 
-
             }
 
             override fun onDataChange(p0: DataSnapshot) {
@@ -123,14 +129,41 @@ class ProfileFragment : Fragment() {
                 if (isAdded) {
 
                     val user = p0.getValue(User::class.java)
+
+                    // Basic info
                     profileName.setText(user?.name, TextView.BufferType.NORMAL)
                     profileProfession.setText(user?.profession, TextView.BufferType.NORMAL)
                     profileLocation.setText(user?.location, TextView.BufferType.NORMAL)
+
+                    for (snapshot in p0.child("interestedIn").children) {
+
+                        var interestsFromDB = snapshot.getValue(String::class.java)
+
+                        val textView = TextView(getActivity(), null, 0, R.style.interestsProfile)
+
+                        var params: FlowLayout.LayoutParams = FlowLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
+                            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
+                        )
+
+                        params.setMargins(0, 20, 20, 0)
+
+                        textView.layoutParams = params
+
+                        textView.gravity = Gravity.CENTER
+
+                        textView.layoutParams = params
+
+                        textView.setText(interestsFromDB)
+
+                        flowInterests.addView(textView)
+                    }
 
                     aboutProfile.setText(user?.about, TextView.BufferType.NORMAL)
 
                     progressLayout.visibility = View.GONE
                 }
+
             }
 
         })
@@ -166,11 +199,13 @@ class ProfileFragment : Fragment() {
         }
         if (requestCode == REQUEST_CODE_INTERESTS && resultCode == RESULT_OK) {
 
-            val interest = data?.getStringExtra(InterestsActivity.INPUT_INTEREST)
+            //val interest = data?.getStringExtra(InterestsActivity.INPUT_INTEREST)
 
-            // OVDE SETOVATI PRIMLJENE PODATKE
+            Log.d("TAG", "RADIIIIIIIi")
 
-            //test.text = interest
+            val t = activity!!.supportFragmentManager.beginTransaction()
+            t.setReorderingAllowed(false)
+            t.detach(this).attach(this).commitAllowingStateLoss()
 
         }
         if (requestCode == REQUEST_CODE_ABOUT && resultCode == RESULT_OK) {

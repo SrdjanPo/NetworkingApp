@@ -54,7 +54,7 @@
                     android:id="@+id/webET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="15dp"
+                    android:textSize="18dp"
                     android:gravity="left"
                     android:inputType="text"/>
 

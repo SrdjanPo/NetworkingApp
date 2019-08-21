@@ -164,83 +164,11 @@
                                     />-->
 
                                     <org.apmem.tools.layouts.FlowLayout
+                                            android:id="@+id/flowInterests"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="0dp"
                                             android:gravity="center_horizontal">
-
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Marketing"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="5dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Social Media"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="5dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Networking"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="7dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Business"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="7dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Startups"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="7dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Enterprenuership"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="7dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Health"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="7dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Reading"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="7dp"
-                                                  android:layout_marginRight="5dp"/>
-
-                                        <TextView android:layout_width="wrap_content"
-                                                  android:layout_height="wrap_content"
-                                                  android:text="Communication"
-                                                  style="@style/interestsProfile"
-                                                  android:gravity="center_horizontal"
-                                                  android:layout_marginTop="7dp"
-                                                  android:layout_marginRight="5dp"/>
 
                                     </org.apmem.tools.layouts.FlowLayout>
 
