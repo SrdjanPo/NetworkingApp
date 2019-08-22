@@ -65,7 +65,7 @@ class LinkedinActivity : AppCompatActivity() {
 
                     linkedinET.setText(user?.linkedin, TextView.BufferType.EDITABLE)
 
-                    linkedinET.setSelection(linkedinET.length())
+                    //linkedinET.setSelection(linkedinET.length())
 
                 }
 

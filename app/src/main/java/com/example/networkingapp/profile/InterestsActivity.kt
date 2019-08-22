@@ -179,8 +179,14 @@ class InterestsActivity : AppCompatActivity() {
                 return
             }
 
+            var keyCurrent = interestDatabase.push().key
+
             // add interest to database
-            interestDatabase.push().setValue(interestToDB)
+            interestDatabase.child(keyCurrent!!).setValue(interestToDB)
+
+
+            Log.d("KEYCURRENT", keyCurrent)
+
 
             // parameters for TextView
             textView.layoutParams =
@@ -215,6 +221,8 @@ class InterestsActivity : AppCompatActivity() {
                 }
                 var interestCounter = viewCounter.toString().plus("/10")
                 numberOfIntTextView.setText(interestCounter)
+
+                interestDatabase.child(keyCurrent).removeValue()
             }
         }
     }

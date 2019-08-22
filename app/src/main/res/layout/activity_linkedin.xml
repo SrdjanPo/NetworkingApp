@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="https://www.linkedin.com/in/"
-                    android:textSize="15dp"
+                    android:textSize="17dp"
                     android:gravity="left"
                     android:inputType="text"/>
 
