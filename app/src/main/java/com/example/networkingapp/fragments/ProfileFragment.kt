@@ -33,6 +33,7 @@ class ProfileFragment : Fragment() {
     val REQUEST_CODE_BASICINFO = 11
     val REQUEST_CODE_INTERESTS = 12
     val REQUEST_CODE_ABOUT = 13
+    val REQUEST_CODE_GOALS = 14
 
 
     fun setCallback(callback: TinderCallback) {
@@ -73,6 +74,11 @@ class ProfileFragment : Fragment() {
             startActivity(intentInterest)*/
         }
 
+        // Open GoalsActivity on click
+        relativegoals.setOnClickListener {
+            startGoalsActivity()
+        }
+
 
         // Open InstagramActivity on click
         instagramicon.setOnClickListener {
@@ -98,11 +104,7 @@ class ProfileFragment : Fragment() {
             startAboutActivity()
         }
 
-        // Open GoalsActivity on click
-        relativegoals.setOnClickListener {
-            val intentGoals = Intent(getActivity(), GoalsActivity::class.java)
-            startActivity(intentGoals)
-        }
+
 
         // Open ExperienceActivity on click
         relativeexp.setOnClickListener {
@@ -159,6 +161,100 @@ class ProfileFragment : Fragment() {
                         flowInterests.addView(textView)
                     }
 
+                    for (snapshotGoal in p0.child("goals").children) {
+
+                        var goalFromDB = snapshotGoal.getValue(String::class.java)
+
+                        val textView = TextView(getActivity(), null, 0, R.style.goalsProfile)
+
+                        var params: FlowLayout.LayoutParams = FlowLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
+                            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
+                        )
+
+                        params.setMargins(0, 30, 20, 0)
+
+                        textView.layoutParams = params
+                        textView.gravity = Gravity.CENTER
+                        textView.layoutParams = params
+                        textView.setText(goalFromDB)
+
+                        if(goalFromDB == "Hire employees"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_hireemployeesicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Looking for a job"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lookingforajobicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Find Co-Founders"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_findcofoundersicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Invest in projects"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_investinprojectsicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Find investors"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_suit1, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Grow my business"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_plant1, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Hire freelancers"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_hirefreelancersicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Find freelance jobs"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_findfreelancejobsicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Find mentors"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_owl2, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Mentor others"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mentorothersicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Make new friends"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_makenewfriendsicon, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        else if(goalFromDB == "Explore ideas"){
+
+                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_explorenewideas, 0,0,0)
+                            textView.compoundDrawablePadding = 15
+                        }
+
+                        flowGoals.addView(textView)
+
+                    }
+
                     aboutProfile.setText(user?.about, TextView.BufferType.NORMAL)
 
                     progressLayout.visibility = View.GONE
@@ -180,6 +276,11 @@ class ProfileFragment : Fragment() {
         startActivityForResult(intent, REQUEST_CODE_INTERESTS)
     }
 
+    fun startGoalsActivity() {
+        val intent = Intent(getActivity(), GoalsActivity::class.java)
+        startActivityForResult(intent, REQUEST_CODE_GOALS)
+    }
+
     fun startAboutActivity() {
         val intent = Intent(getActivity(), AboutActivity::class.java)
         startActivityForResult(intent, REQUEST_CODE_ABOUT)
@@ -199,15 +300,21 @@ class ProfileFragment : Fragment() {
         }
         if (requestCode == REQUEST_CODE_INTERESTS && resultCode == RESULT_OK) {
 
-            //val interest = data?.getStringExtra(InterestsActivity.INPUT_INTEREST)
-
-            Log.d("TAG", "RADIIIIIIIi")
 
             val t = activity!!.supportFragmentManager.beginTransaction()
             t.setReorderingAllowed(false)
             t.detach(this).attach(this).commitAllowingStateLoss()
 
         }
+
+        if (requestCode == REQUEST_CODE_GOALS && resultCode == RESULT_OK) {
+
+            val t = activity!!.supportFragmentManager.beginTransaction()
+            t.setReorderingAllowed(false)
+            t.detach(this).attach(this).commitAllowingStateLoss()
+
+        }
+
         if (requestCode == REQUEST_CODE_ABOUT && resultCode == RESULT_OK) {
 
             val about = data?.getStringExtra(AboutActivity.INPUT_ABOUT)

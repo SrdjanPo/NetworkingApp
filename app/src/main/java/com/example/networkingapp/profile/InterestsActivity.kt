@@ -63,14 +63,18 @@ class InterestsActivity : AppCompatActivity() {
             }
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+
+                closeActivity("closed")
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
 
-
+                closeActivity("closed")
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
+
+                closeActivity("closed")
             }
 
         })

@@ -8,7 +8,6 @@ data class User(
     val location: String? = "",
     val about: String? = "",
     val email: String? = "",
-    val goals: String? = "",
     val instagram: String? = "",
     val linkedin: String? = "",
     val web: String? = "",

@@ -85,7 +85,6 @@
                                         android:id="@+id/profileName"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Ho Yi Fan"
                                         android:textSize="20dp"
                                         android:textColor="#545454"
                                         android:layout_gravity="center_horizontal"
@@ -97,7 +96,6 @@
                                         android:id="@+id/profileProfession"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Sales Manager at Dashang Co."
                                         android:textSize="17dp"
                                         android:textColor="#545454"
                                         android:layout_gravity="center_horizontal"
@@ -111,7 +109,6 @@
                                         android:id="@+id/profileLocation"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Shanghai, China"
                                         android:textSize="17dp"
                                         android:textColor="#545454"
                                         android:layout_gravity="center_horizontal"
@@ -234,6 +231,8 @@
 
 
                         <org.apmem.tools.layouts.FlowLayout
+
+                                android:id="@+id/flowGoals"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
@@ -244,36 +243,7 @@
                                 android:paddingHorizontal="20dp">
 
 
-                            <TextView android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:text="Find investors"
-                                      style="@style/goalsProfile"
-                                      android:gravity="center_horizontal"
-                                      android:layout_marginTop="5dp"
-                                      android:layout_marginRight="5dp"
-                                      android:drawableStart="@drawable/ic_suit1"
-                                      android:drawablePadding="3dp"
-                            />
 
-                            <TextView android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:text="Find mentors"
-                                      style="@style/goalsProfile"
-                                      android:gravity="center_horizontal"
-                                      android:layout_marginTop="5dp"
-                                      android:layout_marginRight="5dp"
-                                      android:drawableStart="@drawable/ic_owl2"
-                                      android:drawablePadding="3dp"/>
-
-                            <TextView android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:text="Grow my business"
-                                      style="@style/goalsProfile"
-                                      android:gravity="center_horizontal"
-                                      android:layout_marginTop="7dp"
-                                      android:layout_marginRight="5dp"
-                                      android:drawableStart="@drawable/ic_plant1"
-                                      android:drawablePadding="3dp"/>
 
                         </org.apmem.tools.layouts.FlowLayout>
 
