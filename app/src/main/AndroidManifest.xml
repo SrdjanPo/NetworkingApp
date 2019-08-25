@@ -8,6 +8,21 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
+        <activity
+                android:name=".profile.PreviousOrgEditActivity"
+                android:label="@string/title_activity_previous_org_edit"
+                android:theme="@style/AppTheme.NoActionBar.NoActionBar">
+        </activity>
+        <activity
+                android:name=".profile.CurrentOrgEditActivity"
+                android:label="@string/title_activity_current_org_edit"
+                android:theme="@style/AppTheme.NoActionBar.NoActionBar">
+        </activity>
+        <activity
+                android:name=".profile.CurentOrgEditActivity"
+                android:label="@string/title_activity_curent_org_edit"
+                android:theme="@style/AppTheme.NoActionBar.NoActionBar">
+        </activity>
         <activity android:name=".profile.PreviousOrganizationActivity">
         </activity>
         <activity android:name=".profile.CurrentOrganizationActivity">

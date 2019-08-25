@@ -14,5 +14,18 @@ data class User(
     val imageUrl: String? = ""
 )
 
+data class CurrentOrganization (
+    val company: String? = "",
+    val title: String? = "",
+    val startDate: String? = ""
+)
+
+data class PreviousOrganization (
+    val company: String? = "",
+    val title: String? = "",
+    val startDate: String? = "",
+    val endDate: String? = ""
+)
+
 
 

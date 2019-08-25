@@ -8,17 +8,30 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.example.networkingapp.R
+import com.example.networkingapp.util.DATA_USERS
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_current_organization.*
 import kotlinx.android.synthetic.main.activity_previous_organization.*
 import java.util.*
 
 class PreviousOrganizationActivity : AppCompatActivity() {
 
+    private lateinit var database: DatabaseReference
+    private lateinit var previousOrgDB: DatabaseReference
+    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val userId = firebaseAuth.currentUser?.uid
+
     val MONTHS = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_previous_organization)
+
+        database = FirebaseDatabase.getInstance().reference.child(DATA_USERS)
+
+        previousOrgDB = database.child(userId!!).child("previousOrg")
 
         //setting toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -66,6 +79,13 @@ class PreviousOrganizationActivity : AppCompatActivity() {
 
             else
             {
+                var keyPreviousOrg = previousOrgDB.push().key
+
+                previousOrgDB.child(keyPreviousOrg!!).child("company").setValue(string1)
+                previousOrgDB.child(keyPreviousOrg!!).child("title").setValue(string2)
+                previousOrgDB.child(keyPreviousOrg!!).child("startDate").setValue(string3)
+                previousOrgDB.child(keyPreviousOrg!!).child("endDate").setValue(string4)
+
                 closeActivity(string1,string2,string3,string4)
             }
         }

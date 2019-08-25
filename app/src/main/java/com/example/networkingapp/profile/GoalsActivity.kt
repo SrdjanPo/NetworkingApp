@@ -311,7 +311,6 @@ class GoalsActivity : AppCompatActivity() {
 
                     var goalsFromDB = snapshot.getValue(String::class.java)
 
-                    Log.d("TAG", goalsFromDB)
 
                     if (goalsFromDB == "Hire employees") {
 

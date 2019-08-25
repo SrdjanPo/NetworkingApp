@@ -10,16 +10,29 @@ import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import com.example.networkingapp.R
+import com.example.networkingapp.util.DATA_USERS
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_current_organization.*
 import java.util.*
 
 class CurrentOrganizationActivity : AppCompatActivity() {
+
+    private lateinit var database: DatabaseReference
+    private lateinit var currentOrgDB: DatabaseReference
+    private val firebaseAuth = FirebaseAuth.getInstance()
+    private val userId = firebaseAuth.currentUser?.uid
 
     val MONTHS = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_current_organization)
+
+        database = FirebaseDatabase.getInstance().reference.child(DATA_USERS)
+
+        currentOrgDB = database.child(userId!!).child("currentOrg")
 
         //setting toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -58,6 +71,13 @@ class CurrentOrganizationActivity : AppCompatActivity() {
 
             else
             {
+
+                var keyCurrentOrg = currentOrgDB.push().key
+
+                currentOrgDB.child(keyCurrentOrg!!).child("company").setValue(string1)
+                currentOrgDB.child(keyCurrentOrg!!).child("title").setValue(string2)
+                currentOrgDB.child(keyCurrentOrg!!).child("startDate").setValue(string3)
+
                 closeActivity(string1,string2,string3)
             }
         }
