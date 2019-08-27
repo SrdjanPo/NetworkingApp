@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            android:elevation="4dp">
+
+        <Button
+                android:id="@+id/profileChanges"
+                android:layout_width="70sp"
+                android:layout_height="50sp"
+                android:text="save"
+                style="@style/SaveButtonTransparent"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <LinearLayout
+            android:id="@+id/linearCurrentOrgBasic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/toolbar">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/companyTIL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center_horizontal">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/companyET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Company"
+                    android:inputType="textCapWords"
+                    android:gravity="center_horizontal"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/titleTIL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/titleET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Title"
+                    android:inputType="textCapWords"
+                    android:gravity="center_horizontal"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/locationTIL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/locationET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_location"
+                    android:inputType="textCapWords"
+                    android:gravity="center_horizontal"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:id="@+id/linearCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/linearCurrentOrgBasic"
+            android:weightSum="2">
+
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/previousStartDateTIL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/previousStartDateET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Start Date"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/previousEndDateTIL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/previousEndDateET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="End Date"
+                    android:inputType="textCapWords"
+                    android:gravity="center_horizontal"
+                    android:editable="false"
+                    android:focusable="false"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/deleteExperience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete experience"
+            android:textColor="#47becd"
+            android:layout_gravity="center_horizontal"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/linearCalendar"
+            android:layout_centerHorizontal="true"
+            android:textSize="17dp"
+            android:textAllCaps="true"
+    />
+
+
+</RelativeLayout>

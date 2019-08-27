@@ -120,6 +120,7 @@
                                 </TextView>
 
                                 <ImageView
+                                        android:id="@+id/mapPin"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:src="@drawable/locationmarker"
@@ -243,8 +244,6 @@
                                 android:paddingHorizontal="20dp">
 
 
-
-
                         </org.apmem.tools.layouts.FlowLayout>
 
                     </RelativeLayout>
@@ -267,38 +266,64 @@
                 <androidx.cardview.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
                         card_view:cardBackgroundColor="#fff"
                         card_view:cardElevation="6dp">
 
-                    <ImageView
+                    <RelativeLayout
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/penresized1"
-                            android:layout_gravity="top|end"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
-                            android:scaleType="fitCenter"
-                            android:adjustViewBounds="true"
-                            android:maxWidth="20dp"
-                            android:maxHeight="20dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginStart="10dp">
 
-                    />
+                        <ImageView
+                                android:id="@+id/editExp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/penresized1"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginTop="10dp"
+                                android:scaleType="fitCenter"
+                                android:adjustViewBounds="true"
+                                android:maxWidth="20dp"
+                                android:maxHeight="20dp"
+                        />
 
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Experience"
-                            android:textSize="20dp"
-                            android:textColor="#c1c0bf"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"/>
+                        <TextView
+                                android:id="@+id/textExp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Experience"
+                                android:textSize="20dp"
+                                android:textColor="#c1c0bf"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginTop="5dp"/>
 
+                        <LinearLayout
+                                android:id="@+id/expContainer"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textExp"
+                                android:orientation="vertical"
+                                android:padding="20dp">
+
+                        </LinearLayout>
+
+                        <!--<ListView
+                                android:id="@+id/profileCurrentListView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/editExp"
+                                android:layout_marginBottom="10dp">
+
+                        </ListView>-->
+
+                    </RelativeLayout>
 
                 </androidx.cardview.widget.CardView>
-
 
             </RelativeLayout>
 

@@ -1,5 +1,6 @@
 package com.example.networkingapp.profile
 
+import android.app.Activity
 import android.app.PendingIntent.getActivity
 import android.content.Context
 import android.content.Intent
@@ -43,6 +44,8 @@ class ExperienceActivity : AppCompatActivity() {
         val prevStartDate = arrayListOf<String?>()
         val prevEndDate = arrayListOf<String?>()
 
+        @JvmField
+        val INPUT_EXPERIENCE = "TESTEXPERIENCE"
     }
 
     val REQUEST_CODE_CURRENTORG = 21
@@ -67,6 +70,31 @@ class ExperienceActivity : AppCompatActivity() {
         currentOrgDB = database.child(userId!!).child("currentOrg")
 
         previousOrgDB = database.child(userId!!).child("previousOrg")
+
+        currentOrgDB.addChildEventListener(object: ChildEventListener{
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+                closeActivity("close")
+            }
+
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
+                closeActivity("close")
+
+            }
+
+            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+                closeActivity("close")
+
+            }
+
+            override fun onChildRemoved(p0: DataSnapshot) {
+                closeActivity("close")
+
+            }
+        })
+
 
         //setting toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -319,15 +347,13 @@ class ExperienceActivity : AppCompatActivity() {
             val deletedValue = data?.getIntExtra(CurrentOrgEditActivity.INPUT_DELETED, -1)
 
 
-            if(deletedValue == 2) {
+            if (deletedValue == 2) {
                 company.removeAt(arrayPos)
                 companyTitle.removeAt(arrayPos)
                 date.removeAt(arrayPos)
 
                 currentAdapter.notifyDataSetChanged()
-            }
-
-            else {
+            } else {
 
                 company[arrayPos] = currentCompanyEdit
                 companyTitle[arrayPos] = currentTitleEdit
@@ -347,7 +373,7 @@ class ExperienceActivity : AppCompatActivity() {
             val deletedValue = data?.getIntExtra(PreviousOrgEditActivity.INPUT_DELETED, -1)
 
 
-            if(deletedValue == 2) {
+            if (deletedValue == 2) {
 
                 prevCompany.removeAt(prevArrayPos)
                 prevTitle.removeAt(prevArrayPos)
@@ -356,9 +382,7 @@ class ExperienceActivity : AppCompatActivity() {
 
 
                 previousAdapter.notifyDataSetChanged()
-            }
-
-            else {
+            } else {
 
                 prevCompany[prevArrayPos] = previousCompanyEdit
                 prevTitle[prevArrayPos] = previousTitleEdit
@@ -368,6 +392,15 @@ class ExperienceActivity : AppCompatActivity() {
                 previousAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun closeActivity(interest: String) {
+
+        val resultIntent = Intent()
+        resultIntent.putExtra(INPUT_EXPERIENCE, interest)
+
+        setResult(Activity.RESULT_OK, resultIntent)
+        //finish()
     }
 
     fun startCurrentOrganizationActivity() {
@@ -382,6 +415,7 @@ class ExperienceActivity : AppCompatActivity() {
 
 
     override fun onSupportNavigateUp(): Boolean {
+        closeActivity("close")
         onBackPressed()
         return true
     }
