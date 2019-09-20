@@ -8,20 +8,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_instagram.*
 import kotlinx.android.synthetic.main.activity_interests.*
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import com.example.networkingapp.R
-import android.view.inputmethod.InputMethodManager.HIDE_IMPLICIT_ONLY
 import android.app.Activity
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Intent
 import android.view.View
-import androidx.core.content.ContextCompat.getSystemService
-import android.view.KeyEvent.KEYCODE_BACK
 import java.util.*
 import kotlin.collections.ArrayList
 import android.text.Editable
@@ -30,19 +21,31 @@ import android.util.Log
 import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import androidx.fragment.app.Fragment
-import com.example.networkingapp.fragments.ProfileFragment
+import kotlin.collections.HashMap
 
 
 class InterestsActivity : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
     private lateinit var interestDatabase: DatabaseReference
+    private lateinit var profileDatabase: DatabaseReference
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val userId = firebaseAuth.currentUser?.uid
 
 
+    var map = HashMap<String, Int?>()
+    var maxValue : String? = "testing"
+    var maxValueCopy : String? = "testing"
+
     var viewCounter = 0
+
+    var technologyAL = ArrayList<String>()
+    var designAL = ArrayList<String>()
+    var hobbyAL = ArrayList<String>()
+    var sportAL = ArrayList<String>()
+    var entertainmentAL = ArrayList<String>()
+    var scienceAL = ArrayList<String>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +55,14 @@ class InterestsActivity : AppCompatActivity() {
 
         interestDatabase = database.child(userId!!).child("interestedIn")
 
+        profileDatabase = database.child(userId!!).child("profile")
+
+
         populateInterests()
+
+        populateCounters()
+
+        //populateProfiled()
 
         interestDatabase.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -64,17 +74,17 @@ class InterestsActivity : AppCompatActivity() {
 
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {
 
-                closeActivity("closed")
+                closeActivity("interest")
             }
 
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
 
-                closeActivity("closed")
+                closeActivity("interest")
             }
 
             override fun onChildRemoved(p0: DataSnapshot) {
 
-                closeActivity("closed")
+                closeActivity("interest")
             }
 
         })
@@ -87,10 +97,30 @@ class InterestsActivity : AppCompatActivity() {
 
         //AutoComplete
 
-        val interests = getResources().getStringArray(R.array.interests)
+        //val interests = getResources().getStringArray(R.array.interests)
+
+        var technologyArray = getResources().getStringArray(R.array.technology)
+        var sportArray = getResources().getStringArray(R.array.sport)
+        var entertainmentArray = getResources().getStringArray(R.array.entertainment)
+        var scienceArray = getResources().getStringArray(R.array.science)
+        var hobbyArray = getResources().getStringArray(R.array.hobby)
+        var designArray = getResources().getStringArray(R.array.design)
+
+        technologyAL.addAll(technologyArray)
+        sportAL.addAll(sportArray)
+        entertainmentAL.addAll(entertainmentArray)
+        scienceAL.addAll(scienceArray)
+        hobbyAL.addAll(hobbyArray)
+        designAL.addAll(designArray)
 
         val wordList = ArrayList<String>()
-        wordList.addAll(interests)
+        wordList.addAll(technologyArray)
+        wordList.addAll(sportArray)
+        wordList.addAll(entertainmentArray)
+        wordList.addAll(scienceArray)
+        wordList.addAll(hobbyArray)
+        wordList.addAll(designArray)
+
         wordList.sort()
         Collections.addAll(wordList)
 
@@ -188,9 +218,9 @@ class InterestsActivity : AppCompatActivity() {
             // add interest to database
             interestDatabase.child(keyCurrent!!).setValue(interestToDB)
 
+            addProfile(interestToDB)
 
-            Log.d("KEYCURRENT", keyCurrent)
-
+            checkMaxValue()
 
             // parameters for TextView
             textView.layoutParams =
@@ -219,6 +249,9 @@ class InterestsActivity : AppCompatActivity() {
             // delete interest on touch
             textView.setOnClickListener {
                 interestsContainerLinear.removeView(textView)
+                var textFromTV = textView.text.toString()
+                deleteProfile(textFromTV)
+                checkMaxValue()
                 --viewCounter
                 if (viewCounter != 10) {
                     numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
@@ -249,7 +282,10 @@ class InterestsActivity : AppCompatActivity() {
                     val textView = TextView(this@InterestsActivity, null, 0, R.style.Interest)
 
                     textView.layoutParams =
-                        LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                        LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
                     val param = textView.layoutParams as LinearLayout.LayoutParams
                     textView.gravity = Gravity.CENTER
                     param.setMargins(70, 35, 0, 35)
@@ -270,6 +306,7 @@ class InterestsActivity : AppCompatActivity() {
                     textView.setOnClickListener {
                         interestsContainerLinear.removeView(textView)
                         --viewCounter
+                        deleteProfile(interestsFromDBX)
                         if (viewCounter != 10) {
                             numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
                         }
@@ -280,12 +317,184 @@ class InterestsActivity : AppCompatActivity() {
 
                         interestDatabase.child(key).removeValue()
 
-                        Log.d("TAG", key)
-
                     }
                 }
             }
         })
+    }
+
+    fun populateCounters() {
+
+        profileDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+
+
+                map.put("technology", p0.child("technology").getValue(Int::class.java))
+                map.put("design", p0.child("design").getValue(Int::class.java))
+                map.put("hobby", p0.child("hobby").getValue(Int::class.java))
+                map.put("entertainment", p0.child("entertainment").getValue(Int::class.java))
+                map.put("science", p0.child("science").getValue(Int::class.java))
+                map.put("sport", p0.child("sport").getValue(Int::class.java))
+
+                maxValueCopy = map.maxBy { it.value!! }!!.key
+
+            }
+        })
+    }
+
+    fun addProfile (profile: String) {
+
+
+        for (t in technologyAL) {
+            if(profile == t){
+
+                profileDatabase.child("technology").setValue(map["technology"]!!.plus(1))
+
+                map.put("technology", map["technology"]!!.plus(1))
+
+                return
+            }
+        }
+
+        for (s in sportAL) {
+            if(profile == s){
+                profileDatabase.child("sport").setValue(map["sport"]!!.plus(1))
+
+                map.put("sport", map["sport"]!!.plus(1))
+
+                return
+            }
+        }
+
+        for (e in entertainmentAL) {
+            if(profile == e){
+                profileDatabase.child("entertainment").setValue(map["entertainment"]!!.plus(1))
+
+                map.put("entertainment", map["entertainment"]!!.plus(1))
+
+                return
+            }
+        }
+
+        for (sc in scienceAL) {
+            if(profile == sc){
+                profileDatabase.child("science").setValue(map["science"]!!.plus(1))
+
+                map.put("science", map["science"]!!.plus(1))
+
+                return
+            }
+        }
+
+        for (h in hobbyAL) {
+            if(profile == h){
+                profileDatabase.child("hobby").setValue(map["hobby"]!!.plus(1))
+
+                map.put("hobby", map["hobby"]!!.plus(1))
+
+                return
+            }
+        }
+
+        for (d in designAL) {
+            if(profile == d){
+                profileDatabase.child("design").setValue(map["design"]!!.plus(1))
+
+                map.put("design", map["design"]!!.plus(1))
+
+                return
+            }
+        }
+
+    }
+
+    fun deleteProfile (profile: String) {
+
+
+        for (t in technologyAL) {
+            if(profile == t.plus("  X")){
+                profileDatabase.child("technology").setValue(map["technology"]!!.minus(1))
+                map.put("technology", map["technology"]!!.minus(1))
+
+                return
+            }
+        }
+
+        for (s in sportAL) {
+            if(profile == s.plus("  X")){
+                profileDatabase.child("sport").setValue(map["sport"]!!.minus(1))
+
+                map.put("sport", map["sport"]!!.minus(1))
+
+                return
+            }
+        }
+
+        for (e in entertainmentAL) {
+            if(profile == e.plus("  X")){
+                profileDatabase.child("entertainment").setValue(map["entertainment"]!!.minus(1))
+
+                map.put("entertainment", map["entertainment"]!!.minus(1))
+
+                return
+            }
+        }
+
+        for (sc in scienceAL) {
+            if(profile == sc.plus("  X")){
+                profileDatabase.child("science").setValue(map["science"]!!.minus(1))
+
+                map.put("science", map["science"]!!.minus(1))
+
+                return
+            }
+        }
+
+        for (h in hobbyAL) {
+            if(profile == h.plus("  X")){
+                profileDatabase.child("hobby").setValue(map["hobby"]!!.minus(1))
+
+                map.put("hobby", map["hobby"]!!.minus(1))
+
+                return
+            }
+        }
+
+        for (d in designAL) {
+            if(profile == d.plus("  X")){
+                profileDatabase.child("design").setValue(map["design"]!!.minus(1))
+
+                map.put("design", map["design"]!!.minus(1))
+
+                return
+            }
+        }
+    }
+
+    private fun checkMaxValue () {
+
+        Log.d("maxValue1", maxValue)
+
+        maxValue = map.maxBy { it.value!! }!!.key
+
+        Log.d("maxValue2", maxValue)
+
+        Log.d("maxValueCopy1", maxValueCopy)
+
+
+
+        if (maxValueCopy !== maxValue) {
+
+            database.child(userId!!).child("profiled").setValue(maxValue)
+
+            maxValueCopy = maxValue
+
+            Log.d("maxValueCopy2", maxValue)
+
+        }
     }
 
     private fun closeActivity(interest: String) {
@@ -306,7 +515,7 @@ class InterestsActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
 
-        closeActivity("closed")
+        closeActivity("interest")
         onBackPressed()
         return true
     }

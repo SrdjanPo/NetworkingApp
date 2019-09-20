@@ -27,5 +27,14 @@ data class PreviousOrganization (
     val endDate: String? = ""
 )
 
+data class InterestCounters (
+    val technology: Int? = 0,
+    val sport: Int? = 0,
+    val entertainment: Int? = 0,
+    val science: Int? = 0,
+    val hobby: Int? = 0,
+    val design: Int? = 0
+)
+
 
 

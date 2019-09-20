@@ -8,6 +8,7 @@
 
     <androidx.core.widget.NestedScrollView
 
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -80,58 +81,49 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content">
 
-
-                                <TextView
-                                        android:id="@+id/profileName"
+                                <RelativeLayout
+                                        android:id="@+id/relativeBasicInfo"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textSize="20dp"
-                                        android:textColor="#545454"
-                                        android:layout_gravity="center_horizontal"
-                                        android:layout_marginTop="40dp"
-                                        android:paddingBottom="5dp"
-                                        android:textStyle="bold"
-                                        android:layout_centerHorizontal="true"/>
-                                <TextView
-                                        android:id="@+id/profileProfession"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="17dp"
-                                        android:textColor="#545454"
-                                        android:layout_gravity="center_horizontal"
-                                        android:paddingBottom="5dp"
-                                        android:textStyle="normal"
-                                        android:layout_below="@id/profileName"
-                                        android:layout_centerHorizontal="true"/>
+                                        android:orientation="vertical"
+                                        android:gravity="center">
 
+                                    <TextView
+                                            android:id="@+id/profileName"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textSize="20dp"
+                                            android:textColor="#545454"
+                                            android:layout_marginTop="40dp"
+                                            android:paddingBottom="5dp"
+                                            android:textStyle="bold"
+                                            android:gravity="center"/>
+                                    <TextView
+                                            android:id="@+id/profileProfession"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textSize="17dp"
+                                            android:textColor="#545454"
+                                            android:paddingBottom="5dp"
+                                            android:textStyle="normal"
+                                            android:gravity="center"
+                                            android:layout_below="@id/profileName"/>
 
-                                <TextView
-                                        android:id="@+id/profileLocation"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textSize="17dp"
-                                        android:textColor="#545454"
-                                        android:layout_gravity="center_horizontal"
-                                        android:paddingBottom="5dp"
-                                        android:textStyle="normal"
-                                        android:layout_below="@id/profileProfession"
-                                        android:layout_centerHorizontal="true">
+                                    <TextView
+                                            android:id="@+id/profileLocation"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:textSize="17dp"
+                                            android:textColor="#545454"
+                                            android:layout_gravity="center_horizontal"
+                                            android:paddingBottom="5dp"
+                                            android:textStyle="normal"
+                                            android:gravity="center"
+                                            android:layout_below="@id/profileProfession">
 
-                                </TextView>
+                                    </TextView>
 
-                                <ImageView
-                                        android:id="@+id/mapPin"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:src="@drawable/locationmarker"
-                                        android:layout_toStartOf="@id/profileLocation"
-                                        android:layout_below="@id/profileProfession"
-                                        android:layout_alignTop="@id/profileLocation"
-                                        android:scaleType="fitCenter"
-                                        android:adjustViewBounds="true"
-                                        android:maxWidth="20dp"
-                                        android:maxHeight="20dp"
-                                />
+                                </RelativeLayout>
 
 
                                 <View
@@ -141,7 +133,7 @@
                                         android:background="#c0c0c0"
                                         android:layout_marginTop="10dp"
                                         android:layout_marginBottom="10dp"
-                                        android:layout_below="@id/profileLocation"/>
+                                        android:layout_below="@id/relativeBasicInfo"/>
 
                                 <RelativeLayout
                                         android:id="@+id/interestsContainer"
@@ -149,17 +141,6 @@
                                         android:layout_height="wrap_content"
                                         android:layout_below="@+id/horizontalLineInfo">
 
-                                    <!--<ImageView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:src="@drawable/penresized1"
-                                            android:layout_alignParentRight="true"
-                                            android:layout_alignParentTop="true"
-                                            android:scaleType="fitCenter"
-                                            android:adjustViewBounds="true"
-                                            android:maxWidth="22dp"
-                                            android:maxHeight="22dp"
-                                    />-->
 
                                     <org.apmem.tools.layouts.FlowLayout
                                             android:id="@+id/flowInterests"
@@ -478,8 +459,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-
-            android:background="#aaaaaaaa">
+            android:layout_gravity="center_vertical"
+    >
 
         <ProgressBar
                 android:layout_width="wrap_content"

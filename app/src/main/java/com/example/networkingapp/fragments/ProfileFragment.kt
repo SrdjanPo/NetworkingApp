@@ -50,6 +50,8 @@ class ProfileFragment : Fragment() {
 
     var counterSnapshot = 1
 
+    var hashMap = HashMap<String, Int?>()
+
     companion object {
         val company = arrayListOf<String?>()
         val companyTitle = arrayListOf<String?>()
@@ -90,7 +92,7 @@ class ProfileFragment : Fragment() {
         signoutButton.setOnClickListener { callback?.onSignout() }
 
         // Open BasicInfoActivity
-        basicInfoEdit.setOnClickListener {
+        relativeBasicInfo.setOnClickListener {
             startBasicInfoActivity()
         }
 
@@ -140,8 +142,7 @@ class ProfileFragment : Fragment() {
     fun populateInfo() {
 
         progressLayout.visibility = View.VISIBLE
-        mapPin.visibility = View.GONE
-        photoIV.visibility = View.GONE
+        profileLayout.visibility = View.GONE
 
         userDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -471,8 +472,7 @@ class ProfileFragment : Fragment() {
 
 
                     progressLayout.visibility = View.GONE
-                    photoIV.visibility = View.VISIBLE
-                    mapPin.visibility = View.VISIBLE
+                    profileLayout.visibility = View.VISIBLE
                 }
             }
         })
@@ -537,6 +537,14 @@ class ProfileFragment : Fragment() {
             val t = activity!!.supportFragmentManager.beginTransaction()
             t.setReorderingAllowed(false)
             t.detach(this).attach(this).commitAllowingStateLoss()
+
+            //scrollView.scrollTo(0, relativeexp.y.toInt())
+
+            /*scrollView.postDelayed( Runnable() {
+                  run() {
+                    scrollView.scrollTo(0, relativeexp.y.toInt());
+                }
+            }, 1000)*/
 
         }
 

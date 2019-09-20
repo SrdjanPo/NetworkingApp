@@ -11,37 +11,45 @@
         <activity
                 android:name=".profile.PreviousOrgEditActivity"
                 android:label="@string/title_activity_previous_org_edit"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar.NoActionBar">
         </activity>
         <activity
                 android:name=".profile.CurrentOrgEditActivity"
                 android:label="@string/title_activity_current_org_edit"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar.NoActionBar">
         </activity>
-        <activity
-                android:name=".profile.CurentOrgEditActivity"
-                android:label="@string/title_activity_curent_org_edit"
-                android:theme="@style/AppTheme.NoActionBar.NoActionBar">
+
+        <activity android:name=".profile.PreviousOrganizationActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.PreviousOrganizationActivity">
+        <activity android:name=".profile.CurrentOrganizationActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.CurrentOrganizationActivity">
+        <activity android:name=".profile.ExperienceActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.ExperienceActivity">
+        <activity android:name=".profile.GoalsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.GoalsActivity">
+        <activity android:name=".profile.AboutActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.AboutActivity">
+        <activity android:name=".profile.WebActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.WebActivity">
+        <activity android:name=".profile.LinkedinActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.LinkedinActivity">
+        <activity android:name=".profile.InstagramActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.InstagramActivity">
+        <activity android:name=".profile.InterestsActivity"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".profile.InterestsActivity">
-        </activity>
-        <activity android:name=".profile.BasicInfoActivity">
+        <activity android:name=".profile.BasicInfoActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activities.SignupActivity"

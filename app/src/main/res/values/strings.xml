@@ -219,6 +219,73 @@
         <item>Writer</item>
         <item>Zoology</item>
     </string-array>
+
+    <string-array name="technology">
+        <item>Programming</item>
+        <item>Electronics</item>
+        <item>Android</item>
+        <item>Mobile Development</item>
+        <item>Software Development</item>
+        <item>Web Development</item>
+        <item>Data Science</item>
+        <item>UI/UX</item>
+        <item>Virtual Reality</item>
+        <item>Augmented Reality</item>
+    </string-array>
+
+    <string-array name="sport">
+        <item>Acrobatics</item>
+        <item>Martial Arts</item>
+        <item>Bowling</item>
+        <item>Ice skating</item>
+        <item>Soccer</item>
+        <item>Football</item>
+        <item>Basketball</item>
+        <item>Golf</item>
+    </string-array>
+
+    <string-array name="entertainment">
+        <item>Acting</item>
+        <item>Beatboxing</item>
+        <item>Gaming</item>
+        <item>Karaoke</item>
+        <item>Television</item>
+        <item>Music</item>
+        <item>Concerts</item>
+    </string-array>
+
+    <string-array name="science">
+        <item>Astronomy</item>
+        <item>Cryptography</item>
+        <item>Experimenting</item>
+        <item>Mathematics</item>
+        <item>Alchemy</item>
+        <item>Chemistry</item>
+        <item>Biology</item>
+        <item>Medicine</item>
+    </string-array>
+
+    <string-array name="hobby">
+        <item>Baking</item>
+        <item>Books</item>
+        <item>Calligraphy</item>
+        <item>Cooking</item>
+        <item>Crafting</item>
+        <item>Dance</item>
+        <item>Fashion</item>
+    </string-array>
+
+    <string-array name="design">
+        <item>3D Animation</item>
+        <item>Animation</item>
+        <item>Fashion Design</item>
+        <item>Graphic Design</item>
+        <item>Photoshop</item>
+        <item>Video Editing</item>
+        <item>Drawing</item>
+        <item>Design</item>
+    </string-array>
+
     <string name="title_activity_curent_org_edit">CurentOrgEditActivity</string>
     <string name="title_activity_current_org_edit">CurrentOrgEditActivity</string>
     <string name="title_activity_previous_org_edit">PreviousOrgEditActivity</string>
