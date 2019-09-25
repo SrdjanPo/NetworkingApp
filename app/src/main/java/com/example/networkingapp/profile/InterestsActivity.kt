@@ -227,7 +227,7 @@ class InterestsActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             val param = textView.layoutParams as LinearLayout.LayoutParams
             textView.gravity = Gravity.CENTER
-            param.setMargins(70, 35, 0, 35)
+            param.setMargins(70, 20, 0, 20)
             textView.layoutParams = param
             textView.setText(interestStr)
             interestsContainerLinear.addView(textView)
@@ -288,7 +288,7 @@ class InterestsActivity : AppCompatActivity() {
                         )
                     val param = textView.layoutParams as LinearLayout.LayoutParams
                     textView.gravity = Gravity.CENTER
-                    param.setMargins(70, 35, 0, 35)
+                    param.setMargins(70, 20, 0, 20)
                     textView.layoutParams = param
                     textView.setText(interestsFromDBX)
                     interestsContainerLinear.addView(textView)

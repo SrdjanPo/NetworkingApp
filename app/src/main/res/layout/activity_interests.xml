@@ -62,14 +62,25 @@
             android:layout_marginBottom="10dp"
             android:layout_below="@id/experienceRelative"/>
 
-    <LinearLayout
-            android:id="@+id/interestsContainerLinear"
+
+    <ScrollView
+            android:id="@+id/scrollViewInterests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/horizontalLineInterests"
-            android:orientation="vertical">
+            android:layout_below="@id/horizontalLineInterests">
 
-    </LinearLayout>
+        <LinearLayout
+                android:id="@+id/interestsContainerLinear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp">
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
 
     <TextView
             android:id="@+id/numberOfIntTextView"
@@ -77,8 +88,8 @@
             android:layout_height="wrap_content"
             android:text="0/10"
             android:layout_marginRight="15dp"
-            android:layout_below="@id/interestsContainerLinear"
-            android:layout_alignEnd="@id/interestsContainerLinear"
+            android:layout_below="@id/scrollViewInterests"
+            android:layout_alignEnd="@id/scrollViewInterests"
     />
 
 </RelativeLayout>
