@@ -32,7 +32,6 @@ class InterestsActivity : AppCompatActivity() {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val userId = firebaseAuth.currentUser?.uid
 
-
     var map = HashMap<String, Int?>()
     var maxValue : String? = "testing"
     var maxValueCopy : String? = "testing"
@@ -52,14 +51,10 @@ class InterestsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_interests)
 
         database = FirebaseDatabase.getInstance().reference.child(DATA_USERS)
-
         interestDatabase = database.child(userId!!).child("interestedIn")
-
         profileDatabase = database.child(userId!!).child("profile")
 
-
         populateInterests()
-
         populateCounters()
 
         //populateProfiled()
@@ -476,23 +471,13 @@ class InterestsActivity : AppCompatActivity() {
 
     private fun checkMaxValue () {
 
-        Log.d("maxValue1", maxValue)
-
         maxValue = map.maxBy { it.value!! }!!.key
-
-        Log.d("maxValue2", maxValue)
-
-        Log.d("maxValueCopy1", maxValueCopy)
-
-
 
         if (maxValueCopy !== maxValue) {
 
             database.child(userId!!).child("profiled").setValue(maxValue)
 
             maxValueCopy = maxValue
-
-            Log.d("maxValueCopy2", maxValue)
 
         }
     }

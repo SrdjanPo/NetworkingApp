@@ -1,18 +1,22 @@
 package com.example.networkingapp.fragments
 
+import android.app.ActionBar
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.networkingapp.R
 import com.example.networkingapp.User
 import com.example.networkingapp.activities.TinderCallback
@@ -21,17 +25,22 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import org.apmem.tools.layouts.FlowLayout
 import android.util.Log
 import android.util.TypedValue
-import android.widget.BaseAdapter
-import android.widget.LinearLayout
-import android.widget.ListView
+import android.widget.*
 import com.example.networkingapp.CurrentOrganization
 import com.example.networkingapp.PreviousOrganization
-import com.example.networkingapp.activities.TinderActivity
 import com.example.networkingapp.util.DATA_USERS
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.profile_current_org_listview.view.*
-
-
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import java.io.File
+import id.zelory.compressor.Compressor
+import java.io.ByteArrayOutputStream
 
 
 class ProfileFragment : Fragment() {
@@ -40,6 +49,7 @@ class ProfileFragment : Fragment() {
     private lateinit var userDatabase: DatabaseReference
     private lateinit var database: DatabaseReference
     private lateinit var currentOrgDB: DatabaseReference
+    private var mStorageRef: StorageReference? = null
     private var callback: TinderCallback? = null
 
     val REQUEST_CODE_BASICINFO = 11
@@ -47,6 +57,7 @@ class ProfileFragment : Fragment() {
     val REQUEST_CODE_ABOUT = 13
     val REQUEST_CODE_GOALS = 14
     val REQUEST_CODE_EXPERIENCE = 15
+    val GALLERY_ID: Int = 16
 
     var counterSnapshot = 1
 
@@ -83,6 +94,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        mStorageRef = FirebaseStorage.getInstance().reference
 
         progressLayout.setOnTouchListener { view, event -> true }
 
@@ -91,7 +103,19 @@ class ProfileFragment : Fragment() {
         // Signout button
         signoutButton.setOnClickListener { callback?.onSignout() }
 
+        //Open Gallery
+
+        photoIV.setOnClickListener {
+            var galleryIntent = Intent()
+            galleryIntent.type = "image/*"
+            galleryIntent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(galleryIntent, "SELECT_IMAGE"), GALLERY_ID)
+        }
         // Open BasicInfoActivity
+
+        basicInfoEdit.setOnClickListener {
+            startBasicInfoActivity()
+        }
         relativeBasicInfo.setOnClickListener {
             startBasicInfoActivity()
         }
@@ -144,7 +168,7 @@ class ProfileFragment : Fragment() {
         progressLayout.visibility = View.VISIBLE
         profileLayout.visibility = View.GONE
 
-        userDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+        userDatabase.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
 
                 progressLayout.visibility = View.GONE
@@ -155,6 +179,11 @@ class ProfileFragment : Fragment() {
 
                 if (isAdded) {
 
+                    flowInterests.removeAllViews()
+                    flowGoals.removeAllViews()
+                    expContainer.removeAllViews()
+
+
                     val user = p0.getValue(User::class.java)
 
                     // Basic info
@@ -162,7 +191,27 @@ class ProfileFragment : Fragment() {
                     profileProfession.setText(user?.profession, TextView.BufferType.NORMAL)
                     profileLocation.setText(user?.location, TextView.BufferType.NORMAL)
 
+                    var image = p0.child("image").value.toString()
+                    var thumbnail = p0.child("thumb_image").value.toString()
+
+                    if (!image!!.equals("default")) {
+                        Picasso.with(context).load(image).noPlaceholder().into(photoIV,  object :Callback{
+                            override fun onError() {
+                                Log.d("TAG", "error")
+                            }
+
+                            override fun onSuccess() {
+
+                                Log.d("TAG", "success")
+
+                            }
+
+                        })
+                    }
+
+
                     for (snapshot in p0.child("interestedIn").children) {
+
 
                         var interestsFromDB = snapshot.getValue(String::class.java)
 
@@ -205,15 +254,30 @@ class ProfileFragment : Fragment() {
 
                         if (goalFromDB == "Hire employees") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_hireemployeesicon, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_hireemployeesicon,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Looking for a job") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_lookingforajobicon, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_lookingforajobicon,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Find Co-Founders") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_findcofoundersicon, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_findcofoundersicon,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Invest in projects") {
 
@@ -226,15 +290,30 @@ class ProfileFragment : Fragment() {
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Find investors") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_suit1, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_suit1,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Grow my business") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_plant1, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_plant1,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Hire freelancers") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_hirefreelancersicon, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_hirefreelancersicon,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Find freelance jobs") {
 
@@ -247,19 +326,39 @@ class ProfileFragment : Fragment() {
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Find mentors") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_owl2, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_owl2,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Mentor others") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_mentorothersicon, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_mentorothersicon,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Make new friends") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_makenewfriendsicon, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_makenewfriendsicon,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         } else if (goalFromDB == "Explore ideas") {
 
-                            textView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_explorenewideas, 0, 0, 0)
+                            textView.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.ic_explorenewideas,
+                                0,
+                                0,
+                                0
+                            )
                             textView.compoundDrawablePadding = 15
                         }
 
@@ -381,17 +480,22 @@ class ProfileFragment : Fragment() {
                             paramsDate.setMargins(0, 10, 0, 10)
                             textViewDate.layoutParams = paramsDate
                             textViewDate.gravity = Gravity.CENTER
-                            textViewDate.setText(previousFromDB.startDate.toString().plus(" - ").plus(previousFromDB.endDate))
+                            textViewDate.setText(
+                                previousFromDB.startDate.toString().plus(" - ").plus(
+                                    previousFromDB.endDate
+                                )
+                            )
                             textViewDate.setTextColor(Color.parseColor("#545454"))
                             textViewDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
                             expContainer.addView(textViewDate)
 
                             val horizontalSeparator = View(getActivity(), null, 0)
 
-                            var paramsSeparator: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                2 // This will define text view height
-                            )
+                            var paramsSeparator: LinearLayout.LayoutParams =
+                                LinearLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
+                                    2 // This will define text view height
+                                )
 
                             paramsSeparator.setMargins(0, 10, 0, 10)
                             horizontalSeparator.layoutParams = paramsSeparator
@@ -400,9 +504,7 @@ class ProfileFragment : Fragment() {
 
                             counterSnapshot++
 
-                        }
-
-                        else {
+                        } else {
 
                             var previousFromDB = snapshot.getValue(PreviousOrganization::class.java)
 
@@ -448,7 +550,11 @@ class ProfileFragment : Fragment() {
                             paramsDate.setMargins(0, 10, 0, 10)
                             textViewDate.layoutParams = paramsDate
                             textViewDate.gravity = Gravity.CENTER
-                            textViewDate.setText(previousFromDB.startDate.toString().plus(" - ").plus(previousFromDB.endDate))
+                            textViewDate.setText(
+                                previousFromDB.startDate.toString().plus(" - ").plus(
+                                    previousFromDB.endDate
+                                )
+                            )
                             textViewDate.setTextColor(Color.parseColor("#545454"))
                             textViewDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
                             expContainer.addView(textViewDate)
@@ -477,6 +583,7 @@ class ProfileFragment : Fragment() {
             }
         })
     }
+
 
     fun startBasicInfoActivity() {
         val intent = Intent(getActivity(), BasicInfoActivity::class.java)
@@ -507,6 +614,106 @@ class ProfileFragment : Fragment() {
     @Suppress("RedundantOverride")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == GALLERY_ID && resultCode == RESULT_OK) {
+
+            var image: Uri = data!!.data
+            CropImage.activity(image).setCropShape(CropImageView.CropShape.OVAL).setAspectRatio(1, 1).start(context!!, this)
+
+        }
+
+        if (requestCode === CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+
+            val result = CropImage.getActivityResult(data)
+
+            if (resultCode === RESULT_OK) {
+
+
+                var dialog = AlertDialog.Builder(context)
+                var dialogView = layoutInflater.inflate(R.layout.image_load, null)
+                dialog.setView(dialogView)
+                dialog.setCancelable(false)
+                var dialogObject = dialog.create()
+                dialogObject.show()
+                //dialogObject.window.setGravity(Gravity.CENTER)
+                //dialogObject.window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, 500)
+
+
+                val resultUri = result.uri
+
+                var userId = userId
+                var thumbFile = File(resultUri.path)
+
+                var thumbBitmap =
+                    Compressor(context).setMaxWidth(200).setMaxHeight(200).setQuality(65)
+                        .compressToBitmap(thumbFile)
+
+                //upload images to firebase
+                var byteArray = ByteArrayOutputStream()
+                thumbBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArray)
+
+                var thumbByteArray: ByteArray
+                thumbByteArray = byteArray.toByteArray()
+
+                var filePath = mStorageRef!!.child("profile_images").child(userId + ".jpeg")
+
+                //another directory for thumb images
+                var thumbFilePath =
+                    mStorageRef!!.child("profile_images").child("thumbs").child(userId + ".jpeg")
+
+
+                filePath.putFile(resultUri)
+                    .addOnSuccessListener {
+
+                            taskSnapshot ->
+
+                        filePath.downloadUrl.addOnCompleteListener { taskSnapshot ->
+
+                            var downloadUrl = taskSnapshot.result.toString()
+
+                            Log.d("URL", downloadUrl)
+
+
+                            //upload image
+
+                            var uploadTask: UploadTask = thumbFilePath.putBytes(thumbByteArray)
+
+                            uploadTask.addOnCompleteListener { task ->
+
+                                thumbFilePath.downloadUrl.addOnCompleteListener { task ->
+
+                                    var thumbUrl = task.result.toString()
+
+                                    Log.d("thumbURL", thumbUrl)
+
+
+                                    if (task.isSuccessful) {
+
+                                        var updateObj = HashMap<String, Any>()
+                                        updateObj.put("image", downloadUrl)
+                                        updateObj.put("thumb_image", thumbUrl)
+
+
+                                        //save profile image
+
+                                        userDatabase!!.updateChildren(updateObj)
+                                            .addOnCompleteListener {
+
+                                                    task: Task<Void> ->
+                                                if (task.isSuccessful) {
+                                                    dialogObject.dismiss()
+                                                }
+                                            }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+            }
+
+        }
+
+
         if (requestCode == REQUEST_CODE_BASICINFO && resultCode == RESULT_OK) {
             val name = data?.getStringExtra(BasicInfoActivity.INPUT_NAME)
             val profession = data?.getStringExtra(BasicInfoActivity.INPUT_PROFESSION)
@@ -515,16 +722,16 @@ class ProfileFragment : Fragment() {
             profileProfession.text = profession
             profileLocation.text = location
         }
-        if (requestCode == REQUEST_CODE_INTERESTS && resultCode == RESULT_OK) {
+        /*if (requestCode == REQUEST_CODE_INTERESTS && resultCode == RESULT_OK) {
 
 
             val t = activity!!.supportFragmentManager.beginTransaction()
             t.setReorderingAllowed(false)
             t.detach(this).attach(this).commitAllowingStateLoss()
 
-        }
+        }*/
 
-        if (requestCode == REQUEST_CODE_GOALS && resultCode == RESULT_OK) {
+        /*if (requestCode == REQUEST_CODE_GOALS && resultCode == RESULT_OK) {
 
             val t = activity!!.supportFragmentManager.beginTransaction()
             t.setReorderingAllowed(false)
@@ -540,13 +747,13 @@ class ProfileFragment : Fragment() {
 
             //scrollView.scrollTo(0, relativeexp.y.toInt())
 
-            /*scrollView.postDelayed( Runnable() {
+            *//*scrollView.postDelayed( Runnable() {
                   run() {
                     scrollView.scrollTo(0, relativeexp.y.toInt());
                 }
-            }, 1000)*/
+            }, 1000)*//*
 
-        }
+        }*/
 
         if (requestCode == REQUEST_CODE_ABOUT && resultCode == RESULT_OK) {
 

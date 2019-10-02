@@ -11,7 +11,9 @@ data class User(
     val instagram: String? = "",
     val linkedin: String? = "",
     val web: String? = "",
-    val imageUrl: String? = ""
+    val imageUrl: String? = "",
+    var image: String? = "",
+    var thumb_image: String? = ""
 )
 
 data class CurrentOrganization (

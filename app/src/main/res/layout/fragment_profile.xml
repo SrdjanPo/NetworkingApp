@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent" android:layout_height="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:context=".fragments.ProfileFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -16,23 +16,23 @@
                 android:id="@+id/profileLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#f2f2f2"
                 android:gravity="center_horizontal"
                 android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:background="#f2f2f2">
+                android:paddingBottom="16dp">
 
             <View
-                    android:background="#47becd"
                     android:layout_width="match_parent"
-                    android:layout_height="210dp"/>
+                    android:layout_height="210dp"
+                    android:background="#47becd" />
 
             <LinearLayout
                     android:id="@+id/lineartop"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp">
+                    android:layout_marginRight="40dp"
+                    android:orientation="vertical">
 
                 <RelativeLayout
                         android:layout_width="match_parent"
@@ -41,12 +41,14 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/photoIV"
-                            android:layout_marginTop="35dp"
                             android:layout_width="96dp"
                             android:layout_height="96dp"
-                            android:src="@drawable/pic"
                             android:layout_centerHorizontal="true"
-                            android:elevation="10dp"/>
+                            android:layout_marginTop="35dp"
+                            android:elevation="4dp"
+                            android:src="@drawable/profile_pic"
+                            app:civ_border_width="2dp"
+                            app:civ_border_color="#FFFFFF"/>
 
                     <LinearLayout
 
@@ -58,24 +60,23 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="85dp"
+                                android:layout_marginBottom="10dp"
+                                app:cardCornerRadius="10dp"
+                                app:contentPaddingBottom="15dp"
                                 app:contentPaddingLeft="10dp"
                                 app:contentPaddingRight="10dp"
-                                app:contentPaddingTop="15dp"
-                                app:contentPaddingBottom="15dp"
-                                app:cardCornerRadius="10dp"
-                                android:layout_marginBottom="10dp">
+                                app:contentPaddingTop="15dp">
 
                             <ImageView
                                     android:id="@+id/basicInfoEdit"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/penresized1"
                                     android:layout_gravity="top|end"
-                                    android:scaleType="fitCenter"
                                     android:adjustViewBounds="true"
                                     android:maxWidth="20dp"
                                     android:maxHeight="20dp"
-                            />
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/penresized1"/>
 
                             <RelativeLayout
                                     android:layout_width="match_parent"
@@ -85,41 +86,42 @@
                                         android:id="@+id/relativeBasicInfo"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:orientation="vertical"
-                                        android:gravity="center">
+                                        android:layout_marginTop="40dp"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
 
                                     <TextView
                                             android:id="@+id/profileName"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:textSize="20dp"
-                                            android:textColor="#545454"
-                                            android:layout_marginTop="40dp"
+                                            android:gravity="center"
                                             android:paddingBottom="5dp"
-                                            android:textStyle="bold"
-                                            android:gravity="center"/>
+                                            android:textColor="#545454"
+                                            android:textSize="20sp"
+                                            android:textStyle="bold" />
+
                                     <TextView
                                             android:id="@+id/profileProfession"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:textSize="17dp"
-                                            android:textColor="#545454"
-                                            android:paddingBottom="5dp"
-                                            android:textStyle="normal"
+                                            android:layout_below="@id/profileName"
                                             android:gravity="center"
-                                            android:layout_below="@id/profileName"/>
+                                            android:paddingBottom="5dp"
+                                            android:textColor="#545454"
+                                            android:textSize="17sp"
+                                            android:textStyle="normal" />
 
                                     <TextView
                                             android:id="@+id/profileLocation"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:textSize="17dp"
-                                            android:textColor="#545454"
+                                            android:layout_below="@id/profileProfession"
                                             android:layout_gravity="center_horizontal"
-                                            android:paddingBottom="5dp"
-                                            android:textStyle="normal"
                                             android:gravity="center"
-                                            android:layout_below="@id/profileProfession">
+                                            android:paddingBottom="5dp"
+                                            android:textColor="#545454"
+                                            android:textSize="17sp"
+                                            android:textStyle="normal">
 
                                     </TextView>
 
@@ -130,10 +132,10 @@
                                         android:id="@+id/horizontalLineInfo"
                                         android:layout_width="fill_parent"
                                         android:layout_height="2dp"
-                                        android:background="#c0c0c0"
+                                        android:layout_below="@id/relativeBasicInfo"
                                         android:layout_marginTop="10dp"
                                         android:layout_marginBottom="10dp"
-                                        android:layout_below="@id/relativeBasicInfo"/>
+                                        android:background="#c0c0c0" />
 
                                 <RelativeLayout
                                         android:id="@+id/interestsContainer"
@@ -168,13 +170,12 @@
                     android:id="@+id/relativegoals"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/lineartop"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="2dp"
-                    android:layout_below="@+id/lineartop">
+                    android:layout_marginTop="2dp">
 
 
-                <androidx.cardview.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -186,15 +187,14 @@
                             android:id="@+id/editGoals"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/penresized1"
                             android:layout_gravity="top|end"
-                            android:scaleType="fitCenter"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
                             android:adjustViewBounds="true"
                             android:maxWidth="20dp"
                             android:maxHeight="20dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
-                    />
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/penresized1" />
 
                     <RelativeLayout
                             android:layout_width="match_parent"
@@ -204,12 +204,12 @@
                                 android:id="@+id/textAbout"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Goals"
-                                android:textSize="20dp"
-                                android:textColor="#c1c0bf"
-                                android:layout_gravity="center_horizontal"
                                 android:layout_centerHorizontal="true"
-                                android:layout_marginTop="5dp"/>
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:text="Goals"
+                                android:textColor="#c1c0bf"
+                                android:textSize="20dp" />
 
 
                         <org.apmem.tools.layouts.FlowLayout
@@ -217,12 +217,12 @@
                                 android:id="@+id/flowGoals"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@id/textAbout"
                                 android:layout_marginTop="0dp"
                                 android:gravity="center_horizontal"
-                                android:layout_below="@id/textAbout"
+                                android:paddingHorizontal="20dp"
                                 android:paddingTop="10dp"
-                                android:paddingBottom="20dp"
-                                android:paddingHorizontal="20dp">
+                                android:paddingBottom="20dp">
 
 
                         </org.apmem.tools.layouts.FlowLayout>
@@ -239,13 +239,12 @@
                     android:id="@+id/relativeexp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativegoals"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="2dp"
-                    android:layout_below="@+id/relativegoals">
+                    android:layout_marginTop="2dp">
 
 
-                <androidx.cardview.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -257,31 +256,30 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginStart="10dp">
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp">
 
                         <ImageView
                                 android:id="@+id/editExp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/penresized1"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginTop="10dp"
-                                android:scaleType="fitCenter"
                                 android:adjustViewBounds="true"
                                 android:maxWidth="20dp"
                                 android:maxHeight="20dp"
-                        />
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/penresized1" />
 
                         <TextView
                                 android:id="@+id/textExp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Experience"
-                                android:textSize="20dp"
-                                android:textColor="#c1c0bf"
                                 android:layout_centerHorizontal="true"
-                                android:layout_marginTop="5dp"/>
+                                android:layout_marginTop="5dp"
+                                android:text="Experience"
+                                android:textColor="#c1c0bf"
+                                android:textSize="20dp" />
 
                         <LinearLayout
                                 android:id="@+id/expContainer"
@@ -312,12 +310,11 @@
                     android:id="@+id/relativeabout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeexp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="2dp"
-                    android:layout_below="@+id/relativeexp">
+                    android:layout_marginTop="2dp">
 
-                <androidx.cardview.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -328,16 +325,16 @@
                     <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/penresized1"
                             android:layout_gravity="top|end"
-                            android:scaleType="fitCenter"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
                             android:adjustViewBounds="true"
                             android:maxWidth="20dp"
                             android:maxHeight="20dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginRight="10dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/penresized1"
 
-                    />
+                            />
 
                     <RelativeLayout
 
@@ -348,27 +345,27 @@
                                 android:id="@+id/aboutText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="About"
-                                android:textSize="20dp"
-                                android:textColor="#c1c0bf"
-                                android:layout_gravity="center_horizontal"
                                 android:layout_centerHorizontal="true"
-                                android:layout_marginTop="5dp"/>
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:text="About"
+                                android:textColor="#c1c0bf"
+                                android:textSize="20dp" />
 
 
                         <TextView
                                 android:id="@+id/aboutProfile"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="15dp"
                                 android:layout_below="@id/aboutText"
+                                android:layout_centerHorizontal="true"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="20dp"
                                 android:layout_marginStart="30dp"
+                                android:layout_marginTop="20dp"
                                 android:layout_marginEnd="30dp"
                                 android:layout_marginBottom="30dp"
-                                android:textStyle="italic"
-                                android:layout_centerHorizontal="true"/>
+                                android:textSize="15dp"
+                                android:textStyle="italic" />
 
                     </RelativeLayout>
 
@@ -380,15 +377,14 @@
 
             <LinearLayout
                     android:id="@+id/linearsocial"
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/relativeabout"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="2dp"
-                    android:layout_below="@+id/relativeabout">
+                    android:orientation="horizontal">
 
-                <androidx.cardview.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="5dp"
@@ -399,27 +395,29 @@
                     <LinearLayout
                             android:layout_width="250dp"
                             android:layout_height="match_parent"
-                            android:weightSum="3"
-                            android:layout_gravity="center_horizontal">
+                            android:layout_gravity="center_horizontal"
+                            android:weightSum="3">
 
                         <ImageView
                                 android:id="@+id/instagramicon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/instacircle"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1"
+                                android:src="@drawable/instacircle" />
+
                         <ImageView
                                 android:id="@+id/linkedinicon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/linkedincircle"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1"
+                                android:src="@drawable/linkedincircle" />
+
                         <ImageView
                                 android:id="@+id/wwwicon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/wwwcircle"
-                                android:layout_weight="1"/>
+                                android:layout_weight="1"
+                                android:src="@drawable/wwwcircle" />
 
 
                     </LinearLayout>
@@ -437,15 +435,15 @@
 
                 <Button
                         android:id="@+id/signoutButton"
+                        style="?android:attr/borderlessButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
                         android:text="Log out"
                         android:textColor="#47becd"
-                        android:layout_gravity="center_horizontal"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_marginTop="10dp"
 
-                />
+                        />
             </LinearLayout>
 
 
@@ -457,15 +455,16 @@
             android:id="@+id/progressLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
             android:layout_gravity="center_vertical"
-    >
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
         <ProgressBar
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
     </LinearLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
