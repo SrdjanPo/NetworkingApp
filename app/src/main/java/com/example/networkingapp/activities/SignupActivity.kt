@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import com.example.networkingapp.R
 import com.example.networkingapp.User
+import com.example.networkingapp.profile.BasicInfoActivity
 import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -19,10 +20,10 @@ class SignupActivity : AppCompatActivity() {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firebaseAuthListener = FirebaseAuth.AuthStateListener {
         val user = firebaseAuth.currentUser
-        if (user != null) {
+        /*if (user != null) {
             startActivity(TinderActivity.newIntent(this))
             finish()
-        }
+        }*/
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,8 +50,22 @@ class SignupActivity : AppCompatActivity() {
                     } else {
                         val email = emailET.text.toString()
                         val userId = firebaseAuth.currentUser?.uid ?: ""
-                        val user = User(userId, "","", "", "", "","","", "", "")
+                        val user = User(userId, "","", "", "", "","","", "", "","default","default","")
+
+                        var updateObj = HashMap<String, Any>()
+                        updateObj.put("design", 0)
+                        updateObj.put("hobby", 0)
+                        updateObj.put("science", 0)
+                        updateObj.put("sport", 0)
+                        updateObj.put("technology", 0)
+
                         firebaseDatabase.child(DATA_USERS).child(userId).setValue(user)
+                        firebaseDatabase.child(DATA_USERS).child(userId).child("profile").setValue(updateObj)
+                        //firebaseDatabase.child("Users").child(userId).child("email").setValue(email)
+
+                        val intent = Intent(this, BasicInfoActivity::class.java)
+                        intent.putExtra("next", 1)
+                        startActivity(intent)
                     }
                 }
         }

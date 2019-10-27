@@ -7,10 +7,8 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.view.View
+import android.widget.Toast
 import com.example.networkingapp.R
 import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_goals.*
 class GoalsActivity : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
-    private lateinit var interestDatabase: DatabaseReference
+    private lateinit var goalsDatabase: DatabaseReference
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val userId = firebaseAuth.currentUser?.uid
 
@@ -38,6 +36,8 @@ class GoalsActivity : AppCompatActivity() {
     var checkClickedMakeNewFriends = 1
     var checkClickedExploreIdeas = 1
 
+    var goalsCounter = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +45,7 @@ class GoalsActivity : AppCompatActivity() {
 
         database = FirebaseDatabase.getInstance().reference.child(DATA_USERS)
 
-        interestDatabase = database.child(userId!!).child("goals")
+        goalsDatabase = database.child(userId!!).child("goals")
 
         //setting toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -53,255 +53,334 @@ class GoalsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Goals"
 
+        var i = intent.getIntExtra("next", 2)
+
+        if (i == 1) {
+
+            goalsChanges.visibility = View.GONE
+            nextButton.visibility = View.VISIBLE
+            progressBar.visibility = View.VISIBLE
+
+            progressBar.progress = 45
+        }
+
         populateGoals()
 
-        interestDatabase.addChildEventListener(object: ChildEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-            }
+        nextButton.setOnClickListener {
 
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-            }
+            if (goalsCounter < 1) {
 
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-
-                closeActivity("closed")
+                Toast.makeText(this, "Enter at least 1 goal", Toast.LENGTH_LONG).show()
 
             }
 
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
+            else {
 
-                closeActivity("closed")
-
+                val intent = Intent(this, ExperienceActivity::class.java)
+                intent.putExtra("next", 1)
+                startActivity(intent)
             }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-
-                closeActivity("closed")
-
-            }
-
-        })
+        }
 
         hireEmployees.setOnClickListener {
 
-            if (checkClickedHireEmployees == 1) {
+            if (checkClickedHireEmployees == 1 && goalsCounter <= 2) {
 
                 hireEmployees.setBackgroundResource(R.drawable.standard_button_interest)
                 hireEmployees.setTextColor(Color.WHITE)
-                interestDatabase.child("Hire employees").setValue("Hire employees")
+                goalsDatabase.child("Hire employees").setValue("Hire employees")
                 checkClickedHireEmployees = 2
+                ++goalsCounter
 
             } else if (checkClickedHireEmployees == 2) {
 
                 hireEmployees.setBackgroundResource(R.drawable.standard_button_goals)
                 hireEmployees.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Hire employees").removeValue()
+                goalsDatabase.child("Hire employees").removeValue()
                 checkClickedHireEmployees = 1
+                --goalsCounter
+            }
+
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         lookingJob.setOnClickListener {
 
-            if (checkClickedLookingJob == 1) {
+            if (checkClickedLookingJob == 1 && goalsCounter <= 2) {
 
                 lookingJob.setBackgroundResource(R.drawable.standard_button_interest)
                 lookingJob.setTextColor(Color.WHITE)
-                interestDatabase.child("Looking for a job").setValue("Looking for a job")
+                goalsDatabase.child("Looking for a job").setValue("Looking for a job")
                 checkClickedLookingJob = 2
+                ++goalsCounter
 
             } else if (checkClickedLookingJob == 2) {
 
                 lookingJob.setBackgroundResource(R.drawable.standard_button_goals)
                 lookingJob.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Looking for a job").removeValue()
+                goalsDatabase.child("Looking for a job").removeValue()
                 checkClickedLookingJob = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         findCoFounders.setOnClickListener {
 
-            if (checkClickedFindCoFounders == 1) {
+            if (checkClickedFindCoFounders == 1 && goalsCounter <= 2) {
 
                 findCoFounders.setBackgroundResource(R.drawable.standard_button_interest)
                 findCoFounders.setTextColor(Color.WHITE)
-                interestDatabase.child("Find Co-Founders").setValue("Find Co-Founders")
+                goalsDatabase.child("Find Co-Founders").setValue("Find Co-Founders")
                 checkClickedFindCoFounders = 2
+                ++goalsCounter
 
             } else if (checkClickedFindCoFounders == 2) {
 
                 findCoFounders.setBackgroundResource(R.drawable.standard_button_goals)
                 findCoFounders.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Find Co-Founders").removeValue()
+                goalsDatabase.child("Find Co-Founders").removeValue()
                 checkClickedFindCoFounders = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         investInProjects.setOnClickListener {
 
-            if (checkClickedInvestInProjects == 1) {
+            if (checkClickedInvestInProjects == 1 && goalsCounter <= 2) {
 
                 investInProjects.setBackgroundResource(R.drawable.standard_button_interest)
                 investInProjects.setTextColor(Color.WHITE)
-                interestDatabase.child("Invest in projects").setValue("Invest in projects")
+                goalsDatabase.child("Invest in projects").setValue("Invest in projects")
                 checkClickedInvestInProjects = 2
+                ++goalsCounter
 
-            } else if (checkClickedInvestInProjects == 2) {
+            }
+
+            else if (checkClickedInvestInProjects == 2) {
 
                 investInProjects.setBackgroundResource(R.drawable.standard_button_goals)
                 investInProjects.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Invest in projects").removeValue()
+                goalsDatabase.child("Invest in projects").removeValue()
                 checkClickedInvestInProjects = 1
+                --goalsCounter
+
+            }
+
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         findInvestors.setOnClickListener {
 
-            if (checkClickedFindInvestors == 1) {
+            if (checkClickedFindInvestors == 1 && goalsCounter <= 2) {
 
                 findInvestors.setBackgroundResource(R.drawable.standard_button_interest)
                 findInvestors.setTextColor(Color.WHITE)
-                interestDatabase.child("Find investors").setValue("Find investors")
+                goalsDatabase.child("Find investors").setValue("Find investors")
                 checkClickedFindInvestors = 2
+                ++goalsCounter
 
             } else if (checkClickedFindInvestors == 2) {
 
                 findInvestors.setBackgroundResource(R.drawable.standard_button_goals)
                 findInvestors.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Find investors").removeValue()
+                goalsDatabase.child("Find investors").removeValue()
                 checkClickedFindInvestors = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         growMyBusiness.setOnClickListener {
 
-            if (checkClickedGrowMyBusiness == 1) {
+            if (checkClickedGrowMyBusiness == 1 && goalsCounter <= 2) {
 
                 growMyBusiness.setBackgroundResource(R.drawable.standard_button_interest)
                 growMyBusiness.setTextColor(Color.WHITE)
-                interestDatabase.child("Grow my business").setValue("Grow my business")
+                goalsDatabase.child("Grow my business").setValue("Grow my business")
                 checkClickedGrowMyBusiness = 2
+                ++goalsCounter
 
             } else if (checkClickedGrowMyBusiness == 2) {
 
                 growMyBusiness.setBackgroundResource(R.drawable.standard_button_goals)
                 growMyBusiness.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Grow my business").removeValue()
+                goalsDatabase.child("Grow my business").removeValue()
                 checkClickedGrowMyBusiness = 1
+                --goalsCounter
+            }
+
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         hireFreelancers.setOnClickListener {
 
-            if (checkClickedHireFreelancers == 1) {
+            if (checkClickedHireFreelancers == 1 && goalsCounter <= 2) {
 
                 hireFreelancers.setBackgroundResource(R.drawable.standard_button_interest)
                 hireFreelancers.setTextColor(Color.WHITE)
-                interestDatabase.child("Hire freelancers").setValue("Hire freelancers")
+                goalsDatabase.child("Hire freelancers").setValue("Hire freelancers")
                 checkClickedHireFreelancers = 2
+                ++goalsCounter
 
             } else if (checkClickedHireFreelancers == 2) {
 
                 hireFreelancers.setBackgroundResource(R.drawable.standard_button_goals)
                 hireFreelancers.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Hire freelancers").removeValue()
+                goalsDatabase.child("Hire freelancers").removeValue()
                 checkClickedHireFreelancers = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         findFreelanceJobs.setOnClickListener {
 
-            if (checkClickedFindFreelanceJobs == 1) {
+            if (checkClickedFindFreelanceJobs == 1 && goalsCounter <= 2) {
 
                 findFreelanceJobs.setBackgroundResource(R.drawable.standard_button_interest)
                 findFreelanceJobs.setTextColor(Color.WHITE)
-                interestDatabase.child("Find freelance jobs").setValue("Find freelance jobs")
+                goalsDatabase.child("Find freelance jobs").setValue("Find freelance jobs")
                 checkClickedFindFreelanceJobs = 2
+                ++goalsCounter
 
             } else if (checkClickedFindFreelanceJobs == 2) {
 
                 findFreelanceJobs.setBackgroundResource(R.drawable.standard_button_goals)
                 findFreelanceJobs.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Find freelance jobs").removeValue()
+                goalsDatabase.child("Find freelance jobs").removeValue()
                 checkClickedFindFreelanceJobs = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         findMentors.setOnClickListener {
 
-            if (checkClickedFindMentors == 1) {
+            if (checkClickedFindMentors == 1 && goalsCounter <= 2) {
 
                 findMentors.setBackgroundResource(R.drawable.standard_button_interest)
                 findMentors.setTextColor(Color.WHITE)
-                interestDatabase.child("Find mentors").setValue("Find mentors")
+                goalsDatabase.child("Find mentors").setValue("Find mentors")
                 checkClickedFindMentors = 2
+                ++goalsCounter
 
             } else if (checkClickedFindMentors == 2) {
 
                 findMentors.setBackgroundResource(R.drawable.standard_button_goals)
                 findMentors.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Find mentors").removeValue()
+                goalsDatabase.child("Find mentors").removeValue()
                 checkClickedFindMentors = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         mentorOthers.setOnClickListener {
 
-            if (checkClickedMentorOthers == 1) {
+            if (checkClickedMentorOthers == 1 && goalsCounter <= 2) {
 
                 mentorOthers.setBackgroundResource(R.drawable.standard_button_interest)
                 mentorOthers.setTextColor(Color.WHITE)
-                interestDatabase.child("Mentor others").setValue("Mentor others")
+                goalsDatabase.child("Mentor others").setValue("Mentor others")
                 checkClickedMentorOthers = 2
+                ++goalsCounter
 
             } else if (checkClickedMentorOthers == 2) {
 
                 mentorOthers.setBackgroundResource(R.drawable.standard_button_goals)
                 mentorOthers.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Mentor others").removeValue()
+                goalsDatabase.child("Mentor others").removeValue()
                 checkClickedMentorOthers = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         makeNewFriends.setOnClickListener {
 
-            if (checkClickedMakeNewFriends == 1) {
+            if (checkClickedMakeNewFriends == 1 && goalsCounter <= 2) {
 
                 makeNewFriends.setBackgroundResource(R.drawable.standard_button_interest)
                 makeNewFriends.setTextColor(Color.WHITE)
-                interestDatabase.child("Make new friends").setValue("Make new friends")
+                goalsDatabase.child("Make new friends").setValue("Make new friends")
                 checkClickedMakeNewFriends = 2
+                ++goalsCounter
 
             } else if (checkClickedMakeNewFriends == 2) {
 
                 makeNewFriends.setBackgroundResource(R.drawable.standard_button_goals)
                 makeNewFriends.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Make new friends").removeValue()
+                goalsDatabase.child("Make new friends").removeValue()
                 checkClickedMakeNewFriends = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
 
         exploreIdeas.setOnClickListener {
 
-            if (checkClickedExploreIdeas == 1) {
+            if (checkClickedExploreIdeas == 1 && goalsCounter <= 2) {
 
                 exploreIdeas.setBackgroundResource(R.drawable.standard_button_interest)
                 exploreIdeas.setTextColor(Color.WHITE)
-                interestDatabase.child("Explore ideas").setValue("Explore ideas")
+                goalsDatabase.child("Explore ideas").setValue("Explore ideas")
                 checkClickedExploreIdeas = 2
+                ++goalsCounter
 
             } else if (checkClickedExploreIdeas == 2) {
 
                 exploreIdeas.setBackgroundResource(R.drawable.standard_button_goals)
                 exploreIdeas.setTextColor(Color.parseColor("#47becd"))
-                interestDatabase.child("Explore ideas").removeValue()
+                goalsDatabase.child("Explore ideas").removeValue()
                 checkClickedExploreIdeas = 1
+                --goalsCounter
+            }
+            else {
+
+                Toast.makeText(this, "You can select 3 goals maximum", Toast.LENGTH_LONG).show()
             }
         }
     }
 
     fun populateGoals() {
 
-        interestDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+        goalsDatabase.addListenerForSingleValueEvent(object : ValueEventListener {
+
             override fun onCancelled(p0: DatabaseError) {
             }
 
@@ -311,6 +390,8 @@ class GoalsActivity : AppCompatActivity() {
 
                     var goalsFromDB = snapshot.getValue(String::class.java)
 
+
+                    Log.d("GOALS", goalsCounter.toString())
 
                     if (goalsFromDB == "Hire employees") {
 
@@ -373,6 +454,8 @@ class GoalsActivity : AppCompatActivity() {
                         exploreIdeas.setTextColor(Color.WHITE)
                         checkClickedExploreIdeas = 2
                     }
+
+                    ++goalsCounter
                 }
             }
         })
@@ -394,6 +477,13 @@ class GoalsActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
+
+        if (goalsCounter < 1) {
+
+            Toast.makeText(this, "Enter at least 1 goal", Toast.LENGTH_LONG).show()
+            return false
+        }
+
         closeActivity("closed")
         onBackPressed()
         return true

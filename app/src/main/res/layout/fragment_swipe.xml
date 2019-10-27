@@ -5,10 +5,13 @@
              android:layout_height="match_parent"
              tools:context=".fragments.SwipeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <com.yuyakaido.android.cardstackview.CardStackView
+            android:id="@+id/card_stack_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Hello Swipe"/>
+            android:padding="4dp"
+            android:clipToPadding="true">
+    </com.yuyakaido.android.cardstackview.CardStackView>
 
 </FrameLayout>

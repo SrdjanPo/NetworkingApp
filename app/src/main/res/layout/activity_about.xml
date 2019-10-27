@@ -1,54 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="20dp">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
+            android:elevation="4dp"
             android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            android:elevation="4dp">
+            android:theme="?attr/actionBarTheme">
 
-        <Button
-                android:id="@+id/aboutChanges"
-                android:layout_width="70sp"
-                android:layout_height="50sp"
-                android:text="save"
-                style="@style/SaveButtonTransparent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+            <Button
+                    android:id="@+id/aboutChanges"
+                    style="@style/SaveButtonTransparent"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:text="save"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                    android:id="@+id/nextButton"
+                    style="@style/SaveButtonTransparent"
+                    android:layout_width="70dp"
+                    android:layout_height="50dp"
+                    android:text="next"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:visibility="gone"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:visibility="gone">
+
+    </ProgressBar>
 
 
     <LinearLayout
             android:id="@+id/aboutlinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
             android:orientation="vertical"
-            android:layout_below="@+id/toolbar">
+            android:layout_marginTop="20dp">
 
 
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/aboutTIL"
                 android:layout_width="@dimen/standard_width"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:paddingBottom="5dp"
-                android:layout_gravity="center_horizontal">
+                android:paddingBottom="5dp">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/aboutET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Short Biography"
-                    android:gravity="center_horizontal"/>
+                    android:gravity="center_horizontal"
+                    android:hint="Short Biography" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
 
     </LinearLayout>
+
 
 </RelativeLayout>

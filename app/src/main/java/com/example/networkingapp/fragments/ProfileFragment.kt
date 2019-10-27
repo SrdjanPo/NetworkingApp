@@ -1,11 +1,7 @@
 package com.example.networkingapp.fragments
 
-import android.app.ActionBar
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
-import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -28,7 +24,7 @@ import android.util.TypedValue
 import android.widget.*
 import com.example.networkingapp.CurrentOrganization
 import com.example.networkingapp.PreviousOrganization
-import com.example.networkingapp.util.DATA_USERS
+import com.example.networkingapp.util.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -47,10 +43,8 @@ class ProfileFragment : Fragment() {
 
     private lateinit var userId: String
     private lateinit var userDatabase: DatabaseReference
-    private lateinit var database: DatabaseReference
-    private lateinit var currentOrgDB: DatabaseReference
-    private var mStorageRef: StorageReference? = null
     private var callback: TinderCallback? = null
+    private var mStorageRef: StorageReference? = null
 
     val REQUEST_CODE_BASICINFO = 11
     val REQUEST_CODE_INTERESTS = 12
@@ -59,20 +53,9 @@ class ProfileFragment : Fragment() {
     val REQUEST_CODE_EXPERIENCE = 15
     val GALLERY_ID: Int = 16
 
-    var counterSnapshot = 1
+    var counterSnapshotCurrent = 1
+    var counterSnapshotPrevious = 1
 
-    var hashMap = HashMap<String, Int?>()
-
-    companion object {
-        val company = arrayListOf<String?>()
-        val companyTitle = arrayListOf<String?>()
-        val date = arrayListOf<String?>()
-        val prevCompany = arrayListOf<String?>()
-        val prevTitle = arrayListOf<String?>()
-        val prevStartDate = arrayListOf<String?>()
-        val prevEndDate = arrayListOf<String?>()
-
-    }
 
     fun setCallback(callback: TinderCallback) {
         this.callback = callback
@@ -94,28 +77,32 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        // Firebase storage
         mStorageRef = FirebaseStorage.getInstance().reference
 
         progressLayout.setOnTouchListener { view, event -> true }
 
+        // Populate profile
         populateInfo()
 
-        // Signout button
+        // Signout
         signoutButton.setOnClickListener { callback?.onSignout() }
 
         //Open Gallery
-
         photoIV.setOnClickListener {
             var galleryIntent = Intent()
             galleryIntent.type = "image/*"
             galleryIntent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(Intent.createChooser(galleryIntent, "SELECT_IMAGE"), GALLERY_ID)
         }
-        // Open BasicInfoActivity
 
+        // Open BasicInfoActivity when edit icon clicked
         basicInfoEdit.setOnClickListener {
             startBasicInfoActivity()
         }
+
+        // Open BasicInfoActivity when view clicked
         relativeBasicInfo.setOnClickListener {
             startBasicInfoActivity()
         }
@@ -133,9 +120,6 @@ class ProfileFragment : Fragment() {
 
         // Open ExperienceActivity on click
         relativeexp.setOnClickListener {
-            //val intentExperience = Intent(getActivity(), ExperienceActivity::class.java)
-            //startActivity(intentExperience)
-
             startExperienceActivity()
         }
 
@@ -172,13 +156,14 @@ class ProfileFragment : Fragment() {
             override fun onCancelled(p0: DatabaseError) {
 
                 progressLayout.visibility = View.GONE
-
             }
 
             override fun onDataChange(p0: DataSnapshot) {
 
                 if (isAdded) {
 
+
+                    // Removing views before each load, so the views won't duplicate
                     flowInterests.removeAllViews()
                     flowGoals.removeAllViews()
                     expContainer.removeAllViews()
@@ -194,385 +179,62 @@ class ProfileFragment : Fragment() {
                     var image = p0.child("image").value.toString()
                     var thumbnail = p0.child("thumb_image").value.toString()
 
+                    var countPreviousChildren = p0.child("previousOrg").childrenCount.toInt()
+                    var countCurrentChildren = p0.child("currentOrg").childrenCount.toInt()
+
                     if (!image!!.equals("default")) {
-                        Picasso.with(context).load(image).noPlaceholder().into(photoIV,  object :Callback{
-                            override fun onError() {
-                                Log.d("TAG", "error")
-                            }
+                        Picasso.with(context).load(image).placeholder(R.drawable.profile_pic)
+                            .into(photoIV, object : Callback {
+                                override fun onError() {
+                                    Log.d("TAG", "error")
+                                }
 
-                            override fun onSuccess() {
+                                override fun onSuccess() {
 
-                                Log.d("TAG", "success")
-
-                            }
-
-                        })
+                                    Log.d("TAG", "success")
+                                }
+                            })
                     }
 
+                    // Interests
+                    for (snapshotInterest in p0.child("interestedIn").children) {
 
-                    for (snapshot in p0.child("interestedIn").children) {
+                        var interestsFromDB = snapshotInterest.getValue(String::class.java)
 
-
-                        var interestsFromDB = snapshot.getValue(String::class.java)
-
-                        val textView = TextView(getActivity(), null, 0, R.style.interestsProfile)
-
-                        var params: FlowLayout.LayoutParams = FlowLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                        )
-
-                        params.setMargins(0, 20, 20, 0)
-
-                        textView.layoutParams = params
-
-                        textView.gravity = Gravity.CENTER
-
-                        textView.layoutParams = params
-
-                        textView.setText(interestsFromDB)
-
-                        flowInterests.addView(textView)
+                        populateInterests(interestsFromDB)
                     }
 
+                    // Goals
                     for (snapshotGoal in p0.child("goals").children) {
 
                         var goalFromDB = snapshotGoal.getValue(String::class.java)
 
-                        val textView = TextView(getActivity(), null, 0, R.style.goalsProfile)
-
-                        var params: FlowLayout.LayoutParams = FlowLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                        )
-
-                        params.setMargins(0, 30, 20, 0)
-
-                        textView.layoutParams = params
-                        textView.gravity = Gravity.CENTER
-                        textView.setText(goalFromDB)
-
-                        if (goalFromDB == "Hire employees") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_hireemployeesicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Looking for a job") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_lookingforajobicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Find Co-Founders") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_findcofoundersicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Invest in projects") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_investinprojectsicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Find investors") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_suit1,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Grow my business") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_plant1,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Hire freelancers") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_hirefreelancersicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Find freelance jobs") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_findfreelancejobsicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Find mentors") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_owl2,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Mentor others") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_mentorothersicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Make new friends") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_makenewfriendsicon,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        } else if (goalFromDB == "Explore ideas") {
-
-                            textView.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.ic_explorenewideas,
-                                0,
-                                0,
-                                0
-                            )
-                            textView.compoundDrawablePadding = 15
-                        }
-
-                        flowGoals.addView(textView)
-
+                        populateGoals(goalFromDB)
                     }
 
-                    for (snapshot in p0.child("currentOrg").children) {
+                    // Current Organization
+                    for (snapshotCurrentOrg in p0.child("currentOrg").children) {
 
-                        var currentFromDB = snapshot.getValue(CurrentOrganization::class.java)
+                        var currentFromDB =
+                            snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
 
-                        val textView = TextView(getActivity(), null, 0)
+                        if (countPreviousChildren == 0) {
 
-                        var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                        )
-
-                        params.setMargins(0, 10, 0, 10)
-                        textView.layoutParams = params
-                        textView.gravity = Gravity.CENTER
-                        textView.setText(currentFromDB!!.company.toString())
-                        textView.setTextColor(Color.parseColor("#545454"))
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-                        textView.setTypeface(null, Typeface.BOLD)
-
-                        expContainer.addView(textView)
-
-                        val textViewTitle = TextView(getActivity(), null, 0)
-
-                        var paramsTitle: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                        )
-
-                        paramsTitle.setMargins(0, 10, 0, 10)
-                        textViewTitle.layoutParams = paramsTitle
-                        textViewTitle.gravity = Gravity.CENTER
-                        textViewTitle.setText(currentFromDB!!.title.toString())
-                        textViewTitle.setTextColor(Color.parseColor("#545454"))
-                        textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-                        expContainer.addView(textViewTitle)
-
-                        val textViewDate = TextView(getActivity(), null, 0)
-
-                        var paramsDate: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                        )
-
-                        paramsDate.setMargins(0, 10, 0, 10)
-                        textViewDate.layoutParams = paramsDate
-                        textViewDate.gravity = Gravity.CENTER
-                        textViewDate.setText(currentFromDB!!.startDate.toString().plus(" - Present"))
-                        textViewDate.setTextColor(Color.parseColor("#545454"))
-                        textViewDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-                        expContainer.addView(textViewDate)
-
-                        val horizontalSeparator = View(getActivity(), null, 0)
-
-                        var paramsSeparator: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                            2 // This will define text view height
-                        )
-
-                        paramsSeparator.setMargins(0, 10, 0, 10)
-                        horizontalSeparator.layoutParams = paramsSeparator
-                        horizontalSeparator.setBackgroundColor(Color.parseColor("#545454"))
-                        expContainer.addView(horizontalSeparator)
-                    }
-
-                    for (snapshot in p0.child("previousOrg").children) {
-
-                        val countChildren = p0.child("previousOrg").childrenCount
-
-                        if (counterSnapshot != countChildren.toInt()) {
-
-                            var previousFromDB = snapshot.getValue(PreviousOrganization::class.java)
-
-                            val textView = TextView(getActivity(), null, 0)
-
-                            var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                            )
-
-                            params.setMargins(0, 10, 0, 10)
-                            textView.layoutParams = params
-                            textView.gravity = Gravity.CENTER
-                            textView.setText(previousFromDB!!.company.toString())
-                            textView.setTextColor(Color.parseColor("#545454"))
-                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-                            textView.setTypeface(null, Typeface.BOLD)
-
-                            expContainer.addView(textView)
-
-                            val textViewTitle = TextView(getActivity(), null, 0)
-
-                            var paramsTitle: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                            )
-
-                            paramsTitle.setMargins(0, 10, 0, 10)
-                            textViewTitle.layoutParams = paramsTitle
-                            textViewTitle.gravity = Gravity.CENTER
-                            textViewTitle.setText(previousFromDB.title.toString())
-                            textViewTitle.setTextColor(Color.parseColor("#545454"))
-                            textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-                            expContainer.addView(textViewTitle)
-
-                            val textViewDate = TextView(getActivity(), null, 0)
-
-                            var paramsDate: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                            )
-
-                            paramsDate.setMargins(0, 10, 0, 10)
-                            textViewDate.layoutParams = paramsDate
-                            textViewDate.gravity = Gravity.CENTER
-                            textViewDate.setText(
-                                previousFromDB.startDate.toString().plus(" - ").plus(
-                                    previousFromDB.endDate
-                                )
-                            )
-                            textViewDate.setTextColor(Color.parseColor("#545454"))
-                            textViewDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-                            expContainer.addView(textViewDate)
-
-                            val horizontalSeparator = View(getActivity(), null, 0)
-
-                            var paramsSeparator: LinearLayout.LayoutParams =
-                                LinearLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                    2 // This will define text view height
-                                )
-
-                            paramsSeparator.setMargins(0, 10, 0, 10)
-                            horizontalSeparator.layoutParams = paramsSeparator
-                            horizontalSeparator.setBackgroundColor(Color.parseColor("#545454"))
-                            expContainer.addView(horizontalSeparator)
-
-                            counterSnapshot++
-
+                            populateCurrentOrgIfNoPreviousOrg(currentFromDB, countCurrentChildren)
                         } else {
 
-                            var previousFromDB = snapshot.getValue(PreviousOrganization::class.java)
-
-                            val textView = TextView(getActivity(), null, 0)
-
-                            var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                            )
-
-                            params.setMargins(0, 10, 0, 10)
-                            textView.layoutParams = params
-                            textView.gravity = Gravity.CENTER
-                            textView.setText(previousFromDB!!.company.toString())
-                            textView.setTextColor(Color.parseColor("#545454"))
-                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-                            textView.setTypeface(null, Typeface.BOLD)
-
-                            expContainer.addView(textView)
-
-                            val textViewTitle = TextView(getActivity(), null, 0)
-
-                            var paramsTitle: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                            )
-
-                            paramsTitle.setMargins(0, 10, 0, 10)
-                            textViewTitle.layoutParams = paramsTitle
-                            textViewTitle.gravity = Gravity.CENTER
-                            textViewTitle.setText(previousFromDB.title.toString())
-                            textViewTitle.setTextColor(Color.parseColor("#545454"))
-                            textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-                            expContainer.addView(textViewTitle)
-
-                            val textViewDate = TextView(getActivity(), null, 0)
-
-                            var paramsDate: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
-                                ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
-                            )
-
-                            paramsDate.setMargins(0, 10, 0, 10)
-                            textViewDate.layoutParams = paramsDate
-                            textViewDate.gravity = Gravity.CENTER
-                            textViewDate.setText(
-                                previousFromDB.startDate.toString().plus(" - ").plus(
-                                    previousFromDB.endDate
-                                )
-                            )
-                            textViewDate.setTextColor(Color.parseColor("#545454"))
-                            textViewDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
-                            expContainer.addView(textViewDate)
-
-                            counterSnapshot = 1
-
+                            populateCurrentOrg(currentFromDB)
                         }
                     }
 
-                    /*for(snapshotCurrentOrg in p0.child("currentOrg").children) {
+                    for (snapshotPreviousOrg in p0.child("previousOrg").children) {
 
-                        var currentOrgDB = snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
+                        var previousFromDB =
+                            snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
 
-                        company.add(currentOrgDB?.company)
-                        companyTitle.add(currentOrgDB?.title)
-                        date.add(currentOrgDB?.startDate)
-                    }*/
+                        populatePreviousOrg(previousFromDB, countPreviousChildren)
 
+                    }
 
                     aboutProfile.setText(user?.about, TextView.BufferType.NORMAL)
 
@@ -610,6 +272,326 @@ class ProfileFragment : Fragment() {
         startActivityForResult(intent, REQUEST_CODE_EXPERIENCE)
     }
 
+    fun populateInterests(interestName: String?) {
+
+        val textView = TextView(getActivity(), null, 0, R.style.interestsProfile)
+
+        var params: FlowLayout.LayoutParams = FlowLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
+            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
+        )
+
+        params.setMargins(0, 20, 20, 0)
+        textView.layoutParams = params
+        textView.gravity = Gravity.CENTER
+        textView.layoutParams = params
+        textView.setText(interestName)
+        flowInterests.addView(textView)
+    }
+
+    fun populateGoals(goalName: String?) {
+
+        val textView = TextView(getActivity(), null, 0, R.style.goalsProfile)
+
+        var params: FlowLayout.LayoutParams = FlowLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define view width
+            ViewGroup.LayoutParams.WRAP_CONTENT // This will define view height
+        )
+
+        params.setMargins(0, 30, 20, 0)
+
+        textView.layoutParams = params
+        textView.gravity = Gravity.CENTER
+        textView.setText(goalName)
+
+        addImageToGoal(goalName, textView)
+        textView.compoundDrawablePadding = 15
+
+        flowGoals.addView(textView)
+    }
+
+    fun addImageToGoal(goalName: String?, textView: TextView) {
+
+        when (goalName) {
+            GOALS_HIRE_EMPLOYEES -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_hireemployeesicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_LOOKING_FOR_A_JOB -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_lookingforajobicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_FIND_COFOUNDERS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_findcofoundersicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_INVEST_IN_PROJECTS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_investinprojectsicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_FIND_INVESTORS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_suit1,
+                0,
+                0,
+                0
+            )
+
+            GOALS_GROW_MY_BUSINESS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_plant1,
+                0,
+                0,
+                0
+            )
+
+            GOALS_HIRE_FREELANCERS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_hirefreelancersicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_FIND_FREELANCE_JOBS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_findfreelancejobsicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_FIND_MENTORS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_owl2,
+                0,
+                0,
+                0
+            )
+
+            GOALS_MENTOR_OTHERS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_mentorothersicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_MAKE_NEW_FRIENDS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_makenewfriendsicon,
+                0,
+                0,
+                0
+            )
+
+            GOALS_EXPLORE_IDEAS -> textView.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_explorenewideas,
+                0,
+                0,
+                0
+            )
+
+            else -> { // Note the block
+                Log.d("error", "error occurred")
+            }
+        }
+    }
+
+    fun populateCurrentOrgIfNoPreviousOrg(
+        currentOrganization: CurrentOrganization?,
+        childrenCounter: Int
+    ) {
+
+
+        if (counterSnapshotCurrent != childrenCounter) {
+
+            companyNameCurrent(currentOrganization)
+            jobTitleCurrent(currentOrganization)
+            startingDateCurrent(currentOrganization)
+            horizontalSeparator()
+
+            counterSnapshotCurrent++
+
+        } else {
+
+            companyNameCurrent(currentOrganization)
+            jobTitleCurrent(currentOrganization)
+            startingDateCurrent(currentOrganization)
+
+            counterSnapshotCurrent = 1
+        }
+    }
+
+    fun populateCurrentOrg(currentOrganization: CurrentOrganization?) {
+
+        companyNameCurrent(currentOrganization)
+        jobTitleCurrent(currentOrganization)
+        startingDateCurrent(currentOrganization)
+        horizontalSeparator()
+    }
+
+    fun populatePreviousOrg(previousOrganization: PreviousOrganization?, countChildren: Int) {
+
+        if (counterSnapshotPrevious != countChildren) {
+
+            companyNamePrevious(previousOrganization)
+            jobTitlePrevious(previousOrganization)
+            datePrevious(previousOrganization)
+            horizontalSeparator()
+
+            counterSnapshotPrevious++
+
+        } else {
+
+            companyNamePrevious(previousOrganization)
+            jobTitlePrevious(previousOrganization)
+            datePrevious(previousOrganization)
+
+            counterSnapshotPrevious = 1
+        }
+    }
+
+    fun companyNameCurrent(currentOrganization: CurrentOrganization?) {
+
+        val companyName = TextView(getActivity(), null, 0)
+
+
+        var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        params.setMargins(0, 10, 0, 10)
+        companyName.layoutParams = params
+        companyName.gravity = Gravity.CENTER
+        companyName.setText(currentOrganization!!.company.toString())
+        companyName.setTextColor(Color.parseColor("#545454"))
+        companyName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+        companyName.setTypeface(null, Typeface.BOLD)
+
+        expContainer.addView(companyName)
+    }
+
+    fun jobTitleCurrent(currentOrganization: CurrentOrganization?) {
+
+        val jobTitle = TextView(getActivity(), null, 0)
+
+        var paramsTitle: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        paramsTitle.setMargins(0, 10, 0, 10)
+        jobTitle.layoutParams = paramsTitle
+        jobTitle.gravity = Gravity.CENTER
+        jobTitle.setText(currentOrganization!!.title.toString())
+        jobTitle.setTextColor(Color.parseColor("#545454"))
+        jobTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+
+        expContainer.addView(jobTitle)
+    }
+
+    fun startingDateCurrent(currentOrganization: CurrentOrganization?) {
+
+        val startingDate = TextView(getActivity(), null, 0)
+
+        var paramsDate: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
+            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
+        )
+
+        paramsDate.setMargins(0, 10, 0, 10)
+        startingDate.layoutParams = paramsDate
+        startingDate.gravity = Gravity.CENTER
+        startingDate.setText(currentOrganization!!.startDate.toString().plus(" - Present"))
+        startingDate.setTextColor(Color.parseColor("#545454"))
+        startingDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+        expContainer.addView(startingDate)
+    }
+
+    fun companyNamePrevious(previousOrganization: PreviousOrganization?) {
+
+        val companyName = TextView(getActivity(), null, 0)
+
+
+        var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        params.setMargins(0, 10, 0, 10)
+        companyName.layoutParams = params
+        companyName.gravity = Gravity.CENTER
+        companyName.setText(previousOrganization!!.company.toString())
+        companyName.setTextColor(Color.parseColor("#545454"))
+        companyName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+        companyName.setTypeface(null, Typeface.BOLD)
+
+        expContainer.addView(companyName)
+    }
+
+    fun jobTitlePrevious(previousOrganization: PreviousOrganization?) {
+
+        val jobTitle = TextView(getActivity(), null, 0)
+
+        var paramsTitle: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        paramsTitle.setMargins(0, 10, 0, 10)
+        jobTitle.layoutParams = paramsTitle
+        jobTitle.gravity = Gravity.CENTER
+        jobTitle.setText(previousOrganization!!.title.toString())
+        jobTitle.setTextColor(Color.parseColor("#545454"))
+        jobTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+
+        expContainer.addView(jobTitle)
+    }
+
+    fun datePrevious(previousOrganization: PreviousOrganization?) {
+
+        val textViewDate = TextView(getActivity(), null, 0)
+
+        var paramsDate: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, // This will define text view width
+            ViewGroup.LayoutParams.WRAP_CONTENT // This will define text view height
+        )
+
+        paramsDate.setMargins(0, 10, 0, 10)
+        textViewDate.layoutParams = paramsDate
+        textViewDate.gravity = Gravity.CENTER
+        textViewDate.setText(
+            previousOrganization!!.startDate.toString().plus(" - ").plus(
+                previousOrganization!!.endDate
+            )
+        )
+        textViewDate.setTextColor(Color.parseColor("#545454"))
+        textViewDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+        expContainer.addView(textViewDate)
+    }
+
+    fun horizontalSeparator() {
+
+        val horizontalSeparator = View(getActivity(), null, 0)
+
+        var paramsSeparator: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            2
+        )
+
+        paramsSeparator.setMargins(0, 10, 0, 10)
+        horizontalSeparator.layoutParams = paramsSeparator
+        horizontalSeparator.setBackgroundColor(Color.parseColor("#c0c0c0"))
+        expContainer.addView(horizontalSeparator)
+    }
+
 
     @Suppress("RedundantOverride")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -617,7 +599,8 @@ class ProfileFragment : Fragment() {
         if (requestCode == GALLERY_ID && resultCode == RESULT_OK) {
 
             var image: Uri = data!!.data
-            CropImage.activity(image).setCropShape(CropImageView.CropShape.OVAL).setAspectRatio(1, 1).start(context!!, this)
+            CropImage.activity(image).setCropShape(CropImageView.CropShape.OVAL)
+                .setAspectRatio(1, 1).start(context!!, this)
 
         }
 
@@ -708,58 +691,8 @@ class ProfileFragment : Fragment() {
                             }
                         }
                     }
-
             }
 
-        }
-
-
-        if (requestCode == REQUEST_CODE_BASICINFO && resultCode == RESULT_OK) {
-            val name = data?.getStringExtra(BasicInfoActivity.INPUT_NAME)
-            val profession = data?.getStringExtra(BasicInfoActivity.INPUT_PROFESSION)
-            val location = data?.getStringExtra(BasicInfoActivity.INPUT_LOCATION)
-            profileName.text = name
-            profileProfession.text = profession
-            profileLocation.text = location
-        }
-        /*if (requestCode == REQUEST_CODE_INTERESTS && resultCode == RESULT_OK) {
-
-
-            val t = activity!!.supportFragmentManager.beginTransaction()
-            t.setReorderingAllowed(false)
-            t.detach(this).attach(this).commitAllowingStateLoss()
-
-        }*/
-
-        /*if (requestCode == REQUEST_CODE_GOALS && resultCode == RESULT_OK) {
-
-            val t = activity!!.supportFragmentManager.beginTransaction()
-            t.setReorderingAllowed(false)
-            t.detach(this).attach(this).commitAllowingStateLoss()
-
-        }
-
-        if (requestCode == REQUEST_CODE_EXPERIENCE && resultCode == RESULT_OK) {
-
-            val t = activity!!.supportFragmentManager.beginTransaction()
-            t.setReorderingAllowed(false)
-            t.detach(this).attach(this).commitAllowingStateLoss()
-
-            //scrollView.scrollTo(0, relativeexp.y.toInt())
-
-            *//*scrollView.postDelayed( Runnable() {
-                  run() {
-                    scrollView.scrollTo(0, relativeexp.y.toInt());
-                }
-            }, 1000)*//*
-
-        }*/
-
-        if (requestCode == REQUEST_CODE_ABOUT && resultCode == RESULT_OK) {
-
-            val about = data?.getStringExtra(AboutActivity.INPUT_ABOUT)
-
-            aboutProfile.setText(about)
         }
     }
 }

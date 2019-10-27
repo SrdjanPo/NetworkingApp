@@ -13,13 +13,31 @@
             android:theme="?attr/actionBarTheme"
             android:elevation="4dp">
 
+        <Button
+                android:id="@+id/nextButton"
+                android:layout_width="70sp"
+                android:layout_height="50sp"
+                android:text="next"
+                style="@style/SaveButtonTransparent"/>
+
     </androidx.appcompat.widget.Toolbar>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:visibility="gone">
+
+    </ProgressBar>
 
     <RelativeLayout
             android:id="@+id/relativeCurrentOrg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/toolbar"
+            android:layout_marginTop="20dp"
             android:paddingLeft="20dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp">

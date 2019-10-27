@@ -71,30 +71,6 @@ class ExperienceActivity : AppCompatActivity() {
 
         previousOrgDB = database.child(userId!!).child("previousOrg")
 
-        currentOrgDB.addChildEventListener(object: ChildEventListener{
-            override fun onCancelled(p0: DatabaseError) {
-            }
-
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-                closeActivity("close")
-            }
-
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {
-                closeActivity("close")
-
-            }
-
-            override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                closeActivity("close")
-
-            }
-
-            override fun onChildRemoved(p0: DataSnapshot) {
-                closeActivity("close")
-
-            }
-        })
-
 
         //setting toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
@@ -102,16 +78,29 @@ class ExperienceActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Experience"
 
+        var i = intent.getIntExtra("next", 2)
+
+        if (i == 1) {
+
+            nextButton.visibility = View.VISIBLE
+            progressBar.visibility = View.VISIBLE
+
+            progressBar.progress = 60
+        }
+
+        nextButton.setOnClickListener {
+
+            val intent = Intent(this, AboutActivity::class.java)
+            intent.putExtra("next", 1)
+            startActivity(intent)
+        }
+
 
 
         currentOrgListView.adapter = currentAdapter
-
         previousOrgListView.adapter = previousAdapter
-
         populateCurrentOrg()
-
         populatePreviousOrg()
-
 
         addCurrentOrg.setOnClickListener {
 
@@ -262,9 +251,7 @@ class ExperienceActivity : AppCompatActivity() {
             dateTextView.text = date.get(position)
 
             return rowListView
-
         }
-
     }
 
     private class MyCustomAdapterPrevious(context: Context) : BaseAdapter() {

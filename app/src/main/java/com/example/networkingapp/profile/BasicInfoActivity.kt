@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Context
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 
@@ -46,6 +47,18 @@ class BasicInfoActivity : AppCompatActivity() {
         supportActionBar?.title = "Basic Info"
 
 
+        var i = intent.getIntExtra("next", 2)
+
+        if (i == 1) {
+
+            nextButton.visibility = View.VISIBLE
+            saveChanges.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+
+            progressBar.progress = 15
+        }
+
+
         populateBasicInfo()
 
         nameET.requestFocus()
@@ -55,7 +68,7 @@ class BasicInfoActivity : AppCompatActivity() {
         }
 
 
-        profileChanges.setOnClickListener {
+        saveChanges.setOnClickListener {
 
             var string = nameET.text.toString()
             var string1 = professionET.text.toString()
@@ -80,14 +93,41 @@ class BasicInfoActivity : AppCompatActivity() {
                 database.child(userId!!).child("profession").setValue(string1)
                 database.child(userId!!).child("location").setValue(string2)
 
-
                 closeActivity(string, string1, string2)
+            }
+        }
 
+        nextButton.setOnClickListener {
+
+            var string = nameET.text.toString()
+            var string1 = professionET.text.toString()
+            var string2 = locationET.text.toString()
+
+
+            if (string.length == 0) {
+
+                nameET.error = "Please enter your name"
+
+            } else if (string1.length == 0) {
+
+                professionET.error = "Please enter your profession"
+
+            } else if (string2.length == 0) {
+                locationET.error = "Please enter your location"
             }
 
 
-        }
+            else {
 
+                database.child(userId!!).child("name").setValue(string)
+                database.child(userId!!).child("profession").setValue(string1)
+                database.child(userId!!).child("location").setValue(string2)
+
+                val intent = Intent(this, InterestsActivity::class.java)
+                intent.putExtra("next", 1)
+                startActivity(intent)
+            }
+        }
     }
 
     fun populateBasicInfo() {
