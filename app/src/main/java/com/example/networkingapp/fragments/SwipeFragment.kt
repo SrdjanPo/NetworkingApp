@@ -73,7 +73,7 @@ class SwipeFragment : Fragment(), CardStackListener {
             }
         })
 
-        //setupCardStackView()
+       // setupCardStackView()
 
     }
 
@@ -222,9 +222,19 @@ class SwipeFragment : Fragment(), CardStackListener {
 
             override fun onDataChange(p0: DataSnapshot) {
 
+                /*spots.add(
+                    Spot(
+                        name = "The statue of Liberty",
+                        profession = "New York",
+                        image = "https://source.unsplash.com/PeFk7fzxTdk/600x800"
+                    )
+                )*/
+
                 val spot = p0.getValue(Spot::class.java)
 
-                spots.add(spot!!)
+                spots.add(Spot(name = spot?.name, profession = spot?.profession, image = spot?.thumb_image))
+
+                Log.d("SPOT", spots.toString())
 
                 // Basic info
 

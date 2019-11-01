@@ -4,16 +4,19 @@ package com.example.networkingapp.profile
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import com.example.networkingapp.R
 import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_goals.*
+import org.w3c.dom.Text
 
 class GoalsActivity : AppCompatActivity() {
 
@@ -57,7 +60,6 @@ class GoalsActivity : AppCompatActivity() {
 
         if (i == 1) {
 
-            goalsChanges.visibility = View.GONE
             nextButton.visibility = View.VISIBLE
             progressBar.visibility = View.VISIBLE
 
@@ -82,23 +84,36 @@ class GoalsActivity : AppCompatActivity() {
             }
         }
 
+        fun addGoals(textView: TextView, child: String) {
+
+            textView.setBackgroundResource(R.drawable.standard_button_interest)
+            textView.setTextColor(Color.WHITE)
+            goalsDatabase.child(child).setValue(child)
+            ++goalsCounter
+            displayTextCounter()
+        }
+
+        fun removeGoals(textView: TextView, child: String) {
+
+            textView.setBackgroundResource(R.drawable.standard_button_goals)
+            textView.setTextColor(Color.parseColor("#47becd"))
+            goalsDatabase.child(child).removeValue()
+            --goalsCounter
+            displayTextCounter()
+        }
+
         hireEmployees.setOnClickListener {
 
             if (checkClickedHireEmployees == 1 && goalsCounter <= 2) {
 
-                hireEmployees.setBackgroundResource(R.drawable.standard_button_interest)
-                hireEmployees.setTextColor(Color.WHITE)
-                goalsDatabase.child("Hire employees").setValue("Hire employees")
+                addGoals(hireEmployees,"Hire employees")
                 checkClickedHireEmployees = 2
-                ++goalsCounter
+
 
             } else if (checkClickedHireEmployees == 2) {
 
-                hireEmployees.setBackgroundResource(R.drawable.standard_button_goals)
-                hireEmployees.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Hire employees").removeValue()
+                removeGoals(hireEmployees, "Hire employees")
                 checkClickedHireEmployees = 1
-                --goalsCounter
             }
 
             else {
@@ -111,19 +126,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedLookingJob == 1 && goalsCounter <= 2) {
 
-                lookingJob.setBackgroundResource(R.drawable.standard_button_interest)
-                lookingJob.setTextColor(Color.WHITE)
-                goalsDatabase.child("Looking for a job").setValue("Looking for a job")
+                addGoals(lookingJob, "Looking for a job")
                 checkClickedLookingJob = 2
-                ++goalsCounter
 
             } else if (checkClickedLookingJob == 2) {
 
-                lookingJob.setBackgroundResource(R.drawable.standard_button_goals)
-                lookingJob.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Looking for a job").removeValue()
+                removeGoals(lookingJob, "Looking for a job")
                 checkClickedLookingJob = 1
-                --goalsCounter
             }
             else {
 
@@ -135,19 +144,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedFindCoFounders == 1 && goalsCounter <= 2) {
 
-                findCoFounders.setBackgroundResource(R.drawable.standard_button_interest)
-                findCoFounders.setTextColor(Color.WHITE)
-                goalsDatabase.child("Find Co-Founders").setValue("Find Co-Founders")
+                addGoals(findCoFounders, "Find Co-Founders")
                 checkClickedFindCoFounders = 2
-                ++goalsCounter
 
             } else if (checkClickedFindCoFounders == 2) {
 
-                findCoFounders.setBackgroundResource(R.drawable.standard_button_goals)
-                findCoFounders.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Find Co-Founders").removeValue()
+                removeGoals(findCoFounders, "Find Co-Founders")
                 checkClickedFindCoFounders = 1
-                --goalsCounter
             }
             else {
 
@@ -159,21 +162,14 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedInvestInProjects == 1 && goalsCounter <= 2) {
 
-                investInProjects.setBackgroundResource(R.drawable.standard_button_interest)
-                investInProjects.setTextColor(Color.WHITE)
-                goalsDatabase.child("Invest in projects").setValue("Invest in projects")
+                addGoals(investInProjects, "Invest in projects")
                 checkClickedInvestInProjects = 2
-                ++goalsCounter
-
             }
 
             else if (checkClickedInvestInProjects == 2) {
 
-                investInProjects.setBackgroundResource(R.drawable.standard_button_goals)
-                investInProjects.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Invest in projects").removeValue()
+                removeGoals(investInProjects, "Invest in projects")
                 checkClickedInvestInProjects = 1
-                --goalsCounter
 
             }
 
@@ -187,19 +183,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedFindInvestors == 1 && goalsCounter <= 2) {
 
-                findInvestors.setBackgroundResource(R.drawable.standard_button_interest)
-                findInvestors.setTextColor(Color.WHITE)
-                goalsDatabase.child("Find investors").setValue("Find investors")
+                addGoals(findInvestors, "Find investors")
                 checkClickedFindInvestors = 2
-                ++goalsCounter
 
             } else if (checkClickedFindInvestors == 2) {
 
-                findInvestors.setBackgroundResource(R.drawable.standard_button_goals)
-                findInvestors.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Find investors").removeValue()
+                removeGoals(findInvestors, "Find investors")
                 checkClickedFindInvestors = 1
-                --goalsCounter
             }
             else {
 
@@ -211,19 +201,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedGrowMyBusiness == 1 && goalsCounter <= 2) {
 
-                growMyBusiness.setBackgroundResource(R.drawable.standard_button_interest)
-                growMyBusiness.setTextColor(Color.WHITE)
-                goalsDatabase.child("Grow my business").setValue("Grow my business")
+                addGoals(growMyBusiness, "Grow my business")
                 checkClickedGrowMyBusiness = 2
-                ++goalsCounter
 
             } else if (checkClickedGrowMyBusiness == 2) {
 
-                growMyBusiness.setBackgroundResource(R.drawable.standard_button_goals)
-                growMyBusiness.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Grow my business").removeValue()
+                removeGoals(growMyBusiness, "Grow my business")
                 checkClickedGrowMyBusiness = 1
-                --goalsCounter
             }
 
             else {
@@ -236,19 +220,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedHireFreelancers == 1 && goalsCounter <= 2) {
 
-                hireFreelancers.setBackgroundResource(R.drawable.standard_button_interest)
-                hireFreelancers.setTextColor(Color.WHITE)
-                goalsDatabase.child("Hire freelancers").setValue("Hire freelancers")
+                addGoals(hireFreelancers, "Hire freelancers")
                 checkClickedHireFreelancers = 2
-                ++goalsCounter
 
             } else if (checkClickedHireFreelancers == 2) {
 
-                hireFreelancers.setBackgroundResource(R.drawable.standard_button_goals)
-                hireFreelancers.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Hire freelancers").removeValue()
+                removeGoals(hireFreelancers, "Hire freelancers")
                 checkClickedHireFreelancers = 1
-                --goalsCounter
             }
             else {
 
@@ -260,19 +238,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedFindFreelanceJobs == 1 && goalsCounter <= 2) {
 
-                findFreelanceJobs.setBackgroundResource(R.drawable.standard_button_interest)
-                findFreelanceJobs.setTextColor(Color.WHITE)
-                goalsDatabase.child("Find freelance jobs").setValue("Find freelance jobs")
+                addGoals(findFreelanceJobs, "Find freelance jobs")
                 checkClickedFindFreelanceJobs = 2
-                ++goalsCounter
 
             } else if (checkClickedFindFreelanceJobs == 2) {
 
-                findFreelanceJobs.setBackgroundResource(R.drawable.standard_button_goals)
-                findFreelanceJobs.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Find freelance jobs").removeValue()
+                removeGoals(findFreelanceJobs, "Find freelance jobs")
                 checkClickedFindFreelanceJobs = 1
-                --goalsCounter
             }
             else {
 
@@ -284,19 +256,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedFindMentors == 1 && goalsCounter <= 2) {
 
-                findMentors.setBackgroundResource(R.drawable.standard_button_interest)
-                findMentors.setTextColor(Color.WHITE)
-                goalsDatabase.child("Find mentors").setValue("Find mentors")
+                addGoals(findMentors, "Find mentors")
                 checkClickedFindMentors = 2
-                ++goalsCounter
 
             } else if (checkClickedFindMentors == 2) {
 
-                findMentors.setBackgroundResource(R.drawable.standard_button_goals)
-                findMentors.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Find mentors").removeValue()
+                removeGoals(findMentors, "Find mentors")
                 checkClickedFindMentors = 1
-                --goalsCounter
             }
             else {
 
@@ -308,19 +274,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedMentorOthers == 1 && goalsCounter <= 2) {
 
-                mentorOthers.setBackgroundResource(R.drawable.standard_button_interest)
-                mentorOthers.setTextColor(Color.WHITE)
-                goalsDatabase.child("Mentor others").setValue("Mentor others")
+                addGoals(mentorOthers, "Mentor others")
                 checkClickedMentorOthers = 2
-                ++goalsCounter
 
             } else if (checkClickedMentorOthers == 2) {
 
-                mentorOthers.setBackgroundResource(R.drawable.standard_button_goals)
-                mentorOthers.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Mentor others").removeValue()
+                removeGoals(mentorOthers, "Mentor others")
                 checkClickedMentorOthers = 1
-                --goalsCounter
             }
             else {
 
@@ -332,19 +292,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedMakeNewFriends == 1 && goalsCounter <= 2) {
 
-                makeNewFriends.setBackgroundResource(R.drawable.standard_button_interest)
-                makeNewFriends.setTextColor(Color.WHITE)
-                goalsDatabase.child("Make new friends").setValue("Make new friends")
+                addGoals(makeNewFriends, "Make new friends")
                 checkClickedMakeNewFriends = 2
-                ++goalsCounter
 
             } else if (checkClickedMakeNewFriends == 2) {
 
-                makeNewFriends.setBackgroundResource(R.drawable.standard_button_goals)
-                makeNewFriends.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Make new friends").removeValue()
+                removeGoals(makeNewFriends, "Make new friends")
                 checkClickedMakeNewFriends = 1
-                --goalsCounter
             }
             else {
 
@@ -356,19 +310,13 @@ class GoalsActivity : AppCompatActivity() {
 
             if (checkClickedExploreIdeas == 1 && goalsCounter <= 2) {
 
-                exploreIdeas.setBackgroundResource(R.drawable.standard_button_interest)
-                exploreIdeas.setTextColor(Color.WHITE)
-                goalsDatabase.child("Explore ideas").setValue("Explore ideas")
+                addGoals(exploreIdeas, "Explore ideas")
                 checkClickedExploreIdeas = 2
-                ++goalsCounter
 
             } else if (checkClickedExploreIdeas == 2) {
 
-                exploreIdeas.setBackgroundResource(R.drawable.standard_button_goals)
-                exploreIdeas.setTextColor(Color.parseColor("#47becd"))
-                goalsDatabase.child("Explore ideas").removeValue()
+                removeGoals(exploreIdeas, "Explore ideas")
                 checkClickedExploreIdeas = 1
-                --goalsCounter
             }
             else {
 
@@ -457,6 +405,8 @@ class GoalsActivity : AppCompatActivity() {
 
                     ++goalsCounter
                 }
+
+                displayTextCounter()
             }
         })
     }
@@ -468,6 +418,14 @@ class GoalsActivity : AppCompatActivity() {
 
         setResult(Activity.RESULT_OK, resultIntent)
         //finish()
+    }
+
+    fun displayTextCounter () {
+
+        var goalsCounterText = goalsCounter.toString().plus("/3")
+        numberOfIntTextView.setText(goalsCounterText)
+
+        Log.d("counter", goalsCounterText)
     }
 
 

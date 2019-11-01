@@ -18,7 +18,8 @@
                 android:layout_width="70sp"
                 android:layout_height="50sp"
                 android:text="next"
-                style="@style/SaveButtonTransparent"/>
+                style="@style/SaveButtonTransparent"
+                android:visibility="gone"/>
 
     </androidx.appcompat.widget.Toolbar>
 

@@ -23,7 +23,6 @@ import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlin.collections.HashMap
-import kotlin.math.log
 
 
 class InterestsActivity : AppCompatActivity() {
@@ -48,7 +47,7 @@ class InterestsActivity : AppCompatActivity() {
     var sportAL = ArrayList<String>()
     var scienceAL = ArrayList<String>()
 
-    var interestedInAL = ArrayList<String>() // list of items stored in InsterestedIn
+    var interestedInAL = ArrayList<String>() // list of items stored in insterestedIn
 
     var suggestionsList = ArrayList<String>() // list of items in suggestions view
 
@@ -69,31 +68,43 @@ class InterestsActivity : AppCompatActivity() {
             progressBar.progress = 30
         }
 
+        //button that shows up on profile setup
+
+        nextButton.setOnClickListener {
+
+            if (viewCounter < 3) {
+
+                Toast.makeText(this, "Enter at least 3 interests", Toast.LENGTH_LONG).show()
+
+            }
+
+            else {
+
+                val intent = Intent(this, GoalsActivity::class.java)
+                intent.putExtra("next", 1)
+                startActivity(intent)
+            }
+        }
+
         //firebase child instances
 
         database = FirebaseDatabase.getInstance().reference.child(DATA_USERS)
         interestDatabase = database.child(userId!!).child("interestedIn")
         profileDatabase = database.child(userId!!).child("profile")
-        profiledDatabase = database.child(userId!!).child("profiled")
 
-        //populate profile counters so "profiled" value can be extracted
-        populateCounters()
         //populate interests from firebase
         populateInterests()
 
+        //emptyInterests()
+
+        //populate profile counters so "profiled" value can be extracted
+        populateCounters()
 
         //setting toolbar
         setSupportActionBar(findViewById(R.id.toolbar))
         //home navigation
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Interests"
-
-        nextButton.setOnClickListener {
-
-            val intent = Intent(this, GoalsActivity::class.java)
-            intent.putExtra("next", 1)
-            startActivity(intent)
-        }
 
 
         var technologyArray = getResources().getStringArray(R.array.technology)
@@ -108,6 +119,8 @@ class InterestsActivity : AppCompatActivity() {
         hobbyAL.addAll(hobbyArray)
         designAL.addAll(designArray)
 
+        // list of items shown in AutoCompleteTextView dropdown list
+
         val wordList = ArrayList<String>()
         wordList.addAll(technologyArray)
         wordList.addAll(sportArray)
@@ -115,9 +128,10 @@ class InterestsActivity : AppCompatActivity() {
         wordList.addAll(hobbyArray)
         wordList.addAll(designArray)
 
-
         wordList.sort()
         Collections.addAll(wordList)
+
+        // adapter for AutoCompleteTextView
 
         val adapter =
             AutoCompleteAdapter(this, R.layout.custom_list_item, R.id.text_view_list_item, wordList)
@@ -190,18 +204,13 @@ class InterestsActivity : AppCompatActivity() {
                 return
             }
 
-            var keyCurrent = interestDatabase.push().key
+            var keyCurrent = interestDatabase.push().key // getting a key value from the item that's about to be inserted in Firebase
 
-            // add interest to database
-            interestDatabase.child(keyCurrent!!).setValue(interestToDB)
-
-            interestedInAL.add(interestToDB)
-
-            addProfile(interestToDB)
-
-            checkMaxValue()
-
-            addSuggestions(maxValue!!)
+            interestDatabase.child(keyCurrent!!).setValue(interestToDB) // adding a interest to database
+            interestedInAL.add(interestToDB) // adding it to the interestedIn ArrayList
+            addProfile(interestToDB) // incrementing proper profile value
+            checkMaxValue() // checking max value of the HashMap so we can extract "profiled" value
+            addSuggestions(maxValue!!) // Initializing addSuggestions function with proper value (maxValue is one of the array strings technology,design,hobby,sport, etc...)
 
             // parameters for TextView
             textView.layoutParams =
@@ -224,6 +233,8 @@ class InterestsActivity : AppCompatActivity() {
                 numberOfIntTextView.setTextColor(Color.parseColor("#f47742"))
             }
 
+            // setting up interests counter
+
             var interestCounter = viewCounter.toString().plus("/10")
 
             numberOfIntTextView.setText(interestCounter)
@@ -231,25 +242,28 @@ class InterestsActivity : AppCompatActivity() {
             interestsET.getText()?.clear()
 
             // delete interest on click
+
             textView.setOnClickListener {
+
                 interestsContainerLinear.removeView(textView)
                 var textFromTV = textView.text.toString()
-                deleteProfile(textFromTV)
-                checkMaxValue()
+                deleteProfile(textFromTV)  // decrementing proper value
+                checkMaxValue() // checking max value of the HashMap so we can extract "profiled" value
                 --viewCounter
+
+                // if there are less than 10 interests, interests counter remains grey
+
                 if (viewCounter != 10) {
                     numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
                 }
+
                 var interestCounter = viewCounter.toString().plus("/10")
                 numberOfIntTextView.setText(interestCounter)
 
                 interestDatabase.child(keyCurrent).removeValue()
-
-                var heeelp = textFromTV.substring(0, textFromTV.length - 3)
-
-                interestedInAL.remove(heeelp)
-
-                addSuggestions(maxValue!!)
+                var interestText = textFromTV.substring(0, textFromTV.length - 3) // because we added "  X" to the interest name, now we have to trim it
+                interestedInAL.remove(interestText) // removing item form the interestedInAL
+                addSuggestions(maxValue!!) // initializing addSuggestins with a proper value
             }
         }
     }
@@ -270,20 +284,16 @@ class InterestsActivity : AppCompatActivity() {
 
             // adding X to the string
 
-            var interestStr = suggestion.plus("  X")
+            var interestStr = suggestion.plus("  X") // adding "  X" to the suggestion
             val textView = TextView(this, null, 0, R.style.Interest)
 
             var keyCurrent = interestDatabase.push().key
 
-            // add interest to database
-            interestDatabase.child(keyCurrent!!).setValue(suggestion)
-
+            interestDatabase.child(keyCurrent!!).setValue(suggestion) // Add interest to database
             interestedInAL.add(suggestion)
 
             addProfile(suggestion)
-
             checkMaxValue()
-
             addSuggestions(maxValue!!)
 
             // parameters for TextView
@@ -329,10 +339,8 @@ class InterestsActivity : AppCompatActivity() {
 
                 interestDatabase.child(keyCurrent).removeValue()
 
-                var heeelp = textFromTV.substring(0, textFromTV.length - 3)
-
-                interestedInAL.remove(heeelp)
-
+                var suggestionText = textFromTV.substring(0, textFromTV.length - 3)
+                interestedInAL.remove(suggestionText)
                 addSuggestions(maxValue!!)
             }
         }
@@ -350,11 +358,11 @@ class InterestsActivity : AppCompatActivity() {
 
                     var interestsFromDB = snapshot.getValue(String::class.java)
 
-                    interestedInAL.add(interestsFromDB!!)
+                    interestedInAL.add(interestsFromDB!!) // adding interest to interestedIn ArrayList
 
-                    // added X
-                    var interestsFromDBX = interestsFromDB.plus("  X")
+                    var interestsFromDBX = interestsFromDB.plus("  X") // adding "  X" to the interest
 
+                    //parameters for TextView
                     val textView = TextView(this@InterestsActivity, null, 0, R.style.Interest)
 
                     textView.layoutParams =
@@ -383,7 +391,6 @@ class InterestsActivity : AppCompatActivity() {
                         interestsContainerLinear.removeView(textView)
                         --viewCounter
                         deleteProfile(interestsFromDBX)
-
                         checkMaxValue()
 
                         if (viewCounter != 10) {
@@ -391,11 +398,8 @@ class InterestsActivity : AppCompatActivity() {
                         }
                         var interestCounter = viewCounter.toString().plus("/10")
                         numberOfIntTextView.setText(interestCounter)
-
                         var key = snapshot.key.toString()
-
                         interestDatabase.child(key).removeValue()
-
                         addSuggestions(maxValue!!)
                     }
                 }
@@ -420,9 +424,7 @@ class InterestsActivity : AppCompatActivity() {
                 map.put("sport", p0.child("sport").getValue(Int::class.java))
 
                 maxValueCopy = map.maxBy { it.value!! }!!.key
-
                 maxValue = maxValueCopy
-
                 addSuggestions(maxValueCopy!!)
             }
         })
@@ -442,10 +444,14 @@ class InterestsActivity : AppCompatActivity() {
 
     fun addRandomSuggestion(profiledArray: ArrayList<String>) {
 
-        var suggestedHelper = 0
+        var suggestedHelper = 0 // suggestions counter
+
+        // removing all suggestions from view, and clearing suggestionsList
 
         suggestedInterests.removeAllViews()
         suggestionsList.clear()
+
+        // after every interest is added or removed, there is 1 sec of spinning circle so the user is informed that the changes are made
 
         Handler().postDelayed( {
 
@@ -457,22 +463,28 @@ class InterestsActivity : AppCompatActivity() {
         suggestedInterests.visibility = View.GONE
         suggestionsProgressBar.visibility = View.VISIBLE
 
+        // generate 8 random suggestions
+
         while (suggestedHelper < 8) {
 
             var randomNumber = (0 until profiledArray.size - 1).random()
+
+            // check if the random suggestion
 
             if (profiledArray[randomNumber] in interestedInAL || profiledArray[randomNumber] in suggestionsList) {
                 Log.d("ITEM", profiledArray[randomNumber])
             } else {
 
-                addToScroll(profiledArray[randomNumber])
-                suggestionsList.add(profiledArray[randomNumber])
-                ++suggestedHelper
+                addToScroll(profiledArray[randomNumber]) // adding suggestion to the HorizontalScrollView
+                suggestionsList.add(profiledArray[randomNumber]) // adding suggestion to the suggestionsList
+                ++suggestedHelper // incrementing suggestions counter
             }
         }
     }
 
     fun addToScroll(item: String) {
+
+        // if the suggestion added is the first one, left margin is increased to 70 instead of 20
 
         if (suggestedInterests.childCount == 0) {
 
@@ -650,6 +662,29 @@ class InterestsActivity : AppCompatActivity() {
 
         setResult(Activity.RESULT_OK, resultIntent)
         //finish()
+    }
+
+    private fun emptyInterests() {
+
+        if (interestsContainerLinear.childCount == 0)
+
+        {
+
+            var textView = TextView(this, null, 0, R.style.interestsProfile)
+
+            textView.layoutParams =
+                LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            val param = textView.layoutParams as LinearLayout.LayoutParams
+            textView.gravity = Gravity.CENTER
+            param.setMargins(70, 20, 20, 20)
+            textView.layoutParams = param
+            textView.setText("Technology")
+            interestsContainerLinear.addView(textView)
+
+        }
     }
 
 

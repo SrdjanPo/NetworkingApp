@@ -182,8 +182,8 @@ class ProfileFragment : Fragment() {
                     var countPreviousChildren = p0.child("previousOrg").childrenCount.toInt()
                     var countCurrentChildren = p0.child("currentOrg").childrenCount.toInt()
 
-                    if (!image!!.equals("default")) {
-                        Picasso.with(context).load(image).placeholder(R.drawable.profile_pic)
+                    if (!thumbnail!!.equals("default")) {
+                        Picasso.with(context).load(thumbnail).placeholder(R.drawable.profile_pic)
                             .into(photoIV, object : Callback {
                                 override fun onError() {
                                     Log.d("TAG", "error")
