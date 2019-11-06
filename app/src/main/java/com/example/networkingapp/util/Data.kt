@@ -43,6 +43,10 @@ data class Spot(
     val name: String? = "",
     val profession: String? = "",
     val location: String? = "",
+    val interests: ArrayList<String> = arrayListOf(),
+    val goals: HashMap<String, String> = hashMapOf(),
+    val currentOrg: MutableMap<String, Any> = mutableMapOf(),
+    //val previousOrg: HashMap<String, String> = hashMapOf(),
     val about: String? = "",
     val email: String? = "",
     val instagram: String? = "",
@@ -50,7 +54,9 @@ data class Spot(
     val web: String? = "",
     val imageUrl: String? = "",
     var image: String? = "",
-    var thumb_image: String? = ""
+    var thumb_image: String? = "",
+    var countCurrentChildren: Int = 0,
+    var countPreviousChildren: Int = 0
 ) {
     companion object {
         private var counter = 0L

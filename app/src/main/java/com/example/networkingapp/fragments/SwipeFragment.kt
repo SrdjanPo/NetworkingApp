@@ -3,19 +3,23 @@
 package com.example.networkingapp.fragments
 
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
-
+import com.example.networkingapp.*
 import com.example.networkingapp.R
-import com.example.networkingapp.Spot
-import com.example.networkingapp.User
+
 import com.example.networkingapp.activities.TinderCallback
 import com.example.networkingapp.adapters.CardStackAdapter
 import com.google.firebase.database.DataSnapshot
@@ -25,8 +29,12 @@ import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.yuyakaido.android.cardstackview.*
+import kotlinx.android.synthetic.main.activity_experience.*
 import kotlinx.android.synthetic.main.fragment_swipe.*
 import kotlinx.android.synthetic.main.item_spot.*
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class SwipeFragment : Fragment(), CardStackListener {
@@ -37,6 +45,8 @@ class SwipeFragment : Fragment(), CardStackListener {
     private var profiled: String? = null
 
     private var callback: TinderCallback? = null
+
+    private var itemsFromDB = ArrayList<Spot>()
 
     private val manager by lazy { CardStackLayoutManager(activity, this) }
 
@@ -70,88 +80,108 @@ class SwipeFragment : Fragment(), CardStackListener {
 
                 profiled = user?.profiled
 
+                val cardsQuery = userDatabase.orderByChild("profiled").equalTo(profiled)
+
+                cardsQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                        //progressLayout.visibility = View.GONE
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+
+                        p0.children.forEach { child ->
+
+                            val spot = child.getValue(Spot::class.java)
+
+                            var interestsList = ArrayList<String>()
+                            var goalsList = HashMap<String, String>()
+                            var currentOrgList = ArrayList<CurrentOrganization>()
+                            var currentOrgListMap = mutableMapOf<String, Any>()
+                            var previousOrgList = HashMap<String, String>()
+                            var countPreviousChildren =
+                                child.child("previousOrg").childrenCount.toInt()
+                            var countCurrentChildren =
+                                child.child("currentOrg").childrenCount.toInt()
+
+                            for (snapshotInterest in child.child("interestedIn").children) {
+
+                                val interestsFromDB = snapshotInterest.getValue(String::class.java)
+
+                                interestsList.add(interestsFromDB!!)
+
+                            }
+
+                            for (snapshotGoal in child.child("goals").children) {
+
+                                val goalsFromDB = snapshotGoal.getValue(String::class.java)
+
+                                goalsList.put(goalsFromDB!!, goalsFromDB)
+
+                            }
+
+                            for (snapshotCurrentOrg in child.child("currentOrg").children) {
+
+                                var currentFromDB =
+                                    snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
+
+                                currentOrgListMap.put("company", currentFromDB!!.company!!)
+                                currentOrgListMap.put("title", currentFromDB!!.title!!)
+                                currentOrgListMap.put("startDate", currentFromDB!!.startDate!!)
+
+                                Log.d("Company", currentFromDB!!.company!!)
+                                Log.d("Title", currentFromDB!!.title!!)
+                                Log.d("Start Date", currentFromDB!!.startDate!!)
+
+                                //currentOrgList.add(currentFromDB!!)
+
+                            }
+
+                            /*for (snapshotPreviousOrg in child.child("previousOrg").children) {
+
+                                var previousFromDB =
+                                    snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
+
+                                previousOrgList.put("company", previousFromDB!!.company!!)
+                                previousOrgList.put("title", previousFromDB!!.title!!)
+                                previousOrgList.put("startDate", previousFromDB!!.startDate!!)
+                                previousOrgList.put("endDate", previousFromDB!!.endDate!!)
+
+                            }*/
+
+                            Log.d("MAP",  currentOrgListMap.toString())
+
+                            itemsFromDB.add(
+                                Spot(
+                                    name = spot?.name,
+                                    profession = spot?.profession,
+                                    location = spot?.location,
+                                    image = spot?.thumb_image,
+                                    interests = interestsList,
+                                    goals = goalsList,
+                                    currentOrg = currentOrgListMap,
+                                    //previousOrg = previousOrgList,
+                                    countCurrentChildren = spot!!.countCurrentChildren,
+                                    countPreviousChildren = spot.countPreviousChildren,
+                                    about = spot.about
+                                )
+                            )
+                        }
+
+                        setupCardStackView()
+                    }
+                })
             }
         })
-
-       // setupCardStackView()
 
     }
 
 
     private fun createSpots(): List<Spot> {
-        val spots = ArrayList<Spot>()
-        /*spots.add(
-            Spot(
-                name = "Yasaka Shrine",
-                profession = "Kyoto",
-                image = "https://source.unsplash.com/Xq1ntWruZQI/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Fushimi Inari Shrine",
-                profession = "Kyoto",
-                image = "https://source.unsplash.com/NYyCqdBOKwc/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Bamboo Forest",
-                profession = "Kyoto",
-                image = "https://source.unsplash.com/buF62ewDLcQ/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Brooklyn Bridge",
-                profession = "New York",
-                image = "https://source.unsplash.com/THozNzxEP3g/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Empire State Building",
-                profession = "New York",
-                image = "https://source.unsplash.com/USrZRcRS2Lw/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "The statue of Liberty",
-                profession = "New York",
-                image = "https://source.unsplash.com/PeFk7fzxTdk/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Louvre Museum",
-                profession = "Paris",
-                image = "https://source.unsplash.com/LrMWHKqilUw/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Eiffel Tower",
-                profession = "Paris",
-                image = "https://source.unsplash.com/HN-5Z6AmxrM/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Big Ben",
-                profession = "London",
-                image = "https://source.unsplash.com/CdVAUADdqEc/600x800"
-            )
-        )
-        spots.add(
-            Spot(
-                name = "Great Wall of China",
-                profession = "China",
-                image = "https://source.unsplash.com/AWh9C-QjhE4/600x800"
-            )
-        )*/
+        var spots = ArrayList<Spot>()
 
-        populateItems(spots)
+        spots.addAll(itemsFromDB)
+
         return spots
     }
 
@@ -207,103 +237,6 @@ class SwipeFragment : Fragment(), CardStackListener {
     override fun onCardDisappeared(view: View, position: Int) {
         val textView = view.findViewById<TextView>(R.id.profileName)
         Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
-    }
-
-    fun populateItems(spots: ArrayList<Spot>) {
-
-        val cardsQuery = userDatabase.orderByChild("profiled").equalTo(profiled)
-
-        cardsQuery.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-
-                progressLayout.visibility = View.GONE
-
-            }
-
-            override fun onDataChange(p0: DataSnapshot) {
-
-                /*spots.add(
-                    Spot(
-                        name = "The statue of Liberty",
-                        profession = "New York",
-                        image = "https://source.unsplash.com/PeFk7fzxTdk/600x800"
-                    )
-                )*/
-
-                val spot = p0.getValue(Spot::class.java)
-
-                spots.add(Spot(name = spot?.name, profession = spot?.profession, image = spot?.thumb_image))
-
-                Log.d("SPOT", spots.toString())
-
-                // Basic info
-
-                /*var profileName = spot?.name
-                var profession = spot?.profession
-                var location = spot?.location
-
-                var image = p0.child("image").value.toString()
-                var thumbnail = p0.child("thumb_image").value.toString()
-
-
-                if (!image!!.equals("default")) {
-                    Picasso.with(context).load(image).noPlaceholder()
-                        .into(photoIV, object : Callback {
-                            override fun onError() {
-                                Log.d("TAG", "error")
-                            }
-
-                            override fun onSuccess() {
-
-                                Log.d("TAG", "success")
-                            }
-                        })
-                }*/
-
-                /*// Interests
-                for (snapshotInterest in p0.child("interestedIn").children) {
-
-                    var interestsFromDB = snapshotInterest.getValue(String::class.java)
-
-                    populateInterests(interestsFromDB)
-                }
-
-                // Goals
-                for (snapshotGoal in p0.child("goals").children) {
-
-                    var goalFromDB = snapshotGoal.getValue(String::class.java)
-
-                    populateGoals(goalFromDB)
-                }
-
-                // Current Organization
-                for (snapshotCurrentOrg in p0.child("currentOrg").children) {
-
-                    var currentFromDB =
-                        snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
-
-                    if (countPreviousChildren == 0) {
-
-                        populateCurrentOrgIfNoPreviousOrg(currentFromDB, countCurrentChildren)
-                    } else {
-
-                        populateCurrentOrg(currentFromDB)
-                    }
-                }
-
-                for (snapshotPreviousOrg in p0.child("previousOrg").children) {
-
-                    var previousFromDB =
-                        snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
-
-                    populatePreviousOrg(previousFromDB, countPreviousChildren)
-
-                }*/
-
-
-            }
-        })
-
     }
 
 }

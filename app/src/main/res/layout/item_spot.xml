@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:background="?attr/selectableItemBackground"
         android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="10dp"
         app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="false">
 
@@ -57,10 +60,11 @@
                                 android:layout_height="96dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginTop="35dp"
+                                android:layout_marginBottom="10dp"
                                 android:elevation="4dp"
                                 android:src="@drawable/profile_pic"
-                                app:civ_border_color="#FFFFFF"
-                                app:civ_border_width="2dp" />
+                                app:civ_border_width="2dp"
+                                app:civ_border_color="#FFFFFF"/>
 
                         <LinearLayout
 
@@ -182,9 +186,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="5dp"
                             card_view:cardBackgroundColor="#fff"
-                            card_view:cardElevation="6dp">
+                            card_view:cardElevation="0dp">
 
                         <RelativeLayout
                                 android:layout_width="match_parent"
@@ -238,9 +242,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="5dp"
                             card_view:cardBackgroundColor="#fff"
-                            card_view:cardElevation="6dp">
+                            card_view:cardElevation="0dp">
 
                         <RelativeLayout
 
@@ -288,9 +292,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="5dp"
                             card_view:cardBackgroundColor="#fff"
-                            card_view:cardElevation="6dp">
+                            card_view:cardElevation="0dp">
 
 
                         <RelativeLayout
@@ -321,7 +325,8 @@
                                     android:layout_marginTop="20dp"
                                     android:layout_marginEnd="30dp"
                                     android:layout_marginBottom="30dp"
-                                    android:textSize="15dp"
+                                    android:gravity="center_horizontal"
+                                    android:textSize="15sp"
                                     android:textStyle="italic" />
 
                         </RelativeLayout>
@@ -345,7 +350,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
                             android:layout_marginTop="5dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="0dp"
                             card_view:cardBackgroundColor="#fff"
                             card_view:cardElevation="6dp">
 
