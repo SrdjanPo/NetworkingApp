@@ -39,14 +39,19 @@ data class InterestCounters (
 )
 
 data class Spot(
+    val id: Long = counter++,
     val uid: String? = "",
     val name: String? = "",
     val profession: String? = "",
     val location: String? = "",
     val interests: ArrayList<String> = arrayListOf(),
     val goals: HashMap<String, String> = hashMapOf(),
+    val currentCompany: ArrayList<String> = arrayListOf(),
+    val currentTitle: ArrayList<String> = arrayListOf(),
+    val currentStartDate: ArrayList<String> = arrayListOf(),
     val currentOrg: MutableMap<String, Any> = mutableMapOf(),
-    //val previousOrg: HashMap<String, String> = hashMapOf(),
+    val currentOrgList: ArrayList<CurrentOrganization> = arrayListOf(),
+    //val previousOrg: MutableMap<String, Any> = mutableMapOf(),
     val about: String? = "",
     val email: String? = "",
     val instagram: String? = "",

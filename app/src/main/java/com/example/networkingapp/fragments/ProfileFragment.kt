@@ -171,6 +171,8 @@ class ProfileFragment : Fragment() {
 
                     val user = p0.getValue(User::class.java)
 
+                    Log.d("UserObj", user.toString())
+
                     // Basic info
                     profileName.setText(user?.name, TextView.BufferType.NORMAL)
                     profileProfession.setText(user?.profession, TextView.BufferType.NORMAL)

@@ -17,11 +17,13 @@ import android.view.animation.LinearInterpolator
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DiffUtil
 import com.example.networkingapp.*
 import com.example.networkingapp.R
 
 import com.example.networkingapp.activities.TinderCallback
 import com.example.networkingapp.adapters.CardStackAdapter
+import com.example.networkingapp.adapters.SpotDiffCallback
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -47,6 +49,7 @@ class SwipeFragment : Fragment(), CardStackListener {
     private var callback: TinderCallback? = null
 
     private var itemsFromDB = ArrayList<Spot>()
+
 
     private val manager by lazy { CardStackLayoutManager(activity, this) }
 
@@ -94,15 +97,16 @@ class SwipeFragment : Fragment(), CardStackListener {
 
                             val spot = child.getValue(Spot::class.java)
 
-                            var interestsList = ArrayList<String>()
-                            var goalsList = HashMap<String, String>()
+                            val interestsList = ArrayList<String>()
+                            val goalsList = HashMap<String, String>()
                             var currentOrgList = ArrayList<CurrentOrganization>()
-                            var currentOrgListMap = mutableMapOf<String, Any>()
+                            //val currentOrgListMap = mutableMapOf<String, Any>()
                             var previousOrgList = HashMap<String, String>()
-                            var countPreviousChildren =
+                            val countPreviousChildren =
                                 child.child("previousOrg").childrenCount.toInt()
-                            var countCurrentChildren =
+                            val countCurrentChildren =
                                 child.child("currentOrg").childrenCount.toInt()
+
 
                             for (snapshotInterest in child.child("interestedIn").children) {
 
@@ -125,6 +129,18 @@ class SwipeFragment : Fragment(), CardStackListener {
                                 var currentFromDB =
                                     snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
 
+                                /*currentOrgListMap.put("company", currentFromDB!!.company!!)
+                                currentOrgListMap.put("title", currentFromDB.title!!)
+                                currentOrgListMap.put("startDate", currentFromDB.startDate!!)*/
+
+                                currentOrgList.add(currentFromDB!!)
+                            }
+
+                            /*for (snapshotPreviousOrg in child.child("previousOrg").children) {
+
+                                var currentFromDB =
+                                    snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
+
                                 currentOrgListMap.put("company", currentFromDB!!.company!!)
                                 currentOrgListMap.put("title", currentFromDB!!.title!!)
                                 currentOrgListMap.put("startDate", currentFromDB!!.startDate!!)
@@ -134,22 +150,9 @@ class SwipeFragment : Fragment(), CardStackListener {
                                 Log.d("Start Date", currentFromDB!!.startDate!!)
 
                                 //currentOrgList.add(currentFromDB!!)
-
-                            }
-
-                            /*for (snapshotPreviousOrg in child.child("previousOrg").children) {
-
-                                var previousFromDB =
-                                    snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
-
-                                previousOrgList.put("company", previousFromDB!!.company!!)
-                                previousOrgList.put("title", previousFromDB!!.title!!)
-                                previousOrgList.put("startDate", previousFromDB!!.startDate!!)
-                                previousOrgList.put("endDate", previousFromDB!!.endDate!!)
-
                             }*/
 
-                            Log.d("MAP",  currentOrgListMap.toString())
+                            Log.d("LISTA", currentOrgList.toString())
 
                             itemsFromDB.add(
                                 Spot(
@@ -159,16 +162,18 @@ class SwipeFragment : Fragment(), CardStackListener {
                                     image = spot?.thumb_image,
                                     interests = interestsList,
                                     goals = goalsList,
-                                    currentOrg = currentOrgListMap,
+                                    currentOrgList = currentOrgList,
+                                    //currentOrg = currentOrgListMap,
                                     //previousOrg = previousOrgList,
-                                    countCurrentChildren = spot!!.countCurrentChildren,
-                                    countPreviousChildren = spot.countPreviousChildren,
-                                    about = spot.about
+                                    countCurrentChildren = countCurrentChildren,
+                                    countPreviousChildren = countPreviousChildren,
+                                    about = spot?.about
                                 )
                             )
                         }
 
                         setupCardStackView()
+
                     }
                 })
             }
@@ -179,6 +184,8 @@ class SwipeFragment : Fragment(), CardStackListener {
 
     private fun createSpots(): List<Spot> {
         var spots = ArrayList<Spot>()
+
+        Log.d("OPET", itemsFromDB.size.toString())
 
         spots.addAll(itemsFromDB)
 
@@ -210,15 +217,33 @@ class SwipeFragment : Fragment(), CardStackListener {
         }
     }
 
+    /*private fun paginate() {
+        val old = adapter.getSpots()
+        val new = old.plus(createSpots())
+        val callback = SpotDiffCallback(old, new)
+        val result = DiffUtil.calculateDiff(callback)
+        adapter.setSpots(new)
+        result.dispatchUpdatesTo(adapter)
+    }
+
+    private fun reload() {
+        val old = adapter.getSpots()
+        val new = createSpots()
+        val callback = SpotDiffCallback(old, new)
+        val result = DiffUtil.calculateDiff(callback)
+        adapter.setSpots(new)
+        result.dispatchUpdatesTo(adapter)
+    }*/
+
     override fun onCardDragging(direction: Direction, ratio: Float) {
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
 
     override fun onCardSwiped(direction: Direction) {
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
-        if (manager.topPosition == adapter.itemCount - 5) {
+        /*if (manager.topPosition == adapter.itemCount - 5) {
             //paginate()
-        }
+        }*/
     }
 
     override fun onCardRewound() {

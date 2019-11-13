@@ -9,10 +9,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -28,6 +25,8 @@ class CardStackAdapter(
     private var spots: List<Spot> = emptyList(),
     private var currentHelper: Int = 1,
     private var previousHelper: Int = 1
+    //private var currentHelper: Int = 1,
+    //private var previousHelper: Int = 1
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,11 +42,16 @@ class CardStackAdapter(
             .load(spot.image)
             .apply(
                 RequestOptions()
-                .placeholder(R.drawable.profile_pic)
+                    .placeholder(R.drawable.profile_pic)
             )
             .into(holder.image)
         holder.location.text = spot.location
         holder.about.text = spot.about
+
+        var currentOrgCounter = spot.countCurrentChildren
+
+        holder.interestsView.removeAllViews()
+
 
         for (interest in spot.interests) {
 
@@ -65,8 +69,9 @@ class CardStackAdapter(
             textView.setText(interest)
 
             holder.interestsView.addView(textView)
-
         }
+
+        holder.goalsView.removeAllViews()
 
         for (goal in spot.goals) {
 
@@ -90,38 +95,62 @@ class CardStackAdapter(
 
         }
 
-        for (current in spot.currentOrg) {
+        holder.experienceView.removeAllViews()
 
-            Log.d("Current", current.toString())
+        if (spot.currentOrgList.isEmpty()) {
 
-            if (spot.countPreviousChildren == 0) {
+            val textView = TextView(holder.experienceView.context, null, 0)
 
-                populateCurrentOrgIfNoPreviousOrg(
-                    current,
-                    spot.countCurrentChildren,
-                    holder.experienceView
-                )
+            var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, // This will define text view width
+                ViewGroup.LayoutParams.MATCH_PARENT // This will define text view height
+            )
 
-            } else {
+            params.setMargins(0, 20, 20, 0)
+            textView.layoutParams = params
+            textView.gravity = Gravity.CENTER
+            textView.layoutParams = params
+            textView.setText("No previous work experience")
+            textView.setTextColor(Color.GRAY)
 
-                populateCurrentOrg(current,holder.experienceView)
+            textView.compoundDrawablePadding = 15
+
+            holder.experienceView.addView(textView)
+
+            //holder.experienceRelativeView.visibility = View.GONE
+
+        } else {
+
+            for (current in spot.currentOrgList) {
+
+                if (spot.countPreviousChildren == 0) {
+
+                    populateCurrentOrgIfNoPreviousOrg(
+                        current,
+                        spot.countCurrentChildren,
+                        holder.experienceView
+                    )
+
+                } else {
+
+                    populateCurrentOrg(current, holder.experienceView)
+                }
             }
-
         }
 
-        /*
-        for (previous in spot.previousOrg) {
+
+        /*for (previous in spot.previousOrg) {
 
             populatePreviousOrg(previous, spot.countPreviousChildren, holder.experienceView)
         }*/
 
-        /*holder.itemView.setOnClickListener { v ->
-                Toast.makeText(v.context, spot.name, Toast.LENGTH_SHORT).show()
-        }*/
+        holder.itemView.setOnClickListener { v ->
+            Toast.makeText(v.context, spot.name, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun populateCurrentOrgIfNoPreviousOrg(
-        currentOrganization: MutableMap.MutableEntry<String, Any>,
+        currentOrganization: CurrentOrganization,
         childrenCounter: Int,
         experienceView: LinearLayout?
     ) {
@@ -129,38 +158,45 @@ class CardStackAdapter(
 
         if (currentHelper != childrenCounter) {
 
-            companyNameCurrent(currentOrganization,experienceView)
-            jobTitleCurrent(currentOrganization,experienceView)
-            startingDateCurrent(currentOrganization,experienceView)
+            companyNameCurrent(currentOrganization, experienceView)
+            jobTitleCurrent(currentOrganization, experienceView)
+            startingDateCurrent(currentOrganization, experienceView)
             horizontalSeparator(experienceView)
 
             currentHelper++
 
         } else {
 
-            companyNameCurrent(currentOrganization,experienceView)
-            jobTitleCurrent(currentOrganization,experienceView)
-            startingDateCurrent(currentOrganization,experienceView)
+            companyNameCurrent(currentOrganization, experienceView)
+            jobTitleCurrent(currentOrganization, experienceView)
+            startingDateCurrent(currentOrganization, experienceView)
 
             currentHelper = 1
         }
     }
 
-    fun populateCurrentOrg(currentOrganization: MutableMap.MutableEntry<String, Any>, experienceView: LinearLayout?) {
+    fun populateCurrentOrg(
+        currentOrganization: CurrentOrganization,
+        experienceView: LinearLayout?
+    ) {
 
-        companyNameCurrent(currentOrganization,experienceView)
-        jobTitleCurrent(currentOrganization,experienceView)
-        startingDateCurrent(currentOrganization,experienceView)
+        companyNameCurrent(currentOrganization, experienceView)
+        jobTitleCurrent(currentOrganization, experienceView)
+        startingDateCurrent(currentOrganization, experienceView)
         horizontalSeparator(experienceView)
     }
 
-    fun populatePreviousOrg(previousOrganization: MutableMap.MutableEntry<String, String>, countChildren: Int, experienceView: LinearLayout?) {
+    fun populatePreviousOrg(
+        previousOrganization: MutableMap.MutableEntry<String, String>,
+        countChildren: Int,
+        experienceView: LinearLayout?
+    ) {
 
-        if (previousHelper != countChildren) {
+        /*if (previousHelper != countChildren) {
 
             companyNamePrevious(previousOrganization, experienceView)
             jobTitlePrevious(previousOrganization, experienceView)
-            datePrevious(previousOrganization,experienceView)
+            datePrevious(previousOrganization, experienceView)
             horizontalSeparator(experienceView)
 
             previousHelper++
@@ -172,11 +208,11 @@ class CardStackAdapter(
             datePrevious(previousOrganization, experienceView)
 
             previousHelper = 1
-        }
+        }*/
     }
 
     fun companyNameCurrent(
-        currentOrganization: MutableMap.MutableEntry<String, Any>,
+        currentOrganization: CurrentOrganization,
         experienceView: LinearLayout?
     ) {
 
@@ -191,7 +227,7 @@ class CardStackAdapter(
         params.setMargins(0, 10, 0, 10)
         companyName.layoutParams = params
         companyName.gravity = Gravity.CENTER
-        companyName.setText(currentOrganization.value.toString())
+        companyName.setText(currentOrganization.company.toString())
         companyName.setTextColor(Color.parseColor("#545454"))
         companyName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         companyName.setTypeface(null, Typeface.BOLD)
@@ -199,7 +235,10 @@ class CardStackAdapter(
         experienceView.addView(companyName)
     }
 
-    fun jobTitleCurrent(currentOrganization: MutableMap.MutableEntry<String, Any>, experienceView: LinearLayout?) {
+    fun jobTitleCurrent(
+        currentOrganization: CurrentOrganization,
+        experienceView: LinearLayout?
+    ) {
 
         val jobTitle = TextView(experienceView!!.context, null, 0)
 
@@ -211,7 +250,7 @@ class CardStackAdapter(
         paramsTitle.setMargins(0, 10, 0, 10)
         jobTitle.layoutParams = paramsTitle
         jobTitle.gravity = Gravity.CENTER
-        jobTitle.setText(currentOrganization.value.toString())
+        jobTitle.setText(currentOrganization.title.toString())
         jobTitle.setTextColor(Color.parseColor("#545454"))
         jobTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
 
@@ -219,7 +258,7 @@ class CardStackAdapter(
     }
 
     fun startingDateCurrent(
-        currentOrganization: MutableMap.MutableEntry<String, Any>,
+        currentOrganization: CurrentOrganization,
         experienceView: LinearLayout?
     ) {
 
@@ -233,13 +272,16 @@ class CardStackAdapter(
         paramsDate.setMargins(0, 10, 0, 10)
         startingDate.layoutParams = paramsDate
         startingDate.gravity = Gravity.CENTER
-        startingDate.setText(currentOrganization.value.toString().plus(" - Present"))
+        startingDate.setText(currentOrganization.startDate.toString().plus(" - Present"))
         startingDate.setTextColor(Color.parseColor("#545454"))
         startingDate.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
         experienceView!!.addView(startingDate)
     }
 
-    fun companyNamePrevious(previousOrganization: MutableMap.MutableEntry<String, String>, experienceView: LinearLayout?) {
+    fun companyNamePrevious(
+        previousOrganization: MutableMap.MutableEntry<String, String>,
+        experienceView: LinearLayout?
+    ) {
 
         val companyName = TextView(experienceView!!.context, null, 0)
 
@@ -260,7 +302,10 @@ class CardStackAdapter(
         experienceView!!.addView(companyName)
     }
 
-    fun jobTitlePrevious(previousOrganization: MutableMap.MutableEntry<String, String>,experienceView: LinearLayout?) {
+    fun jobTitlePrevious(
+        previousOrganization: MutableMap.MutableEntry<String, String>,
+        experienceView: LinearLayout?
+    ) {
 
         val jobTitle = TextView(experienceView!!.context, null, 0)
 
@@ -279,7 +324,10 @@ class CardStackAdapter(
         experienceView!!.addView(jobTitle)
     }
 
-    fun datePrevious(previousOrganization: MutableMap.MutableEntry<String, String>, experienceView: LinearLayout?) {
+    fun datePrevious(
+        previousOrganization: MutableMap.MutableEntry<String, String>,
+        experienceView: LinearLayout?
+    ) {
 
         val textViewDate = TextView(experienceView!!.context, null, 0)
 
@@ -429,6 +477,7 @@ class CardStackAdapter(
         var interestsView: FlowLayout = view.findViewById(R.id.flowInterests)
         var goalsView: FlowLayout = view.findViewById(R.id.flowGoals)
         var experienceView: LinearLayout = view.findViewById(R.id.expContainer)
+        var experienceRelativeView: RelativeLayout = view.findViewById(R.id.relativeexp)
         var about: TextView = view.findViewById(R.id.aboutProfile)
     }
 
