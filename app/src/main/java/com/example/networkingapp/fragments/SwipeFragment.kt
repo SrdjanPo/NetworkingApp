@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -50,8 +51,11 @@ class SwipeFragment : Fragment(), CardStackListener {
 
     private var itemsFromDB = ArrayList<Spot>()
 
+    private var manager: CardStackLayoutManager = CardStackLayoutManager(activity, this)
 
-    private val manager by lazy { CardStackLayoutManager(activity, this) }
+    //private val cardStackView by lazy { card_stack_view }
+
+    //private val manager by lazy { CardStackLayoutManager(activity, this) }
 
     private val adapter by lazy { CardStackAdapter(createSpots()) }
 
@@ -66,11 +70,20 @@ class SwipeFragment : Fragment(), CardStackListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.fragment_swipe, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        manager = CardStackLayoutManager(activity, this)
+
+        setupButtons()
+
+        card_stack_view.visibility = View.GONE
+        buttons.visibility = View.GONE
+        progressLayoutSwipe.visibility = View.VISIBLE
 
         userDatabase.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
@@ -100,8 +113,7 @@ class SwipeFragment : Fragment(), CardStackListener {
                             val interestsList = ArrayList<String>()
                             val goalsList = HashMap<String, String>()
                             var currentOrgList = ArrayList<CurrentOrganization>()
-                            //val currentOrgListMap = mutableMapOf<String, Any>()
-                            var previousOrgList = HashMap<String, String>()
+                            var previousOrgList = ArrayList<PreviousOrganization>()
                             val countPreviousChildren =
                                 child.child("previousOrg").childrenCount.toInt()
                             val countCurrentChildren =
@@ -129,30 +141,17 @@ class SwipeFragment : Fragment(), CardStackListener {
                                 var currentFromDB =
                                     snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
 
-                                /*currentOrgListMap.put("company", currentFromDB!!.company!!)
-                                currentOrgListMap.put("title", currentFromDB.title!!)
-                                currentOrgListMap.put("startDate", currentFromDB.startDate!!)*/
-
                                 currentOrgList.add(currentFromDB!!)
                             }
 
-                            /*for (snapshotPreviousOrg in child.child("previousOrg").children) {
+                            for (snapshotPreviousOrg in child.child("previousOrg").children) {
 
-                                var currentFromDB =
+                                var previousFromDB =
                                     snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
 
-                                currentOrgListMap.put("company", currentFromDB!!.company!!)
-                                currentOrgListMap.put("title", currentFromDB!!.title!!)
-                                currentOrgListMap.put("startDate", currentFromDB!!.startDate!!)
+                                previousOrgList.add(previousFromDB!!)
+                            }
 
-                                Log.d("Company", currentFromDB!!.company!!)
-                                Log.d("Title", currentFromDB!!.title!!)
-                                Log.d("Start Date", currentFromDB!!.startDate!!)
-
-                                //currentOrgList.add(currentFromDB!!)
-                            }*/
-
-                            Log.d("LISTA", currentOrgList.toString())
 
                             itemsFromDB.add(
                                 Spot(
@@ -163,8 +162,7 @@ class SwipeFragment : Fragment(), CardStackListener {
                                     interests = interestsList,
                                     goals = goalsList,
                                     currentOrgList = currentOrgList,
-                                    //currentOrg = currentOrgListMap,
-                                    //previousOrg = previousOrgList,
+                                    previousOrgList = previousOrgList,
                                     countCurrentChildren = countCurrentChildren,
                                     countPreviousChildren = countPreviousChildren,
                                     about = spot?.about
@@ -174,11 +172,13 @@ class SwipeFragment : Fragment(), CardStackListener {
 
                         setupCardStackView()
 
+                        progressLayoutSwipe.visibility = View.GONE
+                        card_stack_view.visibility = View.VISIBLE
+                        buttons.visibility = View.VISIBLE
                     }
                 })
             }
         })
-
     }
 
 
@@ -202,7 +202,7 @@ class SwipeFragment : Fragment(), CardStackListener {
         manager.setTranslationInterval(8.0f)
         manager.setScaleInterval(0.95f)
         manager.setSwipeThreshold(0.3f)
-        manager.setMaxDegree(45.0f)
+        manager.setMaxDegree(90.0f)
         manager.setDirections(Direction.HORIZONTAL)
         manager.setCanScrollHorizontal(true)
         manager.setCanScrollVertical(false)
@@ -217,23 +217,40 @@ class SwipeFragment : Fragment(), CardStackListener {
         }
     }
 
-    /*private fun paginate() {
-        val old = adapter.getSpots()
-        val new = old.plus(createSpots())
-        val callback = SpotDiffCallback(old, new)
-        val result = DiffUtil.calculateDiff(callback)
-        adapter.setSpots(new)
-        result.dispatchUpdatesTo(adapter)
+    private fun setupButtons() {
+
+        skip_button.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Left)
+                .setDuration(Duration.Slow.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            manager.setSwipeAnimationSetting(setting)
+            card_stack_view.swipe()
+        }
+
+        /*val rewind = findViewById<View>(R.id.rewind_button)
+        rewind.setOnClickListener {
+            val setting = RewindAnimationSetting.Builder()
+                .setDirection(Direction.Bottom)
+                .setDuration(Duration.Normal.duration)
+                .setInterpolator(DecelerateInterpolator())
+                .build()
+            manager.setRewindAnimationSetting(setting)
+            cardStackView.rewind()
+        }*/
+
+        like_button.setOnClickListener {
+            val setting = SwipeAnimationSetting.Builder()
+                .setDirection(Direction.Right)
+                .setDuration(Duration.Slow.duration)
+                .setInterpolator(AccelerateInterpolator())
+                .build()
+            manager.setSwipeAnimationSetting(setting)
+            card_stack_view.swipe()
+        }
     }
 
-    private fun reload() {
-        val old = adapter.getSpots()
-        val new = createSpots()
-        val callback = SpotDiffCallback(old, new)
-        val result = DiffUtil.calculateDiff(callback)
-        adapter.setSpots(new)
-        result.dispatchUpdatesTo(adapter)
-    }*/
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")

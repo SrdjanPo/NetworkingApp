@@ -97,7 +97,7 @@ class TinderActivity : AppCompatActivity(), TinderCallback {
 
         })
 
-        profileTab?.select()
+        swipeTab?.select()
     }
 
     @Suppress("RedundantOverride")

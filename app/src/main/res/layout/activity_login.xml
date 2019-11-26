@@ -11,16 +11,15 @@
             android:id="@+id/emailET"
             android:layout_width="@dimen/standard_width"
             android:layout_height="@dimen/standard_height"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:hint="@string/hint_email"
             android:inputType="textEmailAddress"
-            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.20999998" />
 
     <EditText
             android:id="@+id/passwordET"
@@ -39,18 +38,16 @@
 
     <Button
             android:id="@+id/loginButton"
+            style="@style/StandardButton"
             android:layout_width="@dimen/standard_width"
             android:layout_height="@dimen/standard_height"
-            style="@style/StandardButton"
-            android:onClick="onLogin"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/passwordET"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="onLogin"
+            android:text="@string/login_button_text"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp"
-            android:text="@string/login_button_text"/>
+            app:layout_constraintTop_toBottomOf="@+id/passwordET" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

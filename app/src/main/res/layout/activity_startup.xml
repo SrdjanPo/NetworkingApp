@@ -6,7 +6,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.StartupActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
     <ImageView
             android:layout_width="wrap_content"
@@ -16,10 +17,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="@dimen/startup_logo_margin"
+            android:layout_marginBottom="50dp"
     />
 
     <Button
+            android:id="@+id/loginButton"
             android:layout_width="@dimen/standard_width"
             android:layout_height="@dimen/standard_height"
             android:text="@string/startup_button_login"
@@ -27,6 +29,7 @@
             android:onClick="onLoginStart"/>
 
     <Button
+            android:id="@+id/signupButton"
             android:layout_width="@dimen/standard_width"
             android:layout_height="@dimen/standard_height"
             android:text="@string/startup_button_signup"

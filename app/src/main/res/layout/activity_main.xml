@@ -16,7 +16,7 @@
             app:tabIndicator="@null"
             app:tabMinWidth="@dimen/navigation_height"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
             android:id="@+id/fragmentContainer"

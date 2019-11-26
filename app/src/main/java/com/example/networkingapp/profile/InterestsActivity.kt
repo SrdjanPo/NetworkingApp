@@ -30,7 +30,6 @@ class InterestsActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     private lateinit var interestDatabase: DatabaseReference
     private lateinit var profileDatabase: DatabaseReference
-    private lateinit var profiledDatabase: DatabaseReference
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val userId = firebaseAuth.currentUser?.uid
 
@@ -38,6 +37,7 @@ class InterestsActivity : AppCompatActivity() {
 
     var maxValue: String? = "testing"
     var maxValueCopy: String? = "testing"
+    var maxNumber: Int? = 0
 
     var viewCounter = 0
 
@@ -66,6 +66,8 @@ class InterestsActivity : AppCompatActivity() {
             progressBar.visibility = View.VISIBLE
 
             progressBar.progress = 30
+
+            emptyInterests()
         }
 
         //button that shows up on profile setup
@@ -168,64 +170,100 @@ class InterestsActivity : AppCompatActivity() {
         }
     }
 
+    private fun maxNumberOfInterests () {
+
+        // set views to visible when there are 10 interests
+        interestsContainerLinear.visibility = View.VISIBLE
+        numberOfIntTextView.visibility = View.VISIBLE
+
+        Toast.makeText(this, "You've reached maximum number of interests", Toast.LENGTH_LONG)
+            .show()
+    }
+
+    private fun interestActions (interest: String, textView: TextView) {
+
+        val interestStr = interest.plus("  X")
+
+        addProfile(interest) // incrementing proper profile value
+        checkMaxValue() // checking max value of the HashMap so we can extract "profiled" value
+        addSuggestions(maxValue!!) // Initializing addSuggestions function with proper value (maxValue is one of the array strings technology,design,hobby,sport, etc...)
+
+        // parameters for TextView
+
+        parametersForTextView(textView, interestStr)
+
+        ++viewCounter
+    }
+
+    private fun parametersForTextView (textView: TextView, interestStr: String) {
+
+        textView.layoutParams =
+            LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        val param = textView.layoutParams as LinearLayout.LayoutParams
+        textView.gravity = Gravity.CENTER
+        param.setMargins(70, 20, 0, 20)
+        textView.layoutParams = param
+        textView.setText(interestStr)
+        interestsContainerLinear.addView(textView)
+    }
+
+    private fun settingUpInterestCounter () {
+
+        var interestCounter = viewCounter.toString().plus("/10")
+
+        numberOfIntTextView.setText(interestCounter)
+    }
+
+    private fun removeInterest (textView: TextView) {
+
+        interestsContainerLinear.removeView(textView)
+        var textFromTV = textView.text.toString()
+        deleteProfile(textFromTV)  // decrementing proper value
+        checkMaxValue() // checking max value of the HashMap so we can extract "profiled" value
+        --viewCounter
+
+        // if there are less than 10 interests, interests counter remains grey
+
+        if (viewCounter != 10) {
+            numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
+        }
+
+        var interestCounter = viewCounter.toString().plus("/10")
+        numberOfIntTextView.setText(interestCounter)
+
+
+        var interestText = textFromTV.substring(0, textFromTV.length - 3) // because we added "  X" to the interest name, now we have to trim it
+        interestedInAL.remove(interestText) // removing item form the interestedInAL
+        addSuggestions(maxValue!!) // initializing addSuggestins with a proper value
+
+        emptyInterests()
+    }
+
 
     fun addInterest() {
 
         // checking the number of added interests
+
         if (viewCounter == 10) {
 
-            // set views to visible when there are 10 interests
-            interestsContainerLinear.visibility = View.VISIBLE
-            numberOfIntTextView.visibility = View.VISIBLE
+            maxNumberOfInterests()
 
-            Toast.makeText(this, "You've reached maximum number of interests", Toast.LENGTH_LONG)
-                .show()
             return
+
         } else {
 
-            // adding X to the string
             val interestToDB = interestsET.text.toString()
 
-            var interestStr = interestsET.text.toString().plus("  X")
             val textView = TextView(this, null, 0, R.style.Interest)
 
-            // checking the length of the string
-            if (interestStr.length >= 33) {
-
-                Toast.makeText(this, "Interest you've entered is too long", Toast.LENGTH_SHORT)
-                    .show()
-                return
-            }
-
-            if (interestStr.length < 5) {
-
-                Toast.makeText(this, "Interest you've entered is too short", Toast.LENGTH_SHORT)
-                    .show()
-                return
-            }
-
-            var keyCurrent = interestDatabase.push().key // getting a key value from the item that's about to be inserted in Firebase
-
-            interestDatabase.child(keyCurrent!!).setValue(interestToDB) // adding a interest to database
+            val key = interestDatabase.push().key
+            interestDatabase.child(key!!).setValue(interestToDB) // adding a interest to database
             interestedInAL.add(interestToDB) // adding it to the interestedIn ArrayList
-            addProfile(interestToDB) // incrementing proper profile value
-            checkMaxValue() // checking max value of the HashMap so we can extract "profiled" value
-            addSuggestions(maxValue!!) // Initializing addSuggestions function with proper value (maxValue is one of the array strings technology,design,hobby,sport, etc...)
 
-            // parameters for TextView
-            textView.layoutParams =
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            val param = textView.layoutParams as LinearLayout.LayoutParams
-            textView.gravity = Gravity.CENTER
-            param.setMargins(70, 20, 0, 20)
-            textView.layoutParams = param
-            textView.setText(interestStr)
-            interestsContainerLinear.addView(textView)
-
-            ++viewCounter
+            interestActions(interestToDB, textView)
 
             // changing the color of the number of views (from black to orange) when there are 10/10 views
             if (viewCounter == 10) {
@@ -233,11 +271,7 @@ class InterestsActivity : AppCompatActivity() {
                 numberOfIntTextView.setTextColor(Color.parseColor("#f47742"))
             }
 
-            // setting up interests counter
-
-            var interestCounter = viewCounter.toString().plus("/10")
-
-            numberOfIntTextView.setText(interestCounter)
+            settingUpInterestCounter()
 
             interestsET.getText()?.clear()
 
@@ -245,25 +279,8 @@ class InterestsActivity : AppCompatActivity() {
 
             textView.setOnClickListener {
 
-                interestsContainerLinear.removeView(textView)
-                var textFromTV = textView.text.toString()
-                deleteProfile(textFromTV)  // decrementing proper value
-                checkMaxValue() // checking max value of the HashMap so we can extract "profiled" value
-                --viewCounter
-
-                // if there are less than 10 interests, interests counter remains grey
-
-                if (viewCounter != 10) {
-                    numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
-                }
-
-                var interestCounter = viewCounter.toString().plus("/10")
-                numberOfIntTextView.setText(interestCounter)
-
-                interestDatabase.child(keyCurrent).removeValue()
-                var interestText = textFromTV.substring(0, textFromTV.length - 3) // because we added "  X" to the interest name, now we have to trim it
-                interestedInAL.remove(interestText) // removing item form the interestedInAL
-                addSuggestions(maxValue!!) // initializing addSuggestins with a proper value
+                interestDatabase.child(key).removeValue()
+                removeInterest(textView)
             }
         }
     }
@@ -273,43 +290,20 @@ class InterestsActivity : AppCompatActivity() {
         // checking the number of added interests
         if (viewCounter == 10) {
 
-            // set views to visible when there are 10 interests
-            interestsContainerLinear.visibility = View.VISIBLE
-            numberOfIntTextView.visibility = View.VISIBLE
-
-            Toast.makeText(this, "You've reached maximum number of interests", Toast.LENGTH_LONG)
-                .show()
+            maxNumberOfInterests()
             return
+
         } else {
 
             // adding X to the string
 
-            var interestStr = suggestion.plus("  X") // adding "  X" to the suggestion
             val textView = TextView(this, null, 0, R.style.Interest)
 
             var keyCurrent = interestDatabase.push().key
-
             interestDatabase.child(keyCurrent!!).setValue(suggestion) // Add interest to database
             interestedInAL.add(suggestion)
 
-            addProfile(suggestion)
-            checkMaxValue()
-            addSuggestions(maxValue!!)
-
-            // parameters for TextView
-            textView.layoutParams =
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            val param = textView.layoutParams as LinearLayout.LayoutParams
-            textView.gravity = Gravity.CENTER
-            param.setMargins(70, 20, 0, 20)
-            textView.layoutParams = param
-            textView.setText(interestStr)
-            interestsContainerLinear.addView(textView)
-
-            ++viewCounter
+            interestActions(suggestion, textView)
 
             // changing the color of the number of views (from black to orange) when there are 10/10 views
             if (viewCounter == 10) {
@@ -317,31 +311,15 @@ class InterestsActivity : AppCompatActivity() {
                 numberOfIntTextView.setTextColor(Color.parseColor("#f47742"))
             }
 
-            var interestCounter = viewCounter.toString().plus("/10")
-
-            numberOfIntTextView.setText(interestCounter)
+            settingUpInterestCounter()
 
             interestsET.getText()?.clear()
 
 
             // delete interest on click
             textView.setOnClickListener {
-                interestsContainerLinear.removeView(textView)
-                var textFromTV = textView.text.toString()
-                deleteProfile(textFromTV)
-                checkMaxValue()
-                --viewCounter
-                if (viewCounter != 10) {
-                    numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
-                }
-                var interestCounter = viewCounter.toString().plus("/10")
-                numberOfIntTextView.setText(interestCounter)
-
                 interestDatabase.child(keyCurrent).removeValue()
-
-                var suggestionText = textFromTV.substring(0, textFromTV.length - 3)
-                interestedInAL.remove(suggestionText)
-                addSuggestions(maxValue!!)
+                removeInterest(textView)
             }
         }
     }
@@ -396,11 +374,20 @@ class InterestsActivity : AppCompatActivity() {
                         if (viewCounter != 10) {
                             numberOfIntTextView.setTextColor(Color.parseColor("#808080"))
                         }
+
                         var interestCounter = viewCounter.toString().plus("/10")
                         numberOfIntTextView.setText(interestCounter)
                         var key = snapshot.key.toString()
                         interestDatabase.child(key).removeValue()
-                        addSuggestions(maxValue!!)
+
+                        if (interestsContainerLinear.childCount != 0) {
+
+                            addSuggestions(maxValue!!)
+
+                        } else {
+
+                            emptyInterests()
+                        }
                     }
                 }
             }
@@ -423,9 +410,18 @@ class InterestsActivity : AppCompatActivity() {
                 map.put("science", p0.child("science").getValue(Int::class.java))
                 map.put("sport", p0.child("sport").getValue(Int::class.java))
 
-                maxValueCopy = map.maxBy { it.value!! }!!.key
-                maxValue = maxValueCopy
-                addSuggestions(maxValueCopy!!)
+                if (interestsContainerLinear.childCount == 0) {
+
+                    emptyInterests()
+                }
+
+                else {
+
+                    maxValueCopy = map.maxBy { it.value!! }!!.key
+                    maxValue = maxValueCopy
+                    addSuggestions(maxValueCopy!!)
+
+                }
             }
         })
     }
@@ -458,7 +454,7 @@ class InterestsActivity : AppCompatActivity() {
             suggestionsProgressBar.visibility = View.GONE
             suggestedInterests.visibility = View.VISIBLE
 
-        }, 1000)
+        }, 500)
 
         suggestedInterests.visibility = View.GONE
         suggestionsProgressBar.visibility = View.VISIBLE
@@ -518,7 +514,7 @@ class InterestsActivity : AppCompatActivity() {
                 )
             val param = textView.layoutParams as LinearLayout.LayoutParams
             textView.gravity = Gravity.CENTER
-            param.setMargins(20, 20, 20, 20)
+            param.setMargins(0, 20, 20, 20)
             textView.layoutParams = param
             textView.setText(item)
             suggestedInterests.addView(textView)
@@ -645,6 +641,13 @@ class InterestsActivity : AppCompatActivity() {
     private fun checkMaxValue() {
 
         maxValue = map.maxBy { it.value!! }!!.key
+        maxNumber = map.maxBy { it.value!! }!!.value
+
+
+        if (maxNumber == 0) {
+
+            maxValue = ""
+        }
 
         if (maxValueCopy !== maxValue) {
 
@@ -670,19 +673,23 @@ class InterestsActivity : AppCompatActivity() {
 
         {
 
-            var textView = TextView(this, null, 0, R.style.interestsProfile)
+            suggestedInterests.removeAllViews()
 
-            textView.layoutParams =
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            val param = textView.layoutParams as LinearLayout.LayoutParams
-            textView.gravity = Gravity.CENTER
-            param.setMargins(70, 20, 20, 20)
-            textView.layoutParams = param
-            textView.setText("Technology")
-            interestsContainerLinear.addView(textView)
+            Handler().postDelayed( {
+
+                suggestionsProgressBar.visibility = View.GONE
+                suggestedInterests.visibility = View.VISIBLE
+
+            }, 500)
+
+            suggestedInterests.visibility = View.GONE
+            suggestionsProgressBar.visibility = View.VISIBLE
+
+            addToScroll("Technology")
+            addToScroll("Design")
+            addToScroll("Sport")
+            addToScroll("Science")
+            addToScroll("Hobby")
 
         }
     }

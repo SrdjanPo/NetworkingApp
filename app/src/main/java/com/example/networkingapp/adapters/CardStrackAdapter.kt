@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -25,8 +26,6 @@ class CardStackAdapter(
     private var spots: List<Spot> = emptyList(),
     private var currentHelper: Int = 1,
     private var previousHelper: Int = 1
-    //private var currentHelper: Int = 1,
-    //private var previousHelper: Int = 1
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,6 +34,7 @@ class CardStackAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.scroll.fullScroll(ScrollView.FOCUS_UP)
         val spot = spots[position]
         holder.name.text = spot.name
         holder.profession.text = spot.profession
@@ -48,10 +48,7 @@ class CardStackAdapter(
         holder.location.text = spot.location
         holder.about.text = spot.about
 
-        var currentOrgCounter = spot.countCurrentChildren
-
         holder.interestsView.removeAllViews()
-
 
         for (interest in spot.interests) {
 
@@ -97,27 +94,9 @@ class CardStackAdapter(
 
         holder.experienceView.removeAllViews()
 
-        if (spot.currentOrgList.isEmpty()) {
+        if (spot.currentOrgList.isEmpty() && spot.previousOrgList.isEmpty()) {
 
-            val textView = TextView(holder.experienceView.context, null, 0)
-
-            var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, // This will define text view width
-                ViewGroup.LayoutParams.MATCH_PARENT // This will define text view height
-            )
-
-            params.setMargins(0, 20, 20, 0)
-            textView.layoutParams = params
-            textView.gravity = Gravity.CENTER
-            textView.layoutParams = params
-            textView.setText("No previous work experience")
-            textView.setTextColor(Color.GRAY)
-
-            textView.compoundDrawablePadding = 15
-
-            holder.experienceView.addView(textView)
-
-            //holder.experienceRelativeView.visibility = View.GONE
+            holder.experienceRelativeView.visibility = View.GONE
 
         } else {
 
@@ -136,16 +115,11 @@ class CardStackAdapter(
                     populateCurrentOrg(current, holder.experienceView)
                 }
             }
-        }
 
+            for (previous in spot.previousOrgList) {
 
-        /*for (previous in spot.previousOrg) {
-
-            populatePreviousOrg(previous, spot.countPreviousChildren, holder.experienceView)
-        }*/
-
-        holder.itemView.setOnClickListener { v ->
-            Toast.makeText(v.context, spot.name, Toast.LENGTH_SHORT).show()
+                populatePreviousOrg(previous, spot.countPreviousChildren, holder.experienceView)
+            }
         }
     }
 
@@ -187,12 +161,12 @@ class CardStackAdapter(
     }
 
     fun populatePreviousOrg(
-        previousOrganization: MutableMap.MutableEntry<String, String>,
+        previousOrganization: PreviousOrganization,
         countChildren: Int,
         experienceView: LinearLayout?
     ) {
 
-        /*if (previousHelper != countChildren) {
+        if (previousHelper != countChildren) {
 
             companyNamePrevious(previousOrganization, experienceView)
             jobTitlePrevious(previousOrganization, experienceView)
@@ -208,7 +182,7 @@ class CardStackAdapter(
             datePrevious(previousOrganization, experienceView)
 
             previousHelper = 1
-        }*/
+        }
     }
 
     fun companyNameCurrent(
@@ -279,7 +253,7 @@ class CardStackAdapter(
     }
 
     fun companyNamePrevious(
-        previousOrganization: MutableMap.MutableEntry<String, String>,
+        previousOrganization: PreviousOrganization,
         experienceView: LinearLayout?
     ) {
 
@@ -294,7 +268,7 @@ class CardStackAdapter(
         params.setMargins(0, 10, 0, 10)
         companyName.layoutParams = params
         companyName.gravity = Gravity.CENTER
-        companyName.setText(previousOrganization.value.toString())
+        companyName.setText(previousOrganization.company.toString())
         companyName.setTextColor(Color.parseColor("#545454"))
         companyName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
         companyName.setTypeface(null, Typeface.BOLD)
@@ -303,7 +277,7 @@ class CardStackAdapter(
     }
 
     fun jobTitlePrevious(
-        previousOrganization: MutableMap.MutableEntry<String, String>,
+        previousOrganization: PreviousOrganization,
         experienceView: LinearLayout?
     ) {
 
@@ -317,7 +291,7 @@ class CardStackAdapter(
         paramsTitle.setMargins(0, 10, 0, 10)
         jobTitle.layoutParams = paramsTitle
         jobTitle.gravity = Gravity.CENTER
-        jobTitle.setText(previousOrganization!!.value.toString())
+        jobTitle.setText(previousOrganization.title.toString())
         jobTitle.setTextColor(Color.parseColor("#545454"))
         jobTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
 
@@ -325,7 +299,7 @@ class CardStackAdapter(
     }
 
     fun datePrevious(
-        previousOrganization: MutableMap.MutableEntry<String, String>,
+        previousOrganization: PreviousOrganization,
         experienceView: LinearLayout?
     ) {
 
@@ -340,8 +314,8 @@ class CardStackAdapter(
         textViewDate.layoutParams = paramsDate
         textViewDate.gravity = Gravity.CENTER
         textViewDate.setText(
-            previousOrganization!!.value.plus(" - ").plus(
-                previousOrganization!!.value
+            previousOrganization.startDate.plus(" - ").plus(
+                previousOrganization.endDate
             )
         )
         textViewDate.setTextColor(Color.parseColor("#545454"))
@@ -479,6 +453,7 @@ class CardStackAdapter(
         var experienceView: LinearLayout = view.findViewById(R.id.expContainer)
         var experienceRelativeView: RelativeLayout = view.findViewById(R.id.relativeexp)
         var about: TextView = view.findViewById(R.id.aboutProfile)
+        var scroll: NestedScrollView = view.findViewById(R.id.scrollView)
     }
 
 }
