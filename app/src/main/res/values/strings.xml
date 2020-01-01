@@ -17,6 +17,8 @@
     <string name="hint_location">Location</string>
     <string name="goals_text">Goals</string>
     <string name="interested_in_text">Interested in</string>
+    <string name="send_button_text">Send</string>
+    <string name="hint_message">Message</string>
 
 
     <string-array name="technology">

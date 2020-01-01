@@ -61,36 +61,37 @@ class BasicInfoActivity : AppCompatActivity() {
 
         populateBasicInfo()
 
-        nameET.requestFocus()
+        firstNameET.requestFocus()
 
-        if(nameET.requestFocus()) {
+        if(firstNameET.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
 
 
         saveChanges.setOnClickListener {
 
-            var string = nameET.text.toString()
-            var string1 = professionET.text.toString()
-            var string2 = locationET.text.toString()
+            val string = firstNameET.text.toString()
+            val string1 = lastNameET.text.toString()
+            val string2 = professionET.text.toString()
 
 
             if (string.length == 0) {
 
-                nameET.error = "Please enter your name"
+                firstNameET.error = "Please enter your first firstName"
 
             } else if (string1.length == 0) {
 
-                professionET.error = "Please enter your profession"
+                professionET.error = "Please enter your last firstName"
 
             } else if (string2.length == 0) {
-                locationET.error = "Please enter your location"
+
+                professionET.error = "Please enter your profession"
             }
 
             else {
 
-                database.child(userId!!).child("name").setValue(string)
-                database.child(userId!!).child("profession").setValue(string1)
+                database.child(userId!!).child("firstName").setValue(string)
+                database.child(userId!!).child("lastName").setValue(string1)
                 database.child(userId!!).child("location").setValue(string2)
 
                 closeActivity(string, string1, string2)
@@ -99,29 +100,29 @@ class BasicInfoActivity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
 
-            var string = nameET.text.toString()
-            var string1 = professionET.text.toString()
-            var string2 = locationET.text.toString()
+            val string = firstNameET.text.toString()
+            val string1 = lastNameET.text.toString()
+            val string2 = professionET.text.toString()
 
 
             if (string.length == 0) {
 
-                nameET.error = "Please enter your name"
+                firstNameET.error = "Please enter your first firstName"
 
             } else if (string1.length == 0) {
 
-                professionET.error = "Please enter your profession"
+                lastNameET.error = "Please enter your last firstName"
 
             } else if (string2.length == 0) {
-                locationET.error = "Please enter your location"
-            }
 
+                professionET.error = "Please enter your location"
+            }
 
             else {
 
-                database.child(userId!!).child("name").setValue(string)
-                database.child(userId!!).child("profession").setValue(string1)
-                database.child(userId!!).child("location").setValue(string2)
+                database.child(userId!!).child("firstName").setValue(string)
+                database.child(userId!!).child("lastName").setValue(string1)
+                database.child(userId!!).child("profession").setValue(string2)
 
                 val intent = Intent(this, InterestsActivity::class.java)
                 intent.putExtra("next", 1)
@@ -140,23 +141,21 @@ class BasicInfoActivity : AppCompatActivity() {
 
                 val user = p0.getValue(User::class.java)
 
-                nameET.setText(user?.name, TextView.BufferType.EDITABLE)
+                firstNameET.setText(user?.firstName, TextView.BufferType.EDITABLE)
+                lastNameET.setText(user?.lastName, TextView.BufferType.EDITABLE)
                 professionET.setText(user?.profession, TextView.BufferType.EDITABLE)
-                locationET.setText(user?.location, TextView.BufferType.EDITABLE)
 
-                nameET.setSelection(nameET.length())
+                firstNameET.setSelection(firstNameET.length())
             }
-
         })
-
     }
 
-    private fun closeActivity(name: String, profession: String, location: String) {
+    private fun closeActivity(name: String, lastName: String, profession: String) {
 
         val resultIntent = Intent()
         resultIntent.putExtra(INPUT_NAME, name)
+        resultIntent.putExtra(INPUT_LASTNAME, lastName)
         resultIntent.putExtra(INPUT_PROFESSION, profession)
-        resultIntent.putExtra(INPUT_LOCATION, location)
 
         setResult(Activity.RESULT_OK, resultIntent)
         finish()
@@ -166,7 +165,7 @@ class BasicInfoActivity : AppCompatActivity() {
         @JvmField
         val INPUT_NAME = "TEST"
         val INPUT_PROFESSION = "TESTTEST"
-        val INPUT_LOCATION = "TESTTESTTEST"
+        val INPUT_LASTNAME = "TESTTESTTEST"
     }
 
     override fun onSupportNavigateUp(): Boolean {

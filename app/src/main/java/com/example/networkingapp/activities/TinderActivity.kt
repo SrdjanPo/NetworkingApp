@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import com.google.android.material.tabs.TabLayout
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
@@ -15,6 +16,7 @@ import com.example.networkingapp.fragments.MatchesFragment
 import com.example.networkingapp.fragments.ProfileFragment
 import com.example.networkingapp.fragments.SwipeFragment
 import com.example.networkingapp.profile.BasicInfoActivity
+import com.example.networkingapp.util.DATA_CHATS
 import com.example.networkingapp.util.DATA_USERS
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -27,6 +29,7 @@ class TinderActivity : AppCompatActivity(), TinderCallback {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val userId = firebaseAuth.currentUser?.uid
     private lateinit var userDatabase: DatabaseReference
+    private lateinit var chatDatabase: DatabaseReference
 
     private var profileFragment: ProfileFragment? = null
     private var swipeFragment: SwipeFragment? = null
@@ -49,6 +52,7 @@ class TinderActivity : AppCompatActivity(), TinderCallback {
         }
 
         userDatabase = FirebaseDatabase.getInstance().reference.child(DATA_USERS)
+        chatDatabase = FirebaseDatabase.getInstance().reference.child(DATA_CHATS)
 
         profileTab?.icon = ContextCompat.getDrawable(this, R.drawable.tab_profile)
         swipeTab?.icon = ContextCompat.getDrawable(this, R.drawable.tab_swipe)
@@ -122,6 +126,8 @@ class TinderActivity : AppCompatActivity(), TinderCallback {
     override fun onGetUserId(): String = userId!!
 
     override fun getUserDatabase(): DatabaseReference = userDatabase
+
+    override fun getChatDatabase(): DatabaseReference = chatDatabase
 
     companion object {
         fun newIntent(context: Context?) = Intent(context, TinderActivity::class.java)

@@ -10,5 +10,7 @@
     <color name="green">#6bffa1</color>
     <color name="shadow">#cadddddd</color>
     <color name="transparent">#00000000</color>
+    <color name="transparentGrey">#efefef</color>
+    <color name="darkGray">#525252</color>
 
 </resources>

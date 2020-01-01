@@ -235,7 +235,7 @@ class InterestsActivity : AppCompatActivity() {
         numberOfIntTextView.setText(interestCounter)
 
 
-        var interestText = textFromTV.substring(0, textFromTV.length - 3) // because we added "  X" to the interest name, now we have to trim it
+        var interestText = textFromTV.substring(0, textFromTV.length - 3) // because we added "  X" to the interest firstName, now we have to trim it
         interestedInAL.remove(interestText) // removing item form the interestedInAL
         addSuggestions(maxValue!!) // initializing addSuggestins with a proper value
 

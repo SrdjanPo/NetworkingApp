@@ -3,19 +3,15 @@
 package com.example.networkingapp.fragments
 
 
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
@@ -29,27 +25,35 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import com.yuyakaido.android.cardstackview.*
-import kotlinx.android.synthetic.main.activity_experience.*
 import kotlinx.android.synthetic.main.fragment_swipe.*
-import kotlinx.android.synthetic.main.item_spot.*
+import java.text.DateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import android.graphics.PixelFormat
+
+
 
 
 class SwipeFragment : Fragment(), CardStackListener {
 
     private lateinit var userDatabase: DatabaseReference
+    private lateinit var chatDatabase: DatabaseReference
     private lateinit var userId: String
 
     private var profiled: String? = null
+    private var testId: String? = null
+    private var userFirstName: String? = null
+    private var userLastName: String? = null
+    private var userImageUrl: String? = null
+    private val swipedRightList: ArrayList<String> = arrayListOf()
+    private val swipedLeftList: ArrayList<String> = arrayListOf()
 
     private var callback: TinderCallback? = null
 
     private var itemsFromDB = ArrayList<Spot>()
+    private var deletedItems = ArrayList<Spot>()
 
     private var manager: CardStackLayoutManager = CardStackLayoutManager(activity, this)
 
@@ -59,11 +63,14 @@ class SwipeFragment : Fragment(), CardStackListener {
 
     private val adapter by lazy { CardStackAdapter(createSpots()) }
 
+    //private var adapter: CardStackAdapter = CardStackAdapter(createSpots())
+
 
     fun setCallback(callback: TinderCallback) {
         this.callback = callback
         userId = callback.onGetUserId()
         userDatabase = callback.getUserDatabase()
+        chatDatabase = callback.getChatDatabase()
     }
 
     override fun onCreateView(
@@ -77,119 +84,164 @@ class SwipeFragment : Fragment(), CardStackListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        manager = CardStackLayoutManager(activity, this)
+        //manager = CardStackLayoutManager(activity, this)
+        //adapter = CardStackAdapter(createSpots())
+
+        buttons.background = context!!.getDrawable(R.drawable.gradient_transparent)
+
 
         setupButtons()
+
 
         card_stack_view.visibility = View.GONE
         buttons.visibility = View.GONE
         progressLayoutSwipe.visibility = View.VISIBLE
 
-        userDatabase.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
+        if (itemsFromDB.isEmpty()) {
 
-            }
+            userDatabase.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
 
-            override fun onDataChange(p0: DataSnapshot) {
+                }
 
-                val user = p0.getValue(User::class.java)
+                override fun onDataChange(p0: DataSnapshot) {
 
-                profiled = user?.profiled
+                    val user = p0.getValue(User::class.java)
 
-                val cardsQuery = userDatabase.orderByChild("profiled").equalTo(profiled)
+                    profiled = user?.profiled
+                    testId = user?.uid
+                    userFirstName = user?.firstName
+                    userLastName = user?.lastName
+                    userImageUrl = user?.image
 
-                cardsQuery.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onCancelled(p0: DatabaseError) {
-
-                        //progressLayout.visibility = View.GONE
+                    for (child in p0.child("swipedRight").children) {
+                        swipedRightList.add(child.getValue().toString())
                     }
 
-                    override fun onDataChange(p0: DataSnapshot) {
+                    for (child in p0.child("swipedLeft").children) {
+                        swipedLeftList.add(child.getValue().toString())
+                    }
 
-                        p0.children.forEach { child ->
+                    val cardsQuery = userDatabase.orderByChild("profiled").equalTo(profiled)
 
-                            val spot = child.getValue(Spot::class.java)
+                    cardsQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onCancelled(p0: DatabaseError) {
 
-                            val interestsList = ArrayList<String>()
-                            val goalsList = HashMap<String, String>()
-                            var currentOrgList = ArrayList<CurrentOrganization>()
-                            var previousOrgList = ArrayList<PreviousOrganization>()
-                            val countPreviousChildren =
-                                child.child("previousOrg").childrenCount.toInt()
-                            val countCurrentChildren =
-                                child.child("currentOrg").childrenCount.toInt()
-
-
-                            for (snapshotInterest in child.child("interestedIn").children) {
-
-                                val interestsFromDB = snapshotInterest.getValue(String::class.java)
-
-                                interestsList.add(interestsFromDB!!)
-
-                            }
-
-                            for (snapshotGoal in child.child("goals").children) {
-
-                                val goalsFromDB = snapshotGoal.getValue(String::class.java)
-
-                                goalsList.put(goalsFromDB!!, goalsFromDB)
-
-                            }
-
-                            for (snapshotCurrentOrg in child.child("currentOrg").children) {
-
-                                var currentFromDB =
-                                    snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
-
-                                currentOrgList.add(currentFromDB!!)
-                            }
-
-                            for (snapshotPreviousOrg in child.child("previousOrg").children) {
-
-                                var previousFromDB =
-                                    snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
-
-                                previousOrgList.add(previousFromDB!!)
-                            }
-
-
-                            itemsFromDB.add(
-                                Spot(
-                                    name = spot?.name,
-                                    profession = spot?.profession,
-                                    location = spot?.location,
-                                    image = spot?.thumb_image,
-                                    interests = interestsList,
-                                    goals = goalsList,
-                                    currentOrgList = currentOrgList,
-                                    previousOrgList = previousOrgList,
-                                    countCurrentChildren = countCurrentChildren,
-                                    countPreviousChildren = countPreviousChildren,
-                                    about = spot?.about
-                                )
-                            )
+                            //progressLayout.visibility = View.GONE
                         }
 
-                        setupCardStackView()
+                        override fun onDataChange(p0: DataSnapshot) {
 
-                        progressLayoutSwipe.visibility = View.GONE
-                        card_stack_view.visibility = View.VISIBLE
-                        buttons.visibility = View.VISIBLE
-                    }
-                })
-            }
-        })
+                            p0.children.forEach { child ->
+
+                                var childId = child.child("uid").getValue()
+
+                                if (childId == userId
+                                    || swipedRightList.contains(childId)
+                                    || swipedLeftList.contains(childId)
+                                ) {
+
+                                    Log.d("USERID", childId.toString())
+
+                                } else {
+
+                                    val spot = child.getValue(Spot::class.java)
+
+                                    val interestsList = ArrayList<String>()
+                                    val goalsList = HashMap<String, String>()
+                                    var currentOrgList = ArrayList<CurrentOrganization>()
+                                    var previousOrgList = ArrayList<PreviousOrganization>()
+                                    val countPreviousChildren =
+                                        child.child("previousOrg").childrenCount.toInt()
+                                    val countCurrentChildren =
+                                        child.child("currentOrg").childrenCount.toInt()
+
+
+                                    for (snapshotInterest in child.child("interestedIn").children) {
+
+                                        val interestsFromDB =
+                                            snapshotInterest.getValue(String::class.java)
+
+                                        interestsList.add(interestsFromDB!!)
+
+                                    }
+
+                                    for (snapshotGoal in child.child("goals").children) {
+
+                                        val goalsFromDB = snapshotGoal.getValue(String::class.java)
+
+                                        goalsList.put(goalsFromDB!!, goalsFromDB)
+
+                                    }
+
+                                    for (snapshotCurrentOrg in child.child("currentOrg").children) {
+
+                                        var currentFromDB =
+                                            snapshotCurrentOrg.getValue(CurrentOrganization::class.java)
+
+                                        currentOrgList.add(currentFromDB!!)
+                                    }
+
+                                    for (snapshotPreviousOrg in child.child("previousOrg").children) {
+
+                                        var previousFromDB =
+                                            snapshotPreviousOrg.getValue(PreviousOrganization::class.java)
+
+                                        previousOrgList.add(previousFromDB!!)
+                                    }
+
+
+                                    itemsFromDB.add(
+                                        Spot(
+                                            uid = spot?.uid,
+                                            firstName = spot?.firstName,
+                                            lastName = spot?.lastName,
+                                            profession = spot?.profession,
+                                            location = spot?.location,
+                                            image = spot?.thumb_image,
+                                            interests = interestsList,
+                                            goals = goalsList,
+                                            currentOrgList = currentOrgList,
+                                            previousOrgList = previousOrgList,
+                                            countCurrentChildren = countCurrentChildren,
+                                            countPreviousChildren = countPreviousChildren,
+                                            about = spot?.about
+                                        )
+                                    )
+
+                                }
+                            }
+
+                            setupCardStackView()
+
+                            progressLayoutSwipe.visibility = View.GONE
+                            card_stack_view.visibility = View.VISIBLE
+                            buttons.visibility = View.VISIBLE
+                        }
+                    })
+                }
+            })
+
+        } else {
+
+            setupCardStackView()
+
+            adapter.setSpots(itemsFromDB)
+
+            progressLayoutSwipe.visibility = View.GONE
+            card_stack_view.visibility = View.VISIBLE
+            buttons.visibility = View.VISIBLE
+        }
     }
 
 
     private fun createSpots(): List<Spot> {
-        var spots = ArrayList<Spot>()
 
-        Log.d("OPET", itemsFromDB.size.toString())
-
+        /*val spots = ArrayList<Spot>()
+        //spots.clear()
         spots.addAll(itemsFromDB)
-
-        return spots
+        Log.d("SRDJANN", "SRDJAN")*/
+        return itemsFromDB
     }
 
     private fun setupCardStackView() {
@@ -197,6 +249,8 @@ class SwipeFragment : Fragment(), CardStackListener {
     }
 
     private fun initialize() {
+        manager = CardStackLayoutManager(activity, this)
+
         manager.setStackFrom(StackFrom.None)
         manager.setVisibleCount(3)
         manager.setTranslationInterval(8.0f)
@@ -208,6 +262,7 @@ class SwipeFragment : Fragment(), CardStackListener {
         manager.setCanScrollVertical(false)
         manager.setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
         manager.setOverlayInterpolator(LinearInterpolator())
+
         card_stack_view.layoutManager = manager
         card_stack_view.adapter = adapter
         card_stack_view.itemAnimator.apply {
@@ -229,16 +284,16 @@ class SwipeFragment : Fragment(), CardStackListener {
             card_stack_view.swipe()
         }
 
-        /*val rewind = findViewById<View>(R.id.rewind_button)
-        rewind.setOnClickListener {
+
+        rewind_button.setOnClickListener {
             val setting = RewindAnimationSetting.Builder()
                 .setDirection(Direction.Bottom)
                 .setDuration(Duration.Normal.duration)
                 .setInterpolator(DecelerateInterpolator())
                 .build()
             manager.setRewindAnimationSetting(setting)
-            cardStackView.rewind()
-        }*/
+            card_stack_view.rewind()
+        }
 
         like_button.setOnClickListener {
             val setting = SwipeAnimationSetting.Builder()
@@ -251,6 +306,15 @@ class SwipeFragment : Fragment(), CardStackListener {
         }
     }
 
+    /*private fun paginate() {
+        val old = adapter.getSpots()
+        val new = old.plus(createSpots())
+        val callback = SpotDiffCallback(old, new)
+        val result = DiffUtil.calculateDiff(callback)
+        adapter.setSpots(new)
+        result.dispatchUpdatesTo(adapter)
+    }*/
+
 
     override fun onCardDragging(direction: Direction, ratio: Float) {
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
@@ -258,13 +322,125 @@ class SwipeFragment : Fragment(), CardStackListener {
 
     override fun onCardSwiped(direction: Direction) {
         Log.d("CardStackView", "onCardSwiped: p = ${manager.topPosition}, d = $direction")
+
         /*if (manager.topPosition == adapter.itemCount - 5) {
-            //paginate()
+            paginate()
         }*/
+
+        //val uid = adapter.getIDs()
+
+        if (direction == Direction.Right) {
+
+            /*userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition - 1])
+                .setValue(uid[manager.topPosition - 1])*/
+
+            userDatabase.child(userId).child("swipedRight").child(itemsFromDB[0].uid!!)
+                .setValue(itemsFromDB[0].uid!!)
+
+
+            userDatabase.child(itemsFromDB[0].uid!!)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onCancelled(p0: DatabaseError) {
+
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+
+                        val selectedUser = p0.getValue(User::class.java)
+                        val selectedUserFirstName = selectedUser?.firstName
+                        val selectedUserLastName = selectedUser?.lastName
+                        val selectedUserProfession = selectedUser?.profession
+                        val selectedUserImageUrl = selectedUser?.image
+                        val selectedUserId = selectedUser?.uid
+
+                        for (child in p0.child("swipedRight").children) {
+
+
+                            Log.d("selectedUserId", child.toString())
+
+                            if (child.value == userId) {
+
+                                /*val calendar = Calendar.getInstance()
+                                val currentDate = DateFormat.getDateInstance(DateFormat.MONTH_FIELD)
+                                    .format(calendar.time)
+                                val currentDateWOYear = currentDate.substring(0, 6)
+
+                                Log.d("Datum", currentDate)
+                                Log.d("DatumWOY", currentDateWOYear)*/
+
+                                val chatKey = chatDatabase.push().key
+
+                               // chatDatabase.child(chatKey!!).child("dateMatched").setValue(currentDate)
+
+                                userDatabase.child(userId).child("matched").child(selectedUserId!!).setValue(chatKey)
+                                userDatabase.child(selectedUserId).child("matched").child(userId).setValue(chatKey)
+
+                                chatDatabase.child(chatKey!!).child(userId).child("firstName").setValue(userFirstName)
+                                chatDatabase.child(chatKey).child(userId).child("lastName").setValue(userLastName)
+                                chatDatabase.child(chatKey).child(userId).child("imageUrl").setValue(userImageUrl)
+
+
+                                chatDatabase.child(chatKey).child(selectedUserId).child("firstName").setValue(selectedUserFirstName)
+                                chatDatabase.child(chatKey).child(selectedUserId).child("lastName").setValue(selectedUserLastName)
+                                chatDatabase.child(chatKey).child(selectedUserId).child("imageUrl").setValue(selectedUserImageUrl)
+
+                            }
+                        }
+
+                        deletedItems.add(itemsFromDB[0])
+                        itemsFromDB.removeAt(0)
+
+                    }
+                })
+        }
+
+        if (direction == Direction.Left) {
+
+            /*userDatabase.child(userId).child("swipedLeft").child(uid[manager.topPosition - 1])
+                .setValue(uid[manager.topPosition - 1])*/
+
+            userDatabase.child(userId).child("swipedLeft").child(itemsFromDB[0].uid!!)
+                .setValue(itemsFromDB[0].uid!!)
+
+            deletedItems.add(itemsFromDB[0])
+
+            itemsFromDB.removeAt(0)
+        }
+
     }
 
     override fun onCardRewound() {
         Log.d("CardStackView", "onCardRewound: ${manager.topPosition}")
+
+        val uid = adapter.getIDs()
+        val spots = adapter.getSpots()
+
+        /*userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition])
+            .removeValue()
+        userDatabase.child(userId).child("swipedLeft").child(uid[manager.topPosition]).removeValue()*/
+
+        //itemsFromDB.add(spots[manager.topPosition])
+
+
+        userDatabase.child(userId).child("swipedRight")
+            .child(deletedItems[deletedItems.size - 1].uid!!).removeValue()
+
+        Log.d("deletedd", deletedItems[deletedItems.size - 1].firstName!!)
+
+        userDatabase.child(userId).child("swipedLeft")
+            .child(deletedItems[deletedItems.size - 1].uid!!).removeValue()
+
+        var copyItemsList = itemsFromDB
+
+        itemsFromDB.clear()
+
+        itemsFromDB.add(0, deletedItems[deletedItems.size - 1])
+        itemsFromDB.addAll(copyItemsList)
+
+        deletedItems.removeAt(deletedItems.size - 1)
+
+        Log.d("lista1", itemsFromDB.toString())
+        Log.d("lista2", deletedItems.toString())
     }
 
     override fun onCardCanceled() {
@@ -280,5 +456,12 @@ class SwipeFragment : Fragment(), CardStackListener {
         val textView = view.findViewById<TextView>(R.id.profileName)
         Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
     }
+
+
+   /* override fun onAttachFragment(childFragment: Fragment?) {
+        super.onAttachFragment(childFragment)
+        val window = activity!!.window
+        window.setFormat(PixelFormat.RGBA_8888)
+    }*/
 
 }

@@ -3,7 +3,8 @@ package com.example.networkingapp
 
 data class User(
     val uid: String? = "",
-    val name: String? = "",
+    val firstName: String? = "",
+    val lastName: String? = "",
     val profession: String? = "",
     val location: String? = "",
     val about: String? = "",
@@ -15,6 +16,17 @@ data class User(
     var image: String? = "",
     var thumb_image: String? = "",
     var profiled: String? = ""
+)
+
+data class Chat (
+    val userId: String = "",
+    val chatId: String = "",
+    val otherUserId: String = "",
+    val firstName: String = "",
+    val lastName: String? = "",
+    val imageUrl: String = "",
+    val profession: String? = "",
+    val location: String? = ""
 )
 
 data class CurrentOrganization (
@@ -38,10 +50,17 @@ data class InterestCounters (
     val design: Int? = 0
 )
 
+data class Message(
+    val sentBy: String? = null,
+    val message: String? = null,
+    val time: String? = null
+)
+
 data class Spot(
     val id: Long = counter++,
     val uid: String? = "",
-    val name: String? = "",
+    val firstName: String? = "",
+    val lastName: String? = "",
     val profession: String? = "",
     val location: String? = "",
     val interests: ArrayList<String> = arrayListOf(),

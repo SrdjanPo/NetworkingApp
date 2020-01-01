@@ -1,6 +1,5 @@
 package com.example.networkingapp.adapters
 
-import android.app.PendingIntent.getActivity
 import android.graphics.Color
 import android.graphics.Typeface
 import android.util.Log
@@ -24,19 +23,24 @@ import org.apmem.tools.layouts.FlowLayout
 class CardStackAdapter(
 
     private var spots: List<Spot> = emptyList(),
+    private var idList: ArrayList<String> = arrayListOf(),
     private var currentHelper: Int = 1,
     private var previousHelper: Int = 1
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
+        Log.d("BOUNDD", "BOUND")
         return ViewHolder(inflater.inflate(R.layout.item_spot, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
         holder.scroll.fullScroll(ScrollView.FOCUS_UP)
         val spot = spots[position]
-        holder.name.text = spot.name
+        val idItem = spot.uid
+        idList.add(idItem!!)
+        holder.name.text = spot.firstName.plus(" ").plus(spot.lastName)
         holder.profession.text = spot.profession
         Glide.with(holder.image)
             .load(spot.image)
@@ -121,6 +125,11 @@ class CardStackAdapter(
                 populatePreviousOrg(previous, spot.countPreviousChildren, holder.experienceView)
             }
         }
+    }
+
+    fun getIDs() : ArrayList<String> {
+
+        return idList
     }
 
     fun populateCurrentOrgIfNoPreviousOrg(

@@ -106,7 +106,7 @@ class PreviousOrgEditActivity : AppCompatActivity() {
 
             if (string1.length == 0) {
 
-                companyET.error = "Please enter company name"
+                companyET.error = "Please enter company firstName"
 
             } else if (string2.length == 0) {
 

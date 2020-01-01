@@ -1,11 +1,17 @@
 package com.example.networkingapp.fragments
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
@@ -22,6 +28,9 @@ import org.apmem.tools.layouts.FlowLayout
 import android.util.Log
 import android.util.TypedValue
 import android.widget.*
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.networkingapp.CurrentOrganization
 import com.example.networkingapp.PreviousOrganization
 import com.example.networkingapp.util.*
@@ -37,6 +46,10 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import java.io.File
 import id.zelory.compressor.Compressor
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
+import java.util.*
+import java.util.jar.Manifest
+import kotlin.collections.HashMap
 
 
 class ProfileFragment : Fragment() {
@@ -55,6 +68,13 @@ class ProfileFragment : Fragment() {
 
     var counterSnapshotCurrent = 1
     var counterSnapshotPrevious = 1
+
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    var gps_loc: Location? = null
+    var network_loc: Location? = null
+    var final_loc: Location? = null
+    lateinit var locationManager: LocationManager
 
 
     fun setCallback(callback: TinderCallback) {
@@ -76,6 +96,79 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        locationManager = activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        if (ActivityCompat.checkSelfPermission(context!!, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(context!!, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(context!!, android.Manifest.permission.ACCESS_NETWORK_STATE) != PackageManager.PERMISSION_GRANTED) {
+
+            Log.d("PermissionDenied", "PermissionDenied")
+        }
+
+        else {
+
+            Log.d("PermissionGranted", "PermissionGranted")
+        }
+
+        try {
+
+            gps_loc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            network_loc = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+
+        } catch (e: Exception){
+
+            e.printStackTrace()
+
+        }
+
+        if (gps_loc!= null) {
+
+            final_loc = gps_loc
+            latitude = final_loc!!.latitude
+            longitude = final_loc!!.longitude
+
+        }
+
+        else if (network_loc != null) {
+
+            final_loc = network_loc
+            latitude = final_loc!!.latitude
+            longitude = final_loc!!.longitude
+        }
+
+        else {
+            latitude = 0.0
+            longitude = 0.0
+        }
+
+        try {
+
+
+            var geocoder = Geocoder(activity!!.applicationContext, Locale.getDefault())
+            var addresses = geocoder.getFromLocation(latitude, longitude, 1)
+
+
+            if (addresses != null && addresses.size > 0) {
+
+                var address = addresses.get(0).getAddressLine(0)
+                var city = addresses.get(0).locality
+                var state = addresses.get(0).adminArea
+                var country = addresses.get(0).countryName
+                var postal_code = addresses.get(0).postalCode
+                var knownName = addresses.get(0).featureName
+
+
+                var location = city.plus(", ").plus(country)
+                profileLocation.text = location
+                userDatabase.child("location").setValue(location)
+            }
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+        }
 
 
         // Firebase storage
@@ -174,9 +267,10 @@ class ProfileFragment : Fragment() {
                     Log.d("UserObj", user.toString())
 
                     // Basic info
-                    profileName.setText(user?.name, TextView.BufferType.NORMAL)
+                    profileName.setText(user?.firstName.plus(" ").plus(user?.lastName), TextView.BufferType.NORMAL)
+
                     profileProfession.setText(user?.profession, TextView.BufferType.NORMAL)
-                    profileLocation.setText(user?.location, TextView.BufferType.NORMAL)
+                    //profileLocation.setText(user?.location, TextView.BufferType.NORMAL)
 
                     var image = p0.child("image").value.toString()
                     var thumbnail = p0.child("thumb_image").value.toString()

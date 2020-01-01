@@ -50,7 +50,7 @@ class SignupActivity : AppCompatActivity() {
                     } else {
                         val email = emailET.text.toString()
                         val userId = firebaseAuth.currentUser?.uid ?: ""
-                        val user = User(userId, "","", "", "", "","","", "", "","default","default","")
+                        val user = User(userId, "","", "", "", "","","", "", "","default","default","default")
 
                         var updateObj = HashMap<String, Any>()
                         updateObj.put("design", 0)
