@@ -31,6 +31,8 @@ class MatchesFragment : Fragment() {
     private lateinit var userDatabase: DatabaseReference
     private lateinit var chatDatabase: DatabaseReference
 
+    //private val matches by lazy { matchesRV }
+
     private val chatsAdapter = ChatsAdapter(ArrayList())
 
     private var callback: TinderCallback? = null
@@ -55,6 +57,7 @@ class MatchesFragment : Fragment() {
 
         matchesRV.visibility = View.GONE
         progressLayoutMatches.visibility = View.VISIBLE
+
         chatsAdapter.removeAllElements()
         fetchData()
          matchesRV.apply {
@@ -109,5 +112,8 @@ class MatchesFragment : Fragment() {
             }
 
         })
+
+        matchesRV.visibility = View.VISIBLE
+        progressLayoutMatches.visibility = View.GONE
     }
 }

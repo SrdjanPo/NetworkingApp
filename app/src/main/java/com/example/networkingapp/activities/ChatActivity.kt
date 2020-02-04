@@ -116,7 +116,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     fun onSend(v: View) {
-        val message = com.example.networkingapp.Message(userId, messageET.text.toString(), Calendar.getInstance().time.toString())
+        val message = Message(userId, messageET.text.toString(), Calendar.getInstance().time.toString())
         val key = chatDatabase.child(chatId!!).child(DATA_MESSAGES).push().key
         if(!key.isNullOrEmpty()) {
             chatDatabase.child(chatId!!).child(DATA_MESSAGES).child(key).setValue(message)

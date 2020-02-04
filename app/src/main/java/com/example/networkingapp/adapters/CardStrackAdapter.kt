@@ -30,7 +30,6 @@ class CardStackAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        Log.d("BOUNDD", "BOUND")
         return ViewHolder(inflater.inflate(R.layout.item_spot, parent, false))
     }
 
@@ -353,6 +352,7 @@ class CardStackAdapter(
 
     fun setSpots(spots: List<Spot>) {
         this.spots = spots
+        notifyDataSetChanged()
     }
 
     fun getSpots(): List<Spot> {

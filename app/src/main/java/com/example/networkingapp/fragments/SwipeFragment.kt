@@ -32,8 +32,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.graphics.PixelFormat
-
-
+import android.widget.Toast
 
 
 class SwipeFragment : Fragment(), CardStackListener {
@@ -49,21 +48,24 @@ class SwipeFragment : Fragment(), CardStackListener {
     private var userImageUrl: String? = null
     private val swipedRightList: ArrayList<String> = arrayListOf()
     private val swipedLeftList: ArrayList<String> = arrayListOf()
+    private val itemsCounter: Int = 0
 
     private var callback: TinderCallback? = null
+
 
     private var itemsFromDB = ArrayList<Spot>()
     private var deletedItems = ArrayList<Spot>()
 
     private var manager: CardStackLayoutManager = CardStackLayoutManager(activity, this)
 
+    private var positionCounter: Int = 0
+
     //private val cardStackView by lazy { card_stack_view }
+    //private val progessLayoutLazy by lazy { progressLayoutSwipe }
 
     //private val manager by lazy { CardStackLayoutManager(activity, this) }
 
     private val adapter by lazy { CardStackAdapter(createSpots()) }
-
-    //private var adapter: CardStackAdapter = CardStackAdapter(createSpots())
 
 
     fun setCallback(callback: TinderCallback) {
@@ -85,19 +87,19 @@ class SwipeFragment : Fragment(), CardStackListener {
         super.onViewCreated(view, savedInstanceState)
 
         //manager = CardStackLayoutManager(activity, this)
-        //adapter = CardStackAdapter(createSpots())
 
-        buttons.background = context!!.getDrawable(R.drawable.gradient_transparent)
-
+        //buttons.background = context!!.getDrawable(R.drawable.gradient_transparent)
 
         setupButtons()
-
 
         card_stack_view.visibility = View.GONE
         buttons.visibility = View.GONE
         progressLayoutSwipe.visibility = View.VISIBLE
 
+        //itemsFromDB.clear()
+
         if (itemsFromDB.isEmpty()) {
+
 
             userDatabase.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onCancelled(p0: DatabaseError) {
@@ -105,6 +107,7 @@ class SwipeFragment : Fragment(), CardStackListener {
                 }
 
                 override fun onDataChange(p0: DataSnapshot) {
+
 
                     val user = p0.getValue(User::class.java)
 
@@ -138,8 +141,7 @@ class SwipeFragment : Fragment(), CardStackListener {
 
                                 if (childId == userId
                                     || swipedRightList.contains(childId)
-                                    || swipedLeftList.contains(childId)
-                                ) {
+                                    || swipedLeftList.contains(childId)) {
 
                                     Log.d("USERID", childId.toString())
 
@@ -214,6 +216,8 @@ class SwipeFragment : Fragment(), CardStackListener {
 
                             setupCardStackView()
 
+                            Log.d("EMPTY", itemsFromDB.size.toString())
+
                             progressLayoutSwipe.visibility = View.GONE
                             card_stack_view.visibility = View.VISIBLE
                             buttons.visibility = View.VISIBLE
@@ -226,7 +230,10 @@ class SwipeFragment : Fragment(), CardStackListener {
 
             setupCardStackView()
 
-            adapter.setSpots(itemsFromDB)
+            //adapter.setSpots(itemsFromDB)
+
+            Log.d("NOTEMPTY", itemsFromDB.size.toString())
+
 
             progressLayoutSwipe.visibility = View.GONE
             card_stack_view.visibility = View.VISIBLE
@@ -237,11 +244,11 @@ class SwipeFragment : Fragment(), CardStackListener {
 
     private fun createSpots(): List<Spot> {
 
-        /*val spots = ArrayList<Spot>()
-        //spots.clear()
+        val spots = ArrayList<Spot>()
+        spots.clear()
         spots.addAll(itemsFromDB)
-        Log.d("SRDJANN", "SRDJAN")*/
-        return itemsFromDB
+
+        return spots
     }
 
     private fun setupCardStackView() {
@@ -250,7 +257,6 @@ class SwipeFragment : Fragment(), CardStackListener {
 
     private fun initialize() {
         manager = CardStackLayoutManager(activity, this)
-
         manager.setStackFrom(StackFrom.None)
         manager.setVisibleCount(3)
         manager.setTranslationInterval(8.0f)
@@ -334,11 +340,11 @@ class SwipeFragment : Fragment(), CardStackListener {
             /*userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition - 1])
                 .setValue(uid[manager.topPosition - 1])*/
 
-            userDatabase.child(userId).child("swipedRight").child(itemsFromDB[0].uid!!)
-                .setValue(itemsFromDB[0].uid!!)
+            userDatabase.child(userId).child("swipedRight").child(itemsFromDB[manager.topPosition - 1].uid!!)
+                .setValue(itemsFromDB[manager.topPosition - 1].uid!!)
 
 
-            userDatabase.child(itemsFromDB[0].uid!!)
+            userDatabase.child(itemsFromDB[manager.topPosition - 1].uid!!)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
 
@@ -356,8 +362,6 @@ class SwipeFragment : Fragment(), CardStackListener {
                         for (child in p0.child("swipedRight").children) {
 
 
-                            Log.d("selectedUserId", child.toString())
-
                             if (child.value == userId) {
 
                                 /*val calendar = Calendar.getInstance()
@@ -367,6 +371,8 @@ class SwipeFragment : Fragment(), CardStackListener {
 
                                 Log.d("Datum", currentDate)
                                 Log.d("DatumWOY", currentDateWOYear)*/
+
+                                Toast.makeText(context, "IT'S A MATCHHHHH", Toast.LENGTH_LONG).show()
 
                                 val chatKey = chatDatabase.push().key
 
@@ -387,8 +393,8 @@ class SwipeFragment : Fragment(), CardStackListener {
                             }
                         }
 
-                        deletedItems.add(itemsFromDB[0])
-                        itemsFromDB.removeAt(0)
+                        //deletedItems.add(itemsFromDB[0])
+                        //itemsFromDB.removeAt(0)
 
                     }
                 })
@@ -399,12 +405,19 @@ class SwipeFragment : Fragment(), CardStackListener {
             /*userDatabase.child(userId).child("swipedLeft").child(uid[manager.topPosition - 1])
                 .setValue(uid[manager.topPosition - 1])*/
 
-            userDatabase.child(userId).child("swipedLeft").child(itemsFromDB[0].uid!!)
-                .setValue(itemsFromDB[0].uid!!)
+            userDatabase.child(userId).child("swipedLeft").child(itemsFromDB[itemsCounter].uid!!)
+                .setValue(itemsFromDB[itemsCounter].uid!!)
 
-            deletedItems.add(itemsFromDB[0])
+            //deletedItems.add(itemsFromDB[manager.topPosition])
 
-            itemsFromDB.removeAt(0)
+            //itemsFromDB.removeAt(0)
+        }
+
+        Log.d("BROJ", manager.topPosition.toString())
+
+        if (itemsFromDB.isEmpty()) {
+
+            noMoreConnections.visibility = View.VISIBLE
         }
 
     }
@@ -415,14 +428,15 @@ class SwipeFragment : Fragment(), CardStackListener {
         val uid = adapter.getIDs()
         val spots = adapter.getSpots()
 
-        /*userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition])
-            .removeValue()
-        userDatabase.child(userId).child("swipedLeft").child(uid[manager.topPosition]).removeValue()*/
+        userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition]).removeValue()
+        userDatabase.child(userId).child("swipedLeft").child(uid[manager.topPosition]).removeValue()
+
+        Log.d("TRENUTNAREWIND", manager.topPosition.toString())
 
         //itemsFromDB.add(spots[manager.topPosition])
 
 
-        userDatabase.child(userId).child("swipedRight")
+        /*userDatabase.child(userId).child("swipedRight")
             .child(deletedItems[deletedItems.size - 1].uid!!).removeValue()
 
         Log.d("deletedd", deletedItems[deletedItems.size - 1].firstName!!)
@@ -440,7 +454,7 @@ class SwipeFragment : Fragment(), CardStackListener {
         deletedItems.removeAt(deletedItems.size - 1)
 
         Log.d("lista1", itemsFromDB.toString())
-        Log.d("lista2", deletedItems.toString())
+        Log.d("lista2", deletedItems.toString())*/
     }
 
     override fun onCardCanceled() {
@@ -455,6 +469,7 @@ class SwipeFragment : Fragment(), CardStackListener {
     override fun onCardDisappeared(view: View, position: Int) {
         val textView = view.findViewById<TextView>(R.id.profileName)
         Log.d("CardStackView", "onCardDisappeared: ($position) ${textView.text}")
+
     }
 
 
