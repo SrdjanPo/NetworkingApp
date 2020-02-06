@@ -229,8 +229,7 @@ class SwipeFragment : Fragment(), CardStackListener {
         } else {
 
             setupCardStackView()
-
-            //adapter.setSpots(itemsFromDB)
+            reload()
 
             Log.d("NOTEMPTY", itemsFromDB.size.toString())
 
@@ -239,6 +238,15 @@ class SwipeFragment : Fragment(), CardStackListener {
             card_stack_view.visibility = View.VISIBLE
             buttons.visibility = View.VISIBLE
         }
+    }
+
+    private fun reload() {
+        val old = adapter.getSpots()
+        val new = createSpots()
+        val callback = SpotDiffCallback(old, new)
+        val result = DiffUtil.calculateDiff(callback)
+        adapter.setSpots(new)
+        result.dispatchUpdatesTo(adapter)
     }
 
 
@@ -340,11 +348,11 @@ class SwipeFragment : Fragment(), CardStackListener {
             /*userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition - 1])
                 .setValue(uid[manager.topPosition - 1])*/
 
-            userDatabase.child(userId).child("swipedRight").child(itemsFromDB[manager.topPosition - 1].uid!!)
-                .setValue(itemsFromDB[manager.topPosition - 1].uid!!)
+            userDatabase.child(userId).child("swipedRight").child(itemsFromDB[itemsCounter].uid!!)
+                .setValue(itemsFromDB[itemsCounter].uid!!)
 
 
-            userDatabase.child(itemsFromDB[manager.topPosition - 1].uid!!)
+            userDatabase.child(itemsFromDB[itemsCounter].uid!!)
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(p0: DatabaseError) {
 
@@ -413,7 +421,9 @@ class SwipeFragment : Fragment(), CardStackListener {
             //itemsFromDB.removeAt(0)
         }
 
-        Log.d("BROJ", manager.topPosition.toString())
+        Log.d("SRKI", itemsFromDB[0].uid.toString())
+
+        itemsFromDB.removeAt(0)
 
         if (itemsFromDB.isEmpty()) {
 
