@@ -16,7 +16,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DiffUtil
 import com.example.networkingapp.*
-import com.example.networkingapp.R
 
 import com.example.networkingapp.activities.TinderCallback
 import com.example.networkingapp.adapters.CardStackAdapter
@@ -33,6 +32,16 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import android.graphics.PixelFormat
 import android.widget.Toast
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.Button
+import android.widget.LinearLayout
+import com.bumptech.glide.Glide
+import com.example.networkingapp.R
+import com.example.networkingapp.activities.ChatActivity
+import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.match_window_full_screen.*
 
 
 class SwipeFragment : Fragment(), CardStackListener {
@@ -51,7 +60,6 @@ class SwipeFragment : Fragment(), CardStackListener {
     private val itemsCounter: Int = 0
 
     private var callback: TinderCallback? = null
-
 
     private var itemsFromDB = ArrayList<Spot>()
     private var deletedItems = ArrayList<Spot>()
@@ -141,7 +149,8 @@ class SwipeFragment : Fragment(), CardStackListener {
 
                                 if (childId == userId
                                     || swipedRightList.contains(childId)
-                                    || swipedLeftList.contains(childId)) {
+                                    || swipedLeftList.contains(childId)
+                                ) {
 
                                     Log.d("USERID", childId.toString())
 
@@ -320,16 +329,6 @@ class SwipeFragment : Fragment(), CardStackListener {
         }
     }
 
-    /*private fun paginate() {
-        val old = adapter.getSpots()
-        val new = old.plus(createSpots())
-        val callback = SpotDiffCallback(old, new)
-        val result = DiffUtil.calculateDiff(callback)
-        adapter.setSpots(new)
-        result.dispatchUpdatesTo(adapter)
-    }*/
-
-
     override fun onCardDragging(direction: Direction, ratio: Float) {
         Log.d("CardStackView", "onCardDragging: d = ${direction.name}, r = $ratio")
     }
@@ -380,23 +379,100 @@ class SwipeFragment : Fragment(), CardStackListener {
                                 Log.d("Datum", currentDate)
                                 Log.d("DatumWOY", currentDateWOYear)*/
 
-                                Toast.makeText(context, "IT'S A MATCHHHHH", Toast.LENGTH_LONG).show()
+                                //Toast.makeText(context, "IT'S A MATCHHHHH", Toast.LENGTH_LONG).show()
+
+                                val mDialogView = LayoutInflater.from(context)
+                                    .inflate(R.layout.match_window_full_screen, null)
+
+                                val dialog =
+                                    Dialog(
+                                        activity,
+                                        android.R.style.Theme_Translucent_NoTitleBar_Fullscreen
+                                    )
+                                dialog.setContentView(mDialogView)
+                                var window = dialog.window
+
+                                window.setBackgroundDrawable(ColorDrawable (Color.TRANSPARENT));
+
+                                window.setBackgroundDrawableResource(R.color.transparent_grey);
+                                dialog.show()
+
+                                val button = mDialogView.findViewById<View>(R.id.matchLayout)
+                                val matchName = mDialogView.findViewById<TextView>(R.id.matchName)
+                                val userImage = mDialogView.findViewById<CircleImageView>(R.id.userPic)
+                                val matchPic = mDialogView.findViewById<CircleImageView>(R.id.matchPic)
+                                val sendMessage = mDialogView.findViewById<Button>(R.id.sendMessage)
+                                val keepSwiping = mDialogView.findViewById<Button>(R.id.keepSwiping)
+
+
+                                if(userImage != null && userImageUrl != "default") {
+                                    Glide.with(userImage)
+                                        .load(userImageUrl)
+                                        .into(userImage)
+                                }
+
+                                else {
+
+                                    userImage.setImageResource(R.drawable.profile_pic)
+                                }
+
+                                if(matchPic != null && selectedUserImageUrl != "default") {
+                                    Glide.with(matchPic)
+                                        .load(selectedUserImageUrl)
+                                        .into(matchPic)
+                                }
+
+                                else {
+
+                                    matchPic.setImageResource(R.drawable.profile_pic)
+                                }
+
+
+
+                                matchName.text = selectedUserFirstName.plus(" is your new connection!")
+
+                                button.setOnClickListener {
+
+                                    dialog.dismiss()
+                                }
+
+                                keepSwiping.setOnClickListener {
+
+                                    dialog.dismiss()
+                                }
 
                                 val chatKey = chatDatabase.push().key
 
-                               // chatDatabase.child(chatKey!!).child("dateMatched").setValue(currentDate)
+                                sendMessage.setOnClickListener {
 
-                                userDatabase.child(userId).child("matched").child(selectedUserId!!).setValue(chatKey)
-                                userDatabase.child(selectedUserId).child("matched").child(userId).setValue(chatKey)
+                                    val intent = ChatActivity.newIntent(context, chatKey, userId, selectedUserImageUrl, selectedUserId)
+                                    context!!.startActivity(intent)
 
-                                chatDatabase.child(chatKey!!).child(userId).child("firstName").setValue(userFirstName)
-                                chatDatabase.child(chatKey).child(userId).child("lastName").setValue(userLastName)
-                                chatDatabase.child(chatKey).child(userId).child("imageUrl").setValue(userImageUrl)
+                                    dialog.dismiss()
+                                }
+
+                                // chatDatabase.child(chatKey!!).child("dateMatched").setValue(currentDate)
+
+                                userDatabase.child(userId).child("matched").child(selectedUserId!!)
+                                    .setValue(chatKey)
+                                userDatabase.child(selectedUserId).child("matched").child(userId)
+                                    .setValue(chatKey)
 
 
-                                chatDatabase.child(chatKey).child(selectedUserId).child("firstName").setValue(selectedUserFirstName)
-                                chatDatabase.child(chatKey).child(selectedUserId).child("lastName").setValue(selectedUserLastName)
-                                chatDatabase.child(chatKey).child(selectedUserId).child("imageUrl").setValue(selectedUserImageUrl)
+                                chatDatabase.child(chatKey!!).child(userId).child("firstName")
+                                    .setValue(userFirstName)
+                                chatDatabase.child(chatKey).child(userId).child("lastName")
+                                    .setValue(userLastName)
+                                chatDatabase.child(chatKey).child(userId).child("imageUrl")
+                                    .setValue(userImageUrl)
+
+
+                                chatDatabase.child(chatKey).child(selectedUserId).child("firstName")
+                                    .setValue(selectedUserFirstName)
+                                chatDatabase.child(chatKey).child(selectedUserId).child("lastName")
+                                    .setValue(selectedUserLastName)
+                                chatDatabase.child(chatKey).child(selectedUserId).child("imageUrl")
+                                    .setValue(selectedUserImageUrl)
 
                             }
                         }
@@ -421,8 +497,6 @@ class SwipeFragment : Fragment(), CardStackListener {
             //itemsFromDB.removeAt(0)
         }
 
-        Log.d("SRKI", itemsFromDB[0].uid.toString())
-
         itemsFromDB.removeAt(0)
 
         if (itemsFromDB.isEmpty()) {
@@ -438,10 +512,9 @@ class SwipeFragment : Fragment(), CardStackListener {
         val uid = adapter.getIDs()
         val spots = adapter.getSpots()
 
-        userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition]).removeValue()
+        userDatabase.child(userId).child("swipedRight").child(uid[manager.topPosition])
+            .removeValue()
         userDatabase.child(userId).child("swipedLeft").child(uid[manager.topPosition]).removeValue()
-
-        Log.d("TRENUTNAREWIND", manager.topPosition.toString())
 
         //itemsFromDB.add(spots[manager.topPosition])
 
@@ -483,10 +556,10 @@ class SwipeFragment : Fragment(), CardStackListener {
     }
 
 
-   /* override fun onAttachFragment(childFragment: Fragment?) {
-        super.onAttachFragment(childFragment)
-        val window = activity!!.window
-        window.setFormat(PixelFormat.RGBA_8888)
-    }*/
+    /* override fun onAttachFragment(childFragment: Fragment?) {
+         super.onAttachFragment(childFragment)
+         val window = activity!!.window
+         window.setFormat(PixelFormat.RGBA_8888)
+     }*/
 
 }

@@ -55,9 +55,6 @@ class MatchesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        matchesRV.visibility = View.GONE
-        progressLayoutMatches.visibility = View.VISIBLE
-
         chatsAdapter.removeAllElements()
         fetchData()
          matchesRV.apply {
@@ -75,6 +72,7 @@ class MatchesFragment : Fragment() {
     }
 
     fun fetchData() {
+
 
         userDatabase.child(userId).child("matched").addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
